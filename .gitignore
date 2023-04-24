@@ -30,7 +30,7 @@ nosetests.xml
 coverage.xml
 
 # Sphinx documentation
-docs/build/
+docs_source/build/
 
 # PyCharm-specific
 .idea/
