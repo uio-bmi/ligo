@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>immuneML: Dataset Export Overview</title>
+    <style>
+        {{{css_style}}}
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>Dataset export: {{name}}</h1>
+            <div>Full specification is available <a href="{{{full_specs}}}">here</a>.</div>
+            <div class="padded-bottom padded-top">immuneML version: {{immuneML_version}}</div>
+            {{#datasets}}
+            <div class="padded">
+                <div class="col-container">
+                    <div class="col">
+                        <h3>Dataset information</h3>
+                        <h4>General information</h4>
+                        <div class="table-container">
+                            <table>
+                            <tr>
+                                <td><b>Name</b></td>
+                                <td>{{dataset_name}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Type</b></td>
+                                <td>{{dataset_type}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Dataset size</b></td>
+                                <td>{{dataset_size}}</td>
+                            </tr>
+                        </table>
+                        </div>
+                        <h4>Dataset labels</h4>
+                        The following labels may be used for classification:
+                        <div>
+                            <ul>
+                            {{#labels}}
+                                <li>{{label_name}}</li>
+                            {{/labels}}
+                            </ul>
+                        </div>
+                        {{#show_preprocessing}}
+                        <h4>Preprocessings</h4>
+                        The following preprocessing steps have been applied to the dataset:
+                        <div>
+                            <ul>
+                                {{#preprocessing_sequence}}
+                                <li>{{preprocessing_name}}; {{preprocessing_params}}</li>
+                                {{/preprocessing_sequence}}
+                            </ul>
+                        </div>
+                        {{/show_preprocessing}}
+                        <h4>Download formats</h4>
+                        <div>
+                            <ul>
+                            {{#formats}}
+                                <li><a href="{{dataset_download_link}}" download>{{format_name}}</a></li>
+                            {{/formats}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/datasets}}
+        </div>
+    </div>
+</body>
+</html>

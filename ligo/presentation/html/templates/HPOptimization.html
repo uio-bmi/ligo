@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>immuneML: ML Model Training Overview</title>
+    <style>
+        {{{css_style}}}
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+    <div class="container">
+        <h1>ML Model Training overview</h1>
+        <div>Full specification is available <a href="{{{full_specs}}}">here</a>.</div>
+        <div class="padded-bottom padded-top">immuneML version: {{immuneML_version}}</div>
+        <details>
+            <summary>Dataset details</summary>
+            <div class="grid-container">
+                <div class="">
+                    <span>General information</span>
+                    <div class="table-container padded-top padded-bottom">
+                        <table>
+                        <tr>
+                            <td><b>Name</b></td>
+                            <td>{{dataset_name}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Type</b></td>
+                            <td>{{dataset_type}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Dataset size</b></td>
+                            <td>{{dataset_size}}</td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+                <div class="">
+                    <span>Analysis labels</span>
+                    <div class="table-container padded-top padded-bottom">
+                        <table>
+                        <thead>
+                            <tr>
+                                <th>Label name</th>
+                                <th>Label values (classes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#labels}}
+                            <tr>
+                                <td>{{name}}</td>
+                                <td>{{values}}</td>
+                            </tr>
+                            {{/labels}}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </details>
+        <details>
+            <summary>Parameters for training ML model</summary>
+            <div class="grid-container">
+                <div class="">
+                    <span>Metrics</span>
+                    <div class="table-container padded-top padded-bottom">
+                        <table>
+                        <tr>
+                            <td>Optimization metric</td>
+                            <td>{{optimization_metric}}</td>
+                        </tr>
+                        <tr>
+                            <td>Other metrics</td>
+                            <td>{{other_metrics}}</td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+                <div class="">
+                    <span>Cross-validation settings</span>
+                    <div class="table-container padded-top padded-bottom">
+                        <table>
+                            <tr>
+                                <td>assessment</td>
+                                <td>{{assessment_desc}}</td>
+                            </tr>
+                            <tr>
+                                <td>selection</td>
+                                <td>{{selection_desc}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </details>
+        <div>
+            <h3>Optimization results</h3>
+            {{#hp_per_label}}
+            <h4>{{label}}</h4>
+            <p>
+                The following table shows a summary of training ML models for the label {{label}}. For each of the data splits made in the assessment (outer) cross-validation loop, it shows which of combinations of ML settings had the best {{optimization_metric}} score out of all. By clicking ‘see details’ you will find more detailed information about the performance of the trained models on each data split, and generated reports.
+            </p>
+            <div class="table-container">
+                <table>
+                <thead>
+                    <tr>
+                        <th>Split index</th>
+                        <th>Optimal settings (preprocessing, encoding, ML)</th>
+                        <th>Optimization metric ({{optimization_metric}})</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#assessment_results}}
+                    <tr>
+                        <td>{{index}}</td>
+                        <td>{{hp_setting}}</td>
+                        <td>{{optimization_metric_val}}</td>
+                        <td><a href="{{split_details_path}}">see details</a></td>
+                    </tr>
+                    {{/assessment_results}}
+                </tbody>
+                </table>
+            </div>
+            {{/hp_per_label}}
+        </div>
+        <h3>Trained models</h3>
+        <div>
+            <p>
+                Trained models are available as zip files which can be directly provided as input for the MLApplication instruction and used to encode
+                the data and predict the label on a new dataset. These zip files include trained ML model, encoder and preprocessing that were chosen
+                as optimal for the given label, along with additional files showing the values of each parameter in the model and encoder.
+            </p>
+            {{#models_per_label}}
+            <div>
+                <a href="{{{model_path}}}">Download {{label}} model here.</a>
+            </div>
+            {{/models_per_label}}
+        </div>
+        {{#show_hp_reports}}
+        <div id="hyperparameter-reports">
+            <h3>Hyperparameter reports</h3>
+            <p>Hyperparameter reports are executed on the trained models and have access to assessment and selection data (both the outer and the inner
+                loop of nested cross-validation) and typically show trends in the models, over different splits to training, validation or test datasets.</p>
+            {{#hp_reports}}
+
+            <h4>Report {{name}}</h4>
+            <p>{{info}}</p>
+            <div class="grid-container">
+                {{#output_figures}}
+                    {{#is_embed}}
+                    <div class="grid-item-full-width"><embed src="{{path}}">{{#name}}<p>{{name}}</p>{{/name}}</div>
+                    {{/is_embed}}
+                    {{^is_embed}}
+                    <div><img src="{{path}}">{{#name}}<p>{{name}}</p>{{/name}}</div>
+                    {{/is_embed}}
+                {{/output_figures}}
+            </div>
+            {{/hp_reports}}
+        </div>
+        {{/show_hp_reports}}
+    </div>
+</body>
+</html>

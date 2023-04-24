@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Training ML model - CV details</title>
+    <style>
+        {{{css_style}}}
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        <h3>Assessment - split {{split_index}} details</h3>
+        {{#train_metadata_path}}
+        <div class="padded-top padded-bottom">
+            <details>
+                <summary>Train and validation metadata (<a href="{{train_metadata_path}}">download link</a>)</summary>
+                <div class="table-container padded">
+                    {{{train_metadata}}}
+                </div>
+            </details>
+            <details>
+                <summary>Test metadata (<a href="{{test_metadata_path}}">download link</a>)</summary>
+                <div class="table-container padded">
+                    {{{test_metadata}}}
+                </div>
+            </details>
+        </div>
+        {{/train_metadata_path}}
+        <h4>Label {{label}}</h4>
+        <p>
+            In the table below, the performance of the optimal hyperparameter setting on the test set for this split is shown, as measured by the
+            optimization metric used for model selection and model assessment. This hyperparameter setting was chosen to be the optimal one in the
+            inner cross-validation (i.e., during the selection) for this assessment split.
+        </p>
+        <div class="padded">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Optimal hyperparameter settings <br>(preprocessing, encoding, ML method)</th>
+                            <th>Performance ({{optimization_metric}})</th>
+                            {{#has_reports}}
+                            <th>Reports</th>
+                            {{/has_reports}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#hp_settings}}
+                        {{#optimal}}
+                        <tr>
+                            <td>
+                                {{#optimal}}<b>{{/optimal}}
+                                {{hp_setting}}
+                                {{#optimal}}</b>{{/optimal}}
+                            </td>
+                            <td>
+                                {{#optimal}}<b>{{/optimal}}{{optimization_metric_val}}{{#optimal}}</b>{{/optimal}}</td>
+                            {{#has_reports}}
+                            <td><a href="{{reports_path}}">see reports</a></td>
+                            {{/has_reports}}
+                        </tr>
+                        {{/optimal}}
+                        {{/hp_settings}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{#show_non_optimal}}
+        <p>
+            In the table below, the performance of the other hyperparameter settings on the test set for this split are shown, as measured by the
+            optimization metric used for model selection and model assessment. These settings were not chosen as the optimal ones during the selection
+            for this assessment split.
+        </p>
+        <div class="padded">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hyperparameter settings <br>(preprocessing, encoding, ML method)</th>
+                            <th>Performance ({{optimization_metric}})</th>
+                            {{#has_reports}}
+                            <th>Reports</th>
+                            {{/has_reports}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#hp_settings}}
+                        {{^optimal}}
+                        <tr>
+                            <td>
+                                {{hp_setting}}
+                            </td>
+                            <td>{{optimization_metric_val}}</td>
+                            {{#has_reports}}
+                            <td><a href="{{reports_path}}">see reports</a></td>
+                            {{/has_reports}}
+                        </tr>
+                        {{/optimal}}
+                        {{/hp_settings}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{/show_non_optimal}}
+        {{#performances_per_metric}}
+        <p>The performance of different hyperparameter settings on all listed performance metrics
+            is shown in the table below. This is the performance on the test set for this assessment split when all
+            models have been retrained on training and validation dataset (the same as the previous table).</p>
+        <div class="table-container padded">
+            {{{performances_per_metric}}}
+        </div>
+        {{/performances_per_metric}}
+        <p class="padded-bottom">
+            For the performance of each of the settings during the inner loop of cross-validation (used to select the optimal model for the split),
+            see <a href="{{selection_path}}">selection details</a>.
+        </p>
+        {{#show_data_reports}}
+        <h3>Data reports on training and test datasets</h3>
+        <p>Here the reports on the datasets before preprocessing and encoding are shown.</p>
+        <div class="padded">
+            <div class="grid-container">
+                <div class="">
+                    {{#train_data_reports}}
+
+                    <h4>Report {{name}} (training)</h4>
+                    <p>{{info}}</p>
+                    {{#output_figures}}
+                    {{#is_embed}}
+                    <embed src="{{path}}">
+                    {{/is_embed}}
+                    {{^is_embed}}
+                    <img src="{{path}}">
+                    {{/is_embed}}
+                    {{#name}}<p>{{name}} (training data)</p>{{/name}}
+                    {{/output_figures}}
+                    <ul>
+                    {{#output_tables}}
+                    <li><a href="{{path}}">Download {{#name}}{{name}} report{{/name}} (training data)</a></li>
+                    {{/output_tables}}
+                    {{#output_text}}
+                    <li><a href="{{path}}">Download {{#name}}{{name}} report{{/name}} (training data)</a></li>
+                    {{/output_text}}
+                    </ul>
+                    {{/train_data_reports}}
+                </div>
+                <div class="">
+                    {{#test_data_reports}}
+                    <h4>Report {{name}} (test)</h4>
+                    <p>{{info}}</p>
+                    {{#output_figures}}
+                    {{#is_embed}}
+                    <embed src="{{path}}">
+                    {{/is_embed}}
+                    {{^is_embed}}
+                    <img src="{{path}}">
+                    {{/is_embed}}
+                    {{#name}}<p>{{name}} (test data)</p>{{/name}}
+                    {{/output_figures}}
+                    <ul>
+                    {{#output_tables}}
+                    <li><a href="{{path}}">Download {{#name}}{{name}} report{{/name}} (test data)</a></li>
+                    {{/output_tables}}
+                    {{#output_text}}
+                    <li><a href="{{path}}">Download {{#name}}{{name}} report{{/name}} (test data)</a></li>
+                    {{/output_text}}
+                    </ul>
+                    {{/test_data_reports}}
+                </div>
+            </div>
+        </div>
+        {{/show_data_reports}}
+    </div>
+</body>
+</html>

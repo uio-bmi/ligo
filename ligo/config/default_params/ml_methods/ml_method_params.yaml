@@ -1,0 +1,2 @@
+model_selection_cv: false # whether to use cross-validation and random search to estimate the optimal parameters for one split to train/test
+model_selection_n_folds: -1 # number of folds if cross-validation is used for model selection and optimal parameter estimation

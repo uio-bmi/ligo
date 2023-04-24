@@ -1,0 +1,58 @@
+import copy
+from pathlib import Path
+from typing import List
+
+from ligo.data_model.dataset.Dataset import Dataset
+from ligo.environment.Label import Label
+from ligo.hyperparameter_optimization.HPSetting import HPSetting
+from ligo.ml_methods.MLMethod import MLMethod
+from ligo.reports.Report import Report
+from ligo.reports.ReportResult import ReportResult
+from ligo.reports.data_reports.DataReport import DataReport
+from ligo.reports.encoding_reports.EncodingReport import EncodingReport
+from ligo.reports.ml_reports.MLReport import MLReport
+
+
+class ReportUtil:
+
+    @staticmethod
+    def _make_new_report(report: Report, path: Path, number_of_processes: int = 1, context: dict = None):
+        tmp_report = copy.deepcopy(report)
+        report_name = report.name if report.name is not None else 'report_result'
+        tmp_report.result_path = path / report_name
+        tmp_report.number_of_processes = number_of_processes
+        tmp_report.set_context(context)
+        return tmp_report
+
+    @staticmethod
+    def run_ML_reports(train_dataset: Dataset, test_dataset: Dataset, method: MLMethod, reports: List[MLReport], path: Path,
+                       hp_setting: HPSetting, label: Label, number_of_processes: int = 1, context: dict = None) -> List[ReportResult]:
+        report_results = []
+        for report in reports:
+            tmp_report = ReportUtil._make_new_report(report, path, number_of_processes, context)
+            tmp_report.method = method
+            tmp_report.train_dataset = train_dataset
+            tmp_report.test_dataset = test_dataset
+            tmp_report.hp_setting = hp_setting
+            tmp_report.label = label
+            result = tmp_report.generate_report()
+            report_results.append(result)
+        return report_results
+
+    @staticmethod
+    def _run_reports_on_dataset(dataset: Dataset, reports: list, path: Path, number_of_processes: int = 1, context: dict = None) -> List[ReportResult]:
+        report_results = []
+        for report in reports:
+            tmp_report = ReportUtil._make_new_report(report, path, number_of_processes, context)
+            tmp_report.dataset = dataset
+            result = tmp_report.generate_report()
+            report_results.append(result)
+        return report_results
+
+    @staticmethod
+    def run_encoding_reports(dataset: Dataset, reports: List[EncodingReport], path: Path, number_of_processes: int = 1, context: dict = None) -> List[ReportResult]:
+        return ReportUtil._run_reports_on_dataset(dataset, reports, path, number_of_processes, context)
+
+    @staticmethod
+    def run_data_reports(dataset: Dataset, reports: List[DataReport], path: Path, number_of_processes: int = 1, context: dict = None):
+        return ReportUtil._run_reports_on_dataset(dataset, reports, path, number_of_processes, context)

@@ -1,0 +1,2 @@
+coefs_to_plot: [n_largest] # what type of coefficients to plot in the report, options in CoefficientPlottingSetting
+n_largest: [25]

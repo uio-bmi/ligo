@@ -1,0 +1,70 @@
+import os
+import shutil
+from pathlib import Path
+from typing import Tuple
+
+from ligo.IO.ml_method.MLImport import MLImport
+from ligo.dsl.symbol_table.SymbolTable import SymbolTable
+from ligo.dsl.symbol_table.SymbolType import SymbolType
+from ligo.environment.Label import Label
+from ligo.environment.LabelConfiguration import LabelConfiguration
+from ligo.hyperparameter_optimization.HPSetting import HPSetting
+from ligo.ml_metrics.Metric import Metric
+from ligo.util.ParameterValidator import ParameterValidator
+from ligo.util.PathBuilder import PathBuilder
+from ligo.workflows.instructions.ml_model_application.MLApplicationInstruction import MLApplicationInstruction
+
+
+class MLApplicationParser:
+    """
+    Specification example for the MLApplication instruction:
+
+    .. highlight:: yaml
+    .. code-block:: yaml
+
+        instruction_name:
+            type: MLApplication
+            dataset: d1
+            config_path: ./config.zip
+            metrics:
+            - accuracy
+            - precision
+            - recall
+            number_of_processes: 4
+
+    """
+
+    def parse(self, key: str, instruction: dict, symbol_table: SymbolTable, path: Path) -> MLApplicationInstruction:
+        location = MLApplicationParser.__name__
+        ParameterValidator.assert_keys(instruction.keys(), ['type', 'dataset', 'number_of_processes', 'config_path', 'metrics'], location, key)
+        ParameterValidator.assert_in_valid_list(instruction['dataset'], symbol_table.get_keys_by_type(SymbolType.DATASET), location, f"{key}: dataset")
+        ParameterValidator.assert_type_and_value(instruction['number_of_processes'], int, location, f"{key}: number_of_processes", min_inclusive=1)
+        ParameterValidator.assert_type_and_value(instruction['config_path'], str, location, f'{key}: config_path')
+
+        if 'metrics' in instruction and instruction['metrics'] is not None:
+            ParameterValidator.assert_type_and_value(instruction['metrics'], list, location, f'{key}: metrics')
+            metrics = [Metric.get_metric(metric) for metric in instruction["metrics"]]
+        else:
+            metrics = []
+
+        hp_setting, label = self._parse_hp_setting(instruction, path, key)
+
+        instruction = MLApplicationInstruction(dataset=symbol_table.get(instruction['dataset']), name=key,
+                                               number_of_processes=instruction['number_of_processes'],
+                                               label_configuration=LabelConfiguration([label]),
+                                               hp_setting=hp_setting,
+                                               metrics=metrics)
+
+        return instruction
+
+    def _parse_hp_setting(self, instruction: dict, path: Path, key: str) -> Tuple[HPSetting, Label]:
+
+        assert os.path.isfile(instruction['config_path']), f'MLApplicationParser: {instruction["config_path"]} is not file path.'
+        assert '.zip' in instruction['config_path'], f'MLApplicationParser: {instruction["config_path"]} is not a zip file.'
+
+        config_dir = PathBuilder.build(path / f"unpacked_{key}/")
+        shutil.unpack_archive(instruction['config_path'], config_dir, 'zip')
+
+        hp_setting, label = MLImport.import_hp_setting(config_dir)
+
+        return hp_setting, label
