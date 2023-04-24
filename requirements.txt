@@ -1,3 +1,6 @@
+pandas
 bionumpy
-sphinx
-furo
+numpy
+olga
+pyyaml
+airr
