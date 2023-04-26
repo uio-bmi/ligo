@@ -55,7 +55,7 @@ extensions = [
 ]
 
 # html_baseurl
-html_baseurl = 'https://docs.immuneml.uio.no'
+html_baseurl = 'https://uio-bmi.github.io/ligo/'
 
 # mathjax configuration
 mathjax3_config = {
@@ -70,7 +70,7 @@ napoleon_include_init_with_doc = True
 
 # autodoc
 
-autodoc_mock_imports = ["pandas", "sklearn", "numpy", "pystache"]
+autodoc_mock_imports = ["pandas", "sklearn", "numpy", "pystache", 'bionumpy', 'npstructures', 'plotly', 'scipy']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -89,7 +89,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -136,7 +136,7 @@ html_css_files = [
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'immuneMLdoc'
+htmlhelp_basename = 'LIgO_docs'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -163,7 +163,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'immuneML.tex', 'immuneML Documentation',
+    (master_doc, 'ligo.tex', 'LIgO Documentation',
      'Authors', 'manual'),
 ]
 
@@ -173,7 +173,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'immuneml', 'immuneML Documentation',
+    (master_doc, 'ligo', 'LIgO Documentation',
      [author], 1)
 ]
 
@@ -184,8 +184,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'immuneML', 'immuneML Documentation',
-     author, 'immuneML', 'One line description of project.',
+    (master_doc, 'ligo', 'LIgO Documentation',
+     author, 'ligo', 'One line description of project.',
      'Miscellaneous'),
 ]
 

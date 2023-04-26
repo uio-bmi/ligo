@@ -5,20 +5,6 @@ from ligo.data_model.receptor.receptor_sequence.SequenceFrameType import Sequenc
 
 
 class SequenceMetadata:
-    """
-    class modeling the existing knowledge about a receptor_sequence, should be stored according to
-    IMGT gene nomenclature (human can be found `here
-    <http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=genetable&species=human&group=TRBV>`_):
-        - v call
-        - j call
-        - chain
-        - count
-        - region_type (e.g. IMGT_CDR3, IMGT_CDR1, FULL_SEQUENCE)
-        - frame_type (e.g. IN, OUT, STOP)
-        - sample
-        - custom params (dictionary with custom sequence information)
-
-    """
 
     def __init__(self, v_call: str = None, j_call: str = None, chain=None, duplicate_count: int = None, frame_type: str = SequenceFrameType.IN.name,
                  region_type: str = None, cell_id: str = None, custom_params: dict = None):

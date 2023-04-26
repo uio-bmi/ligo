@@ -1,33 +1,47 @@
-Installing immuneML
+Installing LIgO
 ===================
-
-.. meta::
-
-   :twitter:card: summary
-   :twitter:site: @immuneml
-   :twitter:title: immuneML installation
-   :twitter:description: See how to install immuneML.
 
 .. toctree::
    :maxdepth: 2
 
-To get started with immuneML, there are four options:
+To install with LIgO, there are two options:
 
-1. Using `immuneML through Galaxy <https://galaxy.immuneml.uiocloud.no>`_ (no installation or programming experience required, see :ref:`immuneML & Galaxy`).
+#. Install on the local machine either from PyPI or from GitHub
+#. Use Docker image
 
-2. Installing immuneML with a package manager and using it locally (:ref:`Install immuneML with a package manager`),
+Installing LIgO on local machine
+---------------------------------
 
-3. Using immuneML with Docker (:ref:`Setting up immuneML with Docker`) either locally or in the cloud (:ref:`Running immuneML in the cloud`),
+Requirements: Python 3.7 or later
 
-4. Cloning the codebase from the `GitHub repository <https://github.com/uio-bmi/immuneML/>`_ and running it directly from source code (for development purposes, see :ref:`Set up immuneML for development`).
+To install LIgO on the local machine with pip:
 
-Once immuneML has been set up, you can look into :ref:`Quickstart` or look into which analyses you can run with immuneML (see :ref:`Tutorials`).
+1. Make a virtual environment where LIgO will be installed to avoid package versioning issues or collisions with the packages installed for other projects:
+
+.. code-block:: console
+
+  python -m venv ligo_env
+
+2. Activate virtual environment:
+
+.. code-block:: console
+
+  source ligo_env/bin/activate
+
+3. Install LIgO from PyPI (recommended):
+
+.. code-block:: console
+
+  pip install ligo
+
+Alternatively, to install LIgO from GitHub run the following:
+
+.. code-block:: console
+
+  pip install git+https://github.com/uio-bmi/ligo.git
 
 
-.. toctree::
-  :maxdepth: 1
-  :caption: Installation options:
+Use LIgO with Docker
+----------------------
 
-  installation/install_with_package_manager
-  installation/installation_docker
-  installation/cloud
+More information on using LIgO with Docker is coming soon!

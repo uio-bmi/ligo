@@ -51,6 +51,7 @@ class RandomSequenceDatasetImport(DataImport):
                     epitope2: # next label with classes that will be assigned to sequences independently of the previous label or other parameters
                         1: 0.3 # 30% of the generated sequences will have class 1
                         0: 0.7 # 70% of the generated sequences will have class 0
+
     """
 
     @staticmethod

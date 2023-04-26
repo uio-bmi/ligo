@@ -21,4 +21,5 @@ if __name__ == "__main__":
         path = sys.argv[1]
     else:
         path = EnvironmentSettings.specs_docs_path
+    print(path)
     generate_docs(path)

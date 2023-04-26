@@ -22,7 +22,7 @@ class EnvironmentSettings:
     cache_path = root_path / "cache"
     tmp_cache_path = tmp_test_path / "cache"
     html_templates_path = root_path / "ligo/presentation/html/templates"
-    specs_docs_path = root_path / "docs/specs"
+    specs_docs_path = root_path / "docs_source/specs"
     source_docs_path = root_path / "docs_source"
     max_sequence_length = 20
     low_memory = True

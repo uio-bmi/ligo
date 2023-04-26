@@ -7,7 +7,6 @@ import numpy as np
 from ligo.data_model.dataset.ReceptorDataset import ReceptorDataset
 from ligo.data_model.dataset.RepertoireDataset import RepertoireDataset
 from ligo.data_model.dataset.SequenceDataset import SequenceDataset
-from ligo.data_model.receptor.TCABReceptor import TCABReceptor
 from ligo.data_model.receptor.receptor_sequence.ReceptorSequence import ReceptorSequence
 from ligo.data_model.receptor.receptor_sequence.SequenceMetadata import SequenceMetadata
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
@@ -76,6 +75,7 @@ class RandomDatasetGenerator:
             coeliac: # next label with classes that will be assigned to repertoires independently of the previous label or any other parameter
                 1: 0.3 # 30% of the generated repertoires will have class 1
                 0: 0.7 # 70% of the generated repertoires will have class 0
+
         """
         RandomDatasetGenerator._check_rep_dataset_generation_params(repertoire_count, sequence_count_probabilities, sequence_length_probabilities,
                                                                     labels, path)
@@ -136,7 +136,11 @@ class RandomDatasetGenerator:
             epitope2: # next label with classes that will be assigned to receptors independently of the previous label or other parameters
                 1: 0.3 # 30% of the generated receptors will have class 1
                 0: 0.7 # 70% of the generated receptors will have class 0
+
         """
+
+        from ligo.data_model.receptor.TCABReceptor import TCABReceptor
+
         RandomDatasetGenerator._check_receptor_dataset_generation_params(receptor_count, chain_1_length_probabilities,
                                                                          chain_2_length_probabilities, labels, path)
 
@@ -193,6 +197,7 @@ class RandomDatasetGenerator:
             epitope2: # next label with classes that will be assigned to receptors independently of the previous label or other parameters
                 1: 0.3 # 30% of the generated receptors will have class 1
                 0: 0.7 # 70% of the generated receptors will have class 0
+
         """
         RandomDatasetGenerator._check_sequence_dataset_generation_params(sequence_count, length_probabilities, labels, path)
 
