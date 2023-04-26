@@ -37,7 +37,7 @@ class AdaptiveImportHelper:
     @staticmethod
     def parse_adaptive_germline_to_imgt(dataframe, organism):
         gene_name_replacement = pd.read_csv(
-            EnvironmentSettings.root_path / "immuneML/IO/dataset_import/conversion/imgt_adaptive_conversion.csv")
+            EnvironmentSettings.root_path / "ligo/IO/dataset_import/conversion/imgt_adaptive_conversion.csv")
         gene_name_replacement = gene_name_replacement[gene_name_replacement.Species == organism]
         gene_name_replacement = dict(zip(gene_name_replacement.Adaptive, gene_name_replacement.IMGT))
 

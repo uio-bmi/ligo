@@ -3,16 +3,12 @@ import shutil
 from unittest import TestCase
 
 from ligo.IO.dataset_import.SingleLineReceptorImport import SingleLineReceptorImport
-from ligo.caching.CacheType import CacheType
 from ligo.environment.Constants import Constants
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
 from ligo.util.PathBuilder import PathBuilder
 
 
 class TestSingleLineReceptorImport(TestCase):
-
-    def setUp(self) -> None:
-        os.environ[Constants.CACHE_TYPE] = CacheType.TEST.name
 
     def test_import_repertoire_dataset(self):
         path = PathBuilder.build(EnvironmentSettings.tmp_test_path / "io_generic_receptor/")

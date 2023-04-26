@@ -7,16 +7,12 @@ import pandas as pd
 import yaml
 
 from ligo.app.LigoApp import LigoApp
-from ligo.caching.CacheType import CacheType
 from ligo.environment.Constants import Constants
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
 from ligo.util.PathBuilder import PathBuilder
 
 
 class TestSignalPairLigoSimulation(TestCase):
-
-    def setUp(self) -> None:
-        os.environ[Constants.CACHE_TYPE] = CacheType.TEST.name
 
     def prepare_specs(self, path) -> Path:
         specs = {
@@ -91,7 +87,6 @@ class TestSignalPairLigoSimulation(TestCase):
                 "inst1": {
                     "type": "LigoSim",
                     "simulation": "sim1",
-                    "export_formats": ["AIRR"],
                     "store_signal_in_receptors": True,
                     "sequence_batch_size": 1000,
                     'max_iterations': 100,

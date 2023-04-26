@@ -24,8 +24,10 @@ def make_bnp_dataclass_object_from_dicts(dict_objects: List[dict], field_type_ma
 
         new_class = bnpdataclass(dc_make_dataclass("DynamicDC", bases=tuple([base_class]) if base_class is not None else (), namespace=functions,
                                                    fields=fields_list))
-    else:
+    elif base_class:
         new_class = base_class.extend(fields)
+    else:
+        new_class = bnpdataclass(dc_make_dataclass("DynamicDC", fields=fields_list))
 
     for key in transformed_objs:
         if transformed_objs[key] is None and isinstance(fields[key], Encoding):

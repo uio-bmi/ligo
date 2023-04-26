@@ -34,7 +34,7 @@ class BCReceptor(Receptor):
 
     def __init__(self, heavy: ReceptorSequence = None, light: ReceptorSequence = None, metadata: dict = None,
                  identifier: str = None):
-        super().__init__(metadata, identifier)
+        super().__init__(metadata=metadata, identifier=identifier)
         self.heavy = heavy
         self.light = light
 

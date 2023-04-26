@@ -5,7 +5,6 @@ from unittest import TestCase
 
 import pandas as pd
 
-from ligo.caching.CacheType import CacheType
 from ligo.data_model.dataset.ReceptorDataset import ReceptorDataset
 from ligo.data_model.dataset.RepertoireDataset import RepertoireDataset
 from ligo.dsl.import_parsers.ImportParser import ImportParser
@@ -16,9 +15,6 @@ from ligo.util.PathBuilder import PathBuilder
 
 
 class TestImportParser(TestCase):
-
-    def setUp(self) -> None:
-        os.environ[Constants.CACHE_TYPE] = CacheType.TEST.name
 
     def test_parse_receptor_dataset(self):
         file_content = """complex.id	Gene	CDR3	V	J	Species	MHC A	MHC B	MHC class	Epitope	Epitope gene	Epitope species	Reference	Method	Meta	CDR3fix	Score

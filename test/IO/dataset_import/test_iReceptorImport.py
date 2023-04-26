@@ -441,7 +441,7 @@ class TestIReceptorImport(TestCase):
     def test_import_repertoire_dataset(self):
         base_path = EnvironmentSettings.root_path / "test/tmp/ireceptorimport/"
         path = base_path / "repertoiredataset/"
-        PathBuilder.build(path)
+        PathBuilder.remove_old_and_build(path)
         ireceptor_zip1_path = self.create_dummy_dataset(path, zip_name="first_zip", disease_name="first_disease")
         ireceptor_zip2_path = self.create_dummy_dataset(path, zip_name="second_zip", disease_name="second_disease")
 
@@ -483,9 +483,8 @@ person2	second_zip_rep2	samp2	5faf101103b9977a150a9eaa	PRJCA002413	Homo sapiens	
         shutil.rmtree(base_path)
 
     def test_import_sequence_dataset(self):
-        base_path = EnvironmentSettings.root_path / "test/tmp/ireceptorimport/"
-        path = base_path / "sequencedataset/"
-        PathBuilder.build(path)
+        path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / "ireceptorimport_sequence_dataset")
+
         ireceptor_zip1_path = self.create_dummy_dataset(path, zip_name="first_zip", disease_name="first_disease")
         ireceptor_zip2_path = self.create_dummy_dataset(path, zip_name="second_zip", disease_name="second_disease")
 
@@ -500,7 +499,7 @@ person2	second_zip_rep2	samp2	5faf101103b9977a150a9eaa	PRJCA002413	Homo sapiens	
         self.assertEqual(26, dataset.get_example_count())
         self.assertEqual(SequenceDataset, type(dataset))
 
-        shutil.rmtree(base_path)
+        shutil.rmtree(path)
 
     def test_safe_get_field(self):
         dict = {"field1": {"field2": {"field3": "field4"}}}

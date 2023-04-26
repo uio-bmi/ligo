@@ -2,7 +2,6 @@
 import os
 from pathlib import Path
 
-from ligo.caching.CacheType import CacheType
 from ligo.environment.Constants import Constants
 from ligo.environment.SequenceType import SequenceType
 from ligo.util.Logger import print_log
@@ -17,14 +16,14 @@ class EnvironmentSettings:
 
     sequence_type = SequenceType.AMINO_ACID
     root_path = Path(os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + "/../../") + "/")
-    default_params_path = root_path / "immuneML/config/default_params"
+    default_params_path = root_path / "ligo/config/default_params"
     tmp_test_path = root_path / "test/tmp"
     default_analysis_path = root_path / "analysis_runs"
     cache_path = root_path / "cache"
     tmp_cache_path = tmp_test_path / "cache"
-    html_templates_path = root_path / "immuneML/presentation/html/templates"
+    html_templates_path = root_path / "ligo/presentation/html/templates"
     specs_docs_path = root_path / "docs/specs"
-    source_docs_path = root_path / "docs/source"
+    source_docs_path = root_path / "docs_source"
     max_sequence_length = 20
     low_memory = True
 
@@ -39,22 +38,6 @@ class EnvironmentSettings:
         PathBuilder.build(path)
         os.environ[Constants.CACHE_PATH] = str(EnvironmentSettings.cache_path)
         print_log(f"Setting temporary cache path to {path}", include_datetime=True)
-
-    @staticmethod
-    def get_cache_type():
-        if Constants.CACHE_TYPE not in os.environ:
-            os.environ[Constants.CACHE_TYPE] = CacheType.PRODUCTION.name
-        return CacheType[os.environ[Constants.CACHE_TYPE].upper()]
-
-    @staticmethod
-    def get_cache_path(cache_type: CacheType = None):
-        cache_type = EnvironmentSettings.get_cache_type() if cache_type is None else cache_type
-        if cache_type == CacheType.PRODUCTION:
-            return EnvironmentSettings.cache_path if Constants.CACHE_PATH not in os.environ else Path(os.environ[Constants.CACHE_PATH])
-        elif cache_type == CacheType.TEST:
-            return EnvironmentSettings.tmp_cache_path
-        else:
-            raise RuntimeError("Cache is not set up.")
 
     @staticmethod
     def set_sequence_type(sequence_type: SequenceType):

@@ -3,8 +3,8 @@ import shutil
 from pathlib import Path
 from typing import List
 
+from ligo import Constants
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
-from ligo.ml_methods.util.Util import Util as MLUtil
 from ligo.presentation.InstructionPresentation import InstructionPresentation
 from ligo.presentation.PresentationFactory import PresentationFactory
 from ligo.presentation.PresentationFormat import PresentationFormat
@@ -42,7 +42,7 @@ class HTMLBuilder:
         result_path = path / "index.html"
         if len(presentations) > 1:
             html_map = {"instructions": presentations, "css_path": EnvironmentSettings.html_templates_path / "css/custom.css",
-                        "full_specs": Util.get_full_specs_path(path), 'immuneML_version': MLUtil.get_immuneML_version()}
+                        "full_specs": Util.get_full_specs_path(path), 'ligo_version': Constants.VERSION}
             TemplateParser.parse(template_path=EnvironmentSettings.html_templates_path / "index.html",
                                  template_map=html_map, result_path=result_path)
         elif len(presentations) == 1:

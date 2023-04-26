@@ -5,8 +5,7 @@ import pandas as pd
 import plotly.express as px
 
 from ligo.environment.SequenceType import SequenceType
-from ligo.reports.ReportOutput import ReportOutput
-from ligo.reports.ReportResult import ReportResult
+from ligo.util.Reports import ReportOutput, ReportResult
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
 
 

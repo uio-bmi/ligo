@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
+from ligo import Constants
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
-from ligo.ml_methods.util.Util import Util as MLUtil
 from ligo.presentation.TemplateParser import TemplateParser
 from ligo.presentation.html.Util import Util
 from ligo.simulation.LigoSimState import LigoSimState
@@ -42,7 +42,7 @@ class LIgOSimulationHTMLBuilder:
         html_map = {
             "css_style": Util.get_css_content(LIgOSimulationHTMLBuilder.CSS_PATH),
             "name": state.name,
-            'immuneML_version': MLUtil.get_immuneML_version(),
+            'ligo_version': Constants.VERSION,
             "full_specs": Util.get_full_specs_path(base_path),
             "dataset_name": state.resulting_dataset.name if state.resulting_dataset.name is not None else state.resulting_dataset.identifier,
             "dataset_type": StringHelper.camel_case_to_word_string(type(state.resulting_dataset).__name__),

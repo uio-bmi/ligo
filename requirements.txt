@@ -3,4 +3,9 @@ bionumpy
 numpy
 olga
 pyyaml
-airr
+airr<1.4
+plotly
+pystache
+pytest
+scipy
+npstructures

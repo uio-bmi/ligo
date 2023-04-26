@@ -84,7 +84,7 @@ class TestElementGenerator(TestCase):
     def test_get_data_from_index_range(self):
         path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / "el_gen_index_range/")
 
-        dataset = self.make_seq_dataset(path, 18, 5)
+        dataset = self.make_seq_dataset(path, seq_count=18, file_size=5)
         seqs = dataset.get_data_from_index_range(7, 13)
         print([seq.identifier for seq in seqs])
         assert len(seqs) == 7

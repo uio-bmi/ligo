@@ -7,14 +7,11 @@ from ligo.dsl.definition_parsers.DefinitionParserOutput import DefinitionParserO
 from ligo.dsl.symbol_table.SymbolTable import SymbolTable
 from ligo.dsl.symbol_table.SymbolType import SymbolType
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
-from ligo.hyperparameter_optimization.config.ReportConfig import ReportConfig
-from ligo.hyperparameter_optimization.config.SplitConfig import SplitConfig
 from ligo.util.Logger import log
 from ligo.util.ParameterValidator import ParameterValidator
 from ligo.util.PathBuilder import PathBuilder
 from ligo.util.ReflectionHandler import ReflectionHandler
 from ligo.workflows.instructions.Instruction import Instruction
-from ligo.workflows.instructions.TrainMLModelInstruction import TrainMLModelInstruction
 from scripts.DocumentatonFormat import DocumentationFormat
 from scripts.specification_util import write_class_docs
 
@@ -98,13 +95,4 @@ class InstructionParser:
 
         with file_path.open("w") as file:
             write_class_docs(DocumentationFormat(instruction, "", DocumentationFormat.LEVELS[1]), file)
-        return file_path
-
-    @staticmethod
-    def make_trainmlmodel_docs(path):
-        file_path = path / "hp.rst"
-        with file_path.open("w") as file:
-            write_class_docs(DocumentationFormat(TrainMLModelInstruction, "", DocumentationFormat.LEVELS[1]), file)
-            write_class_docs(DocumentationFormat(SplitConfig, "SplitConfig", DocumentationFormat.LEVELS[1]), file)
-            write_class_docs(DocumentationFormat(ReportConfig, "ReportConfig", DocumentationFormat.LEVELS[1]), file)
         return file_path

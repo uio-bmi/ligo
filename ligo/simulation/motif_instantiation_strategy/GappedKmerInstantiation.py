@@ -179,13 +179,13 @@ class GappedKmerInstantiation(MotifInstantiationStrategy):
         s = sum([weights[key] for key in keys])
         return [weights[key] / s for key in keys]
 
-    def set_default_weights(self, weights, keys):
-        weights = {} if weights is None else weights
+    def set_default_weights(self, weights, allowed_keys):
+        weights = {k: v for k, v in weights.items() if k in allowed_keys} if weights is not None else {}
         weight_sum = sum(list(weights.values()))
 
         if 0.99 <= weight_sum <= 1.:
-            weights = {**{key: 0 for key in keys}, **weights}
+            weights = {**{key: 0 for key in allowed_keys}, **weights}
         else:
-            missing_keys = [key for key in keys if key not in weights]
+            missing_keys = [key for key in allowed_keys if key not in weights]
             weights = {**{key: (1 - weight_sum) / len(missing_keys) for key in missing_keys}, **weights}
         return weights

@@ -16,7 +16,7 @@ class GappedMotifImplanting(SequenceImplantingStrategy):
 
     def implant(self, sequence, signal: dict, sequence_position_weights=None, sequence_type: SequenceType = SequenceType.AMINO_ACID) -> ReceptorSequence:
 
-        assert sequence.metadata.region_type in [RegionType.IMGT_CDR3.name, RegionType.IMGT_JUNCTION.name], \
+        assert sequence.metadata.region_type.name in [RegionType.IMGT_CDR3.name, RegionType.IMGT_JUNCTION.name], \
             f"{GappedMotifImplanting.__name__}: sequence is of type {sequence.metadata.region_type}, but currently only {RegionType.IMGT_CDR3.name} and " \
             f"{RegionType.IMGT_JUNCTION.name} are supported."
 

@@ -34,7 +34,7 @@ class BCKReceptor(Receptor):
                + [name for name in cls.FIELDS if name not in ['heavy', 'kappa']]
 
     def __init__(self, heavy: ReceptorSequence = None, kappa: ReceptorSequence = None, metadata: dict = None, identifier: str = None):
-        super().__init__(metadata, identifier)
+        super().__init__(metadata=metadata, identifier=identifier)
         self.heavy = heavy
         self.kappa = kappa
 

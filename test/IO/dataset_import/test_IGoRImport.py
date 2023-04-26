@@ -39,7 +39,7 @@ rep2.tsv,2""")
 
     def test_load_repertoire(self):
         """Test dataset content with and without a header included in the input file"""
-        path = EnvironmentSettings.root_path / "test/tmp/io_igor_load/"
+        path = EnvironmentSettings.tmp_test_path / "io_igor_load/"
 
         PathBuilder.build(path)
         self.write_dummy_files(path, True)

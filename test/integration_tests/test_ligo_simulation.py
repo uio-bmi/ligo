@@ -6,17 +6,13 @@ from unittest import TestCase
 import pandas as pd
 import yaml
 
-from ligo.app.ImmuneMLApp import ImmuneMLApp
-from ligo.caching.CacheType import CacheType
+from ligo.app.LigoApp import LigoApp
 from ligo.environment.Constants import Constants
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
 from ligo.util.PathBuilder import PathBuilder
 
 
 class TestLIgOSimulation(TestCase):
-
-    def setUp(self) -> None:
-        os.environ[Constants.CACHE_TYPE] = CacheType.TEST.name
 
     def prepare_specs(self, path) -> Path:
         specs = {
@@ -91,7 +87,6 @@ class TestLIgOSimulation(TestCase):
                 "inst1": {
                     "type": "LigoSim",
                     "simulation": "sim1",
-                    "export_formats": ["AIRR"],
                     "store_signal_in_receptors": True,
                     "sequence_batch_size": 100,
                     'max_iterations': 100,
@@ -116,7 +111,7 @@ class TestLIgOSimulation(TestCase):
 
         PathBuilder.build(path / "result/")
 
-        app = ImmuneMLApp(specification_path=specs_path, result_path=path / "result/")
+        app = LigoApp(specification_path=specs_path, result_path=path / "result/")
         app.run()
 
         self.assertTrue(os.path.isfile(path / "result/inst1/metadata.csv"))

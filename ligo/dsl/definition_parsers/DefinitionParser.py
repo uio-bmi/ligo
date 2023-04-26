@@ -4,23 +4,11 @@ from pathlib import Path
 from ligo.IO.dataset_import.DataImport import DataImport
 from ligo.dsl.DefaultParamsLoader import DefaultParamsLoader
 from ligo.dsl.definition_parsers.DefinitionParserOutput import DefinitionParserOutput
-from ligo.dsl.definition_parsers.EncodingParser import EncodingParser
-from ligo.dsl.definition_parsers.MLParser import MLParser
 from ligo.dsl.definition_parsers.MotifParser import MotifParser
-from ligo.dsl.definition_parsers.PreprocessingParser import PreprocessingParser
-from ligo.dsl.definition_parsers.ReportParser import ReportParser
 from ligo.dsl.definition_parsers.SignalParser import SignalParser
 from ligo.dsl.definition_parsers.SimulationParser import SimulationParser
 from ligo.dsl.import_parsers.ImportParser import ImportParser
 from ligo.dsl.symbol_table.SymbolTable import SymbolTable
-from ligo.encodings.DatasetEncoder import DatasetEncoder
-from ligo.ml_methods.MLMethod import MLMethod
-from ligo.preprocessing.Preprocessor import Preprocessor
-from ligo.reports.data_reports.DataReport import DataReport
-from ligo.reports.encoding_reports.EncodingReport import EncodingReport
-from ligo.reports.ml_reports.MLReport import MLReport
-from ligo.reports.multi_dataset_reports.MultiDatasetReport import MultiDatasetReport
-from ligo.reports.train_ml_model_reports.TrainMLModelReport import TrainMLModelReport
 from ligo.simulation.implants.Motif import Motif
 from ligo.simulation.implants.Signal import Signal
 from ligo.simulation.motif_instantiation_strategy.MotifInstantiationStrategy import MotifInstantiationStrategy
@@ -39,7 +27,7 @@ class DefinitionParser:
 
         specs_defs = {}
 
-        for parser in [MotifParser, SignalParser, SimulationParser, PreprocessingParser, EncodingParser, MLParser, ReportParser, ImportParser]:
+        for parser in [MotifParser, SignalParser, SimulationParser]:
             symbol_table, new_specs = DefinitionParser._call_if_exists(parser.keyword, parser.parse, specs, symbol_table, result_path)
             specs_defs[parser.keyword] = new_specs
 
@@ -60,10 +48,6 @@ class DefinitionParser:
         def_path = PathBuilder.build(path / "definitions")
         DefinitionParser.make_dataset_docs(def_path)
         DefinitionParser.make_simulation_docs(def_path)
-        DefinitionParser.make_encodings_docs(def_path)
-        DefinitionParser.make_reports_docs(def_path)
-        DefinitionParser.make_ml_methods_docs(def_path)
-        DefinitionParser.make_preprocessing_docs(def_path)
 
     @staticmethod
     def make_simulation_docs(path: Path):
@@ -84,37 +68,3 @@ class DefinitionParser:
         import_classes = ReflectionHandler.all_nonabstract_subclasses(DataImport, "Import", "dataset_import/")
         make_docs(path, import_classes, "datasets.rst", "Import")
 
-    @staticmethod
-    def make_encodings_docs(path: Path):
-        enc_classes = ReflectionHandler.all_direct_subclasses(DatasetEncoder, "Encoder", "encodings/")
-        make_docs(path, enc_classes, "encodings.rst", "Encoder")
-
-    @staticmethod
-    def make_reports_docs(path: Path):
-        filename = "reports.rst"
-        file_path = path / filename
-
-        with file_path.open("w") as file:
-            pass
-
-        for report_type_class in [DataReport, EncodingReport, MLReport, TrainMLModelReport, MultiDatasetReport]:
-            with file_path.open("a") as file:
-                doc_format = DocumentationFormat(cls=report_type_class,
-                                                 cls_name=f"**{report_type_class.get_title()}**",
-                                                 level_heading=DocumentationFormat.LEVELS[1])
-                write_class_docs(doc_format, file)
-
-            subdir = DefaultParamsLoader.convert_to_snake_case(report_type_class.__name__) + "s"
-
-            classes = ReflectionHandler.all_nonabstract_subclasses(report_type_class, "", f"reports/{subdir}/")
-            make_docs(path, classes, filename, "", "a")
-
-    @staticmethod
-    def make_ml_methods_docs(path: Path):
-        classes = ReflectionHandler.all_nonabstract_subclasses(MLMethod, "", "ml_methods/")
-        make_docs(path, classes, "ml_methods.rst", "")
-
-    @staticmethod
-    def make_preprocessing_docs(path: Path):
-        classes = ReflectionHandler.all_nonabstract_subclasses(Preprocessor, "", "preprocessing/")
-        make_docs(path, classes, "preprocessings.rst", "")

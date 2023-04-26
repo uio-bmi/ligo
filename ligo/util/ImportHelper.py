@@ -69,15 +69,12 @@ class ImportHelper:
     def import_repertoire_dataset(import_class, params: DatasetImportParams, dataset_name: str) -> RepertoireDataset:
         """
         Function to create a dataset from the metadata and a list of repertoire files and exports dataset pickle file
-
         Arguments:
             import_class: class to use for import
             params: instance of DatasetImportParams class which includes information on path, columns, result path etc.
             dataset_name: user-defined name of the dataset
-
         Returns:
             RepertoireDataset object that was created
-
         """
 
         try:
@@ -122,6 +119,8 @@ class ImportHelper:
             alternative_load_func = getattr(import_class, "alternative_load_func", None)
 
             filename = params.path / f"{metadata_row['filename']}"
+            if not filename.exists():
+                filename = params.path / f"repertoires/{metadata_row['filename']}"
 
             dataframe = ImportHelper.load_sequence_dataframe(filename, params, alternative_load_func)
             dataframe = import_class.preprocess_dataframe(dataframe, params)

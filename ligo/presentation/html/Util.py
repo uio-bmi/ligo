@@ -5,8 +5,7 @@ from enum import Enum
 from pathlib import Path
 import numpy as np
 
-from ligo.reports.ReportOutput import ReportOutput
-from ligo.reports.ReportResult import ReportResult
+from ligo.util.Reports import ReportOutput, ReportResult
 from ligo.util.PathBuilder import PathBuilder
 
 

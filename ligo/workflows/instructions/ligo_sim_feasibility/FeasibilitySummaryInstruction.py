@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from ligo.environment.SequenceType import SequenceType
-from ligo.reports.ReportResult import ReportResult
+from ligo.util.Reports import ReportResult
 from ligo.simulation.SimConfig import SimConfig
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
 from ligo.simulation.generative_models.GenerativeModel import GenerativeModel

@@ -1,6 +1,7 @@
 import pytest
 from bionumpy import DNAEncoding
 
+from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
 from ligo.simulation.util.bnp_util import make_bnp_dataclass_object_from_dicts
 
 

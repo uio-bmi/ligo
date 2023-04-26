@@ -34,7 +34,7 @@ class ReflectionHandler:
 
     @staticmethod
     def _import_class(path: Path, class_name: str):
-        module_path = ".".join(path.parts[len(list(path.parts)) - list(path.parts)[::-1].index("immuneML") - 1:])[:-3]
+        module_path = ".".join(path.parts[len(list(path.parts)) - list(path.parts)[::-1].index("ligo") - 1:])[:-3]
         mod = import_module(module_path)
         cls = getattr(mod, class_name)
         return cls
@@ -49,7 +49,7 @@ class ReflectionHandler:
 
     @staticmethod
     def _get_filenames(class_name: str, subdirectory_name: str = "", partial=False):
-        pattern = f"immuneML/**/*{class_name}.py" if partial else f"immuneML/**/{class_name}.py"
+        pattern = f"ligo/**/*{class_name}.py" if partial else f"ligo/**/{class_name}.py"
 
         filenames = list(EnvironmentSettings.root_path.glob(pattern))
         filenames = [f for f in filenames if subdirectory_name in "/".join(f.parts)]
