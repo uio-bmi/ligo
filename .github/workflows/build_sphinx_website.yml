@@ -24,6 +24,7 @@ jobs:
       - name: make html & commit the changes
         run: |
           export PYTHONPATH=.
+          python scripts/specs_docs_generation.py
           sphinx-build -b html ./docs_source ./docs
           git config --global user.email "github@action.com"
           git config user.name "pavlovicmilena"
