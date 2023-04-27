@@ -39,33 +39,32 @@ class FeasibilitySummaryState:
 
 class FeasibilitySummaryInstruction(Instruction):
     """
-        FeasibilitySummaryInstruction instruction creates a small synthetic dataset and reports summary metrics to show if the simulation with the given
-        parameters is feasible. The input parameters to this analysis are the name of the simulation
-        (the same that can be used with LigoSim instruction later if feasibility analysis looks acceptable), and the number of sequences to
-        simulate for estimating the feasibility.
+    FeasibilitySummaryInstruction instruction creates a small synthetic dataset and reports summary metrics to show if the simulation with the given
+    parameters is feasible. The input parameters to this analysis are the name of the simulation
+    (the same that can be used with LigoSim instruction later if feasibility analysis looks acceptable), and the number of sequences to
+    simulate for estimating the feasibility.
 
-        The feasibility analysis is performed for each generative model separately as these could differ in the analyses that will be reported.
+    The feasibility analysis is performed for each generative model separately as these could differ in the analyses that will be reported.
 
-        Arguments:
+    Arguments:
 
-            simulation (str): a name of a simulation object containing a list of SimConfigItem as specified under definitions key; defines how
-            to combine signals with simulated data; specified under definitions
+    - simulation (str): a name of a simulation object containing a list of SimConfigItem as specified under definitions key; defines how to combine signals with simulated data; specified under definitions
 
-            sequence_count (int): how many sequences to generate to estimate feasibility (default value: 100 000)
+    - sequence_count (int): how many sequences to generate to estimate feasibility (default value: 100 000)
 
-            number_of_processes (int): for the parts of analysis that are possible to parallelize, how many processes to use
+    - number_of_processes (int): for the parts of analysis that are possible to parallelize, how many processes to use
 
-        YAML specification:
+    YAML specification:
 
-        .. indent with spaces
-        .. code-block:: yaml
+    .. indent with spaces
+    .. code-block:: yaml
 
-            my_feasibility_summary: # user-defined name of the instruction
-                type: FeasibilitySummaryInstruction # which instruction to execute
-                simulation: sim1
-                sequence_count: 10000
+        my_feasibility_summary: # user-defined name of the instruction
+            type: FeasibilitySummaryInstruction # which instruction to execute
+            simulation: sim1
+            sequence_count: 10000
 
-        """
+    """
 
     def __init__(self, simulation, sequence_count: int, number_of_processes: int, signals: List[Signal], name: str = None):
         self.state = FeasibilitySummaryState(simulation=simulation, sequence_count=sequence_count, signals=signals, name=name)

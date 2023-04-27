@@ -20,17 +20,11 @@ class SeedMotif(Motif):
     When instantiation_strategy is set, specific motif instances will be
     produced by calling instantiate_motif(seed) method of instantiation_strategy
 
-
     Arguments:
 
-        seed (str): An amino acid sequence that represents the basic motif seed. All implanted motifs correspond to the seed, or a modified
-        version thereof, as specified in it's instantiation strategy. If this argument is set, seed_chain1 and seed_chain2 arguments are not used.
+    - seed (str): An amino acid sequence that represents the basic motif seed. All implanted motifs correspond to the seed, or a modified version thereof, as specified in it's instantiation strategy. If this argument is set, seed_chain1 and seed_chain2 arguments are not used.
 
-        instantiation (:py:obj:`~immuneML.simulation.motif_instantiation_strategy.MotifInstantiationStrategy.MotifInstantiationStrategy`):
-        Which strategy to use for implanting the seed. It should be one of the classes inheriting MotifInstantiationStrategy.
-        In the YAML specification this can either be one of these values as a string in which case the default parameters will be used.
-        Alternatively, instantiation can be specified with parameters as in the example YAML specification below. For the detailed list of
-        parameters, see the specific instantiation strategies below.
+    - instantiation (:py:obj:`~immuneML.simulation.motif_instantiation_strategy.MotifInstantiationStrategy.MotifInstantiationStrategy`): Which strategy to use for implanting the seed. It should be one of the classes inheriting MotifInstantiationStrategy. In the YAML specification this can either be one of these values as a string in which case the default parameters will be used. Alternatively, instantiation can be specified with parameters as in the example YAML specification below. For the detailed list of parameters, see the specific instantiation strategies below.
 
     YAML specification:
 

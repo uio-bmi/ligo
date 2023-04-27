@@ -39,18 +39,17 @@ class LigoSimInstruction(Instruction):
 
     Arguments:
 
-        simulation (str): a name of a simulation object containing a list of SimConfigItem as specified under definitions key; defines how
-        to combine signals with simulated data; specified under definitions
+    - simulation (str): a name of a simulation object containing a list of SimConfigItem as specified under definitions key; defines how to combine signals with simulated data; specified under definitions
 
-        store_signal_in_receptors (bool): for repertoire-level simulation, whether to store the information on what exact motif is implanted in each receptor
+    - store_signal_in_receptors (bool): for repertoire-level simulation, whether to store the information on what exact motif is implanted in each receptor
 
-        sequence_batch_size (bool): how many sequences to generate at once using the generative model before checking for signals and filtering
+    - sequence_batch_size (bool): how many sequences to generate at once using the generative model before checking for signals and filtering
 
-        max_iterations (int): how many iterations are allowed when creating sequences
+    - max_iterations (int): how many iterations are allowed when creating sequences
 
-        export_p_gens (bool): whether to compute generation probabilities (if supported by the generative model) for sequences and include them as part of output
+    - export_p_gens (bool): whether to compute generation probabilities (if supported by the generative model) for sequences and include them as part of output
 
-        number_of_processes (int): determines how many simulation items can be simulated in parallel
+    - number_of_processes (int): determines how many simulation items can be simulated in parallel
 
     YAML specification:
 

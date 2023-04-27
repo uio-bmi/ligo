@@ -86,7 +86,7 @@ class InstructionParser:
         inst_file_path = inst_path / "instructions.rst"
         with inst_file_path.open('w') as file:
             for key, item in inst_paths.items():
-                lines = f"{key}\n---------------------------\n.. include:: {os.path.relpath(item, EnvironmentSettings.source_docs_path)}\n"
+                lines = f"{key}\n---------------------------\n\n.. include:: {os.path.relpath(item, EnvironmentSettings.source_docs_path)}\n\n"
                 file.writelines(lines)
 
     @staticmethod
@@ -94,5 +94,6 @@ class InstructionParser:
         file_path = path / f"{name}.rst"
 
         with file_path.open("w") as file:
-            write_class_docs(DocumentationFormat(instruction, "", DocumentationFormat.LEVELS[1]), file)
+            doc_format = DocumentationFormat(instruction, "", DocumentationFormat.LEVELS[1])
+            write_class_docs(doc_format, file)
         return file_path

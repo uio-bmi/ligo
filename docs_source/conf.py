@@ -46,8 +46,6 @@ html_favicon = 'favicon.ico'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
@@ -70,7 +68,7 @@ napoleon_include_init_with_doc = True
 
 # autodoc
 
-autodoc_mock_imports = ["pandas", "sklearn", "numpy", "pystache", 'bionumpy', 'npstructures', 'plotly', 'scipy']
+# autodoc_mock_imports = ["pandas", "sklearn", "numpy", "pystache", 'bionumpy', 'npstructures', 'plotly', 'scipy']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

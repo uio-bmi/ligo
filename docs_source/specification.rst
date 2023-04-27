@@ -33,13 +33,18 @@ The overall structure of the YAML specification is the following:
 Definitions
 ===========
 
+Supported dataset formats
+----------
+
+.. include:: ./specs/definitions/datasets.rst
+
 Simulation
 ----------
 
-.. include:: ../specs/definitions/simulation.rst
+.. include:: ./specs/definitions/simulation.rst
 
 Instructions
 ============
 
-.. include:: ../specs/instructions/instructions.rst
+.. include:: ./specs/instructions/instructions.rst
 

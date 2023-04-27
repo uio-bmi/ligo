@@ -2,14 +2,13 @@ from inspect import signature
 from pathlib import Path
 
 from ligo.IO.dataset_import.DataImport import DataImport
-from ligo.dsl.DefaultParamsLoader import DefaultParamsLoader
 from ligo.dsl.definition_parsers.DefinitionParserOutput import DefinitionParserOutput
 from ligo.dsl.definition_parsers.MotifParser import MotifParser
 from ligo.dsl.definition_parsers.SignalParser import SignalParser
 from ligo.dsl.definition_parsers.SimulationParser import SimulationParser
-from ligo.dsl.import_parsers.ImportParser import ImportParser
 from ligo.dsl.symbol_table.SymbolTable import SymbolTable
-from ligo.simulation.implants.Motif import Motif
+from ligo.simulation.implants.SeedMotif import SeedMotif
+from ligo.simulation.implants.LigoPWM import LigoPWM
 from ligo.simulation.implants.Signal import Signal
 from ligo.simulation.motif_instantiation_strategy.MotifInstantiationStrategy import MotifInstantiationStrategy
 from ligo.util.PathBuilder import PathBuilder
@@ -51,12 +50,10 @@ class DefinitionParser:
 
     @staticmethod
     def make_simulation_docs(path: Path):
-        instantiations = ReflectionHandler.all_nonabstract_subclasses(MotifInstantiationStrategy, "Instantiation", "motif_instantiation_strategy/")
-        instantiations = [DocumentationFormat(inst, inst.__name__.replace('Instantiation', ""), DocumentationFormat.LEVELS[2])
-                          for inst in instantiations]
 
-        classes_to_document = [DocumentationFormat(Motif, Motif.__name__, DocumentationFormat.LEVELS[1])] + instantiations + \
-                              [DocumentationFormat(Signal, Signal.__name__, DocumentationFormat.LEVELS[1])]
+        classes_to_document = [DocumentationFormat(SeedMotif, SeedMotif.__name__, DocumentationFormat.LEVELS[1]),
+                               DocumentationFormat(LigoPWM, "PWM", DocumentationFormat.LEVELS[1]),
+                               DocumentationFormat(Signal, Signal.__name__, DocumentationFormat.LEVELS[1])]
 
         file_path = path / "simulation.rst"
         with file_path.open("w") as file:

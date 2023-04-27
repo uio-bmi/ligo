@@ -38,9 +38,9 @@ class ImmuneMLImport(DataImport):
 
     Arguments:
 
-        path (str): The path to the previously created dataset file. This file should have an '.iml_dataset' extension. If the path has not been specified, immuneML attempts to load the dataset from a specified metadata file (only for RepertoireDatasets).
+    - path (str): The path to the previously created dataset file. This file should have an '.iml_dataset' extension. If the path has not been specified, immuneML attempts to load the dataset from a specified metadata file (only for RepertoireDatasets).
 
-        metadata_file (str): An optional metadata file for a RepertoireDataset. If specified, the RepertoireDataset metadata will be updated to the newly specified metadata without otherwise changing the Repertoire objects
+    - metadata_file (str): An optional metadata file for a RepertoireDataset. If specified, the RepertoireDataset metadata will be updated to the newly specified metadata without otherwise changing the Repertoire objects
 
 
     YAML specification:

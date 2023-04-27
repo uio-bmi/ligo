@@ -13,15 +13,15 @@ from ligo.simulation.implants.Motif import Motif
 @dataclass
 class LigoPWM(Motif):
     """
-    Class describing positional weight matrix and using bionumpy's LigoPWM internally.
-    For more details on bionumpy's implementation of PWM, see the documentation at
-    https://bionumpy.github.io/bionumpy/tutorials/position_weight_matrix.html.
+    Motifs defined by a positional weight matrix and using bionumpy's PWM internally.
+    For more details on bionumpy's implementation of PWM, as well as for supported formats,
+    see the documentation at https://bionumpy.github.io/bionumpy/tutorials/position_weight_matrix.html.
 
     Arguments:
 
-        file_path: path to the file where the LigoPWM is stored
+    - file_path: path to the file where the LigoPWM is stored
 
-        threshold (float): when matching LigoPWM to a sequence, this is the threshold to consider the sequence as containing the motif
+    - threshold (float): when matching LigoPWM to a sequence, this is the threshold to consider the sequence as containing the motif
 
     YAML specification:
 
