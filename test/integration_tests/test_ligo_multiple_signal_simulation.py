@@ -19,12 +19,10 @@ class TestSignalPairLigoSimulation(TestCase):
             "definitions": {
                 "motifs": {
                     "motif1": {
-                        "seed": "AS",
-                        "instantiation": "GappedKmer"
+                        "seed": "AS"
                     },
                     "motif2": {
-                        "seed": "GG",
-                        "instantiation": "GappedKmer"
+                        "seed": "GG"
                     }
                 },
                 "signals": {

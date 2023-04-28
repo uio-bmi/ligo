@@ -41,7 +41,7 @@ class MotifParser:
             "MotifParser: please check the documentation for motif definition. Either parameter `seed` has to be set (for simulation in single " \
             "chain data) or all of the parameters `name_chain1`, `name_chain2`, `seed_chain1`, `seed_chain2` (for simulation for paired chain data)."
 
-        if motif_dict['hamming_distance_probabilities'] is not None:
+        if 'hamming_distance_probabilities' in motif_dict and motif_dict['hamming_distance_probabilities'] is not None:
             motif_dict['hamming_distance_probabilities'] = {key: float(value) for key, value in motif_dict['hamming_distance_probabilities'].items()}
             assert all(isinstance(key, int) for key in motif_dict['hamming_distance_probabilities'].keys()) \
                    and all(isinstance(val, float) for val in motif_dict['hamming_distance_probabilities'].values()) \
