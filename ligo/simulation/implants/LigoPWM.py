@@ -19,9 +19,9 @@ class LigoPWM(Motif):
 
     Arguments:
 
-    - file_path: path to the file where the LigoPWM is stored
+    - file_path: path to the file where the PWM is stored
 
-    - threshold (float): when matching LigoPWM to a sequence, this is the threshold to consider the sequence as containing the motif
+    - threshold (float): when matching PWM to a sequence, this is the threshold to consider the sequence as containing the motif
 
     YAML specification:
 
