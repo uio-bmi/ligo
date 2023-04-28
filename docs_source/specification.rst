@@ -33,15 +33,22 @@ The overall structure of the YAML specification is the following:
 Definitions
 ===========
 
-Supported dataset formats
-----------
-
-.. include:: ./specs/definitions/datasets.rst
-
 Simulation
 ----------
 
 .. include:: ./specs/definitions/simulation.rst
+
+Generative models
+-----------------
+
+.. include:: ./specs/definitions/gen_models.rst
+
+Supported dataset formats
+--------------------------
+
+These dataset formats can be used in combination with :ref:`ExperimentalImport` generative model.
+
+.. include:: ./specs/definitions/datasets.rst
 
 Instructions
 ============

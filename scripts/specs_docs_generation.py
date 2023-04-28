@@ -12,7 +12,6 @@ def generate_docs(docs_path: str):
 
     DefinitionParser.generate_docs(docs_path)
     InstructionParser.generate_docs(docs_path)
-    OutputParser.generate_docs(docs_path)
     print(f"Specification documentation is generated at {docs_path}.")
 
 

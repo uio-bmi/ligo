@@ -8,6 +8,50 @@ from ligo.simulation.simulation_strategy.SimulationStrategy import SimulationStr
 
 @dataclass
 class SimConfig:
+    """
+    Defines all parameters of the simulation.
+
+    Arguments:
+
+    - sim_items (dict): a list of SimConfigItems defining individual units of simulation
+
+    - is_repertoire (bool): whether the simulation is on a repertoire (person) or sequence/receptor level
+
+    - paired (bool): if the simulation should output paired data or not
+
+    - sequence_type (str): either amino_acid or nucleotide
+
+    - simulation_strategy (str): either RejectionSampling or Implanting, see the tutorials for more information on choosing one of these
+
+    - keep_p_gen_dist (bool): if possible, whether to keep the distribution of generation probabilities of the sequences the same as provided by the model without any signals
+
+    - p_gen_bin_count (int): if keep_p_gen_dist is true, how many bins to use to approximate the generation probability distribution
+
+    - remove_seqs_with_signals (bool): if true, it explicitly controls the proportions of signals in sequences and removes any accidental occurrences
+
+    YAML specification:
+
+    .. code-block:: yaml
+
+      simulations:
+        sim1:
+          is_repertoire: false
+          paired: false
+          sequence_type: amino_acid
+          simulation_strategy: RejectionSampling
+          sim_items:
+            sim_item1: # group of sequences with same simulation params
+              generative_model:
+                chain: beta
+                default_model_name: humanTRB
+                model_path: null
+                type: OLGA
+              number_of_examples: 100
+              seed: 1002
+              signals:
+               signal1: 1
+
+    """
     sim_items: List[SimConfigItem] = None
     identifier: str = None
     is_repertoire: bool = None

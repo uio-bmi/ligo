@@ -27,8 +27,7 @@ from ligo.util.PathBuilder import PathBuilder
 @dataclass
 class OLGA(GenerativeModel):
     """
-    This class is an immuneML wrapper around OLGA package as described by Sethna et al. 2019 that is available in `olga` python package
-    available at PyPI and at the following GitHub repository: https://github.com/statbiophys/OLGA.
+    This is a wrapper around OLGA package as described by Sethna et al. 2019 (`olga` package on PyPI or GitHub: https://github.com/statbiophys/OLGA).
 
     Reference:
 
@@ -37,8 +36,26 @@ class OLGA(GenerativeModel):
     https://doi.org/10.1093/bioinformatics/btz035
 
     Note:
-        - OLGA model generates sequences that correspond to IMGT junction and are used for matching as such. See the https://github.com/statbiophys/OLGA for more details.
-        - Gene names are as provided in OLGA (either in default models or in the user-specified model files). For simulation, one should use gene names in the same format.
+
+    - OLGA model generates sequences that correspond to IMGT junction and are used for matching as such. See the https://github.com/statbiophys/OLGA for more details.
+
+    - Gene names are as provided in OLGA (either in default models or in the user-specified model files). For simulation, one should use gene names in the same format.
+
+    Arguments:
+
+    - model_path (str): if not default model, this parameter should point to a folder where the four OLGA/IGOR format files are stored (could also be inferred from some experimental data)
+
+    - default_model_name (str): if not using custom models, one of the OLGA default models could be specified here; the value should be the same as it would be passed to command line in OLGA: e.g., humanTRB, human IGH
+
+    YAML specification:
+
+    .. indent with spaces
+    .. code-block:: yaml
+
+        generative_model:
+            type: OLGA
+            model_path: None
+            default_model_name: humanTRB
 
     """
     model_path: Path

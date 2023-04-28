@@ -7,10 +7,12 @@ from ligo.dsl.definition_parsers.MotifParser import MotifParser
 from ligo.dsl.definition_parsers.SignalParser import SignalParser
 from ligo.dsl.definition_parsers.SimulationParser import SimulationParser
 from ligo.dsl.symbol_table.SymbolTable import SymbolTable
-from ligo.simulation.implants.SeedMotif import SeedMotif
+from ligo.simulation.SimConfig import SimConfig
+from ligo.simulation.SimConfigItem import SimConfigItem
+from ligo.simulation.generative_models.GenerativeModel import GenerativeModel
 from ligo.simulation.implants.LigoPWM import LigoPWM
+from ligo.simulation.implants.SeedMotif import SeedMotif
 from ligo.simulation.implants.Signal import Signal
-from ligo.simulation.motif_instantiation_strategy.MotifInstantiationStrategy import MotifInstantiationStrategy
 from ligo.util.PathBuilder import PathBuilder
 from ligo.util.ReflectionHandler import ReflectionHandler
 from scripts.DocumentatonFormat import DocumentationFormat
@@ -47,13 +49,16 @@ class DefinitionParser:
         def_path = PathBuilder.build(path / "definitions")
         DefinitionParser.make_dataset_docs(def_path)
         DefinitionParser.make_simulation_docs(def_path)
+        DefinitionParser.make_gen_model_docs(def_path)
 
     @staticmethod
     def make_simulation_docs(path: Path):
 
         classes_to_document = [DocumentationFormat(SeedMotif, SeedMotif.__name__, DocumentationFormat.LEVELS[1]),
                                DocumentationFormat(LigoPWM, "PWM", DocumentationFormat.LEVELS[1]),
-                               DocumentationFormat(Signal, Signal.__name__, DocumentationFormat.LEVELS[1])]
+                               DocumentationFormat(Signal, Signal.__name__, DocumentationFormat.LEVELS[1]),
+                               DocumentationFormat(SimConfig, "Simulation config", DocumentationFormat.LEVELS[1]),
+                               DocumentationFormat(SimConfigItem, "Simulation config item", DocumentationFormat.LEVELS[1])]
 
         file_path = path / "simulation.rst"
         with file_path.open("w") as file:
@@ -64,4 +69,9 @@ class DefinitionParser:
     def make_dataset_docs(path: Path):
         import_classes = ReflectionHandler.all_nonabstract_subclasses(DataImport, "Import", "dataset_import/")
         make_docs(path, import_classes, "datasets.rst", "Import")
+
+    @staticmethod
+    def make_gen_model_docs(path: Path):
+        gen_models = ReflectionHandler.all_nonabstract_subclasses(GenerativeModel, "", "simulation/generative_models/")
+        make_docs(path, gen_models, "gen_models.rst", "")
 

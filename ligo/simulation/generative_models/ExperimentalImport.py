@@ -17,6 +17,14 @@ class ExperimentalImport(GenerativeModel):
     """
     Allows to import existing experimental data and do annotations and simulations on top of them.
 
+    Arguments:
+
+    - import_format (str): see the list of supported formats under :ref:`Supported dataset formats`
+
+    - tmp_import_path (str): where to store the imported files
+
+    - import_params (dict): as defined under the import format selected in the first parameter; for details see :ref:`Supported dataset formats`
+
     YAML specification:
 
     .. indent with spaces
