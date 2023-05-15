@@ -19,7 +19,7 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Affero General Public License v3"
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.11',
     packages=find_packages(exclude=["test", "test.*"]),
     package_data={
         'ligo': [str(Path('IO/dataset_import/conversion/*.csv')),
