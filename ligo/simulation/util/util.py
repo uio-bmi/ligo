@@ -256,7 +256,7 @@ def make_bnp_annotated_sequences(sequences: BackgroundSequences, bnp_data_class,
     kwargs = {**{s.id: signal_matrix[:, ind].astype(int) for ind, s in enumerate(all_signals)},
               **{f"{s.id}_positions": bnp.as_encoded_array(signal_positions[f"{s.id}_positions"], bnp.encodings.BaseEncoding) for ind, s in
                  enumerate(all_signals)},
-              **{field_name: getattr(sequences, field_name) for field_name in BackgroundSequences.__annotations__.keys()}}
+              **{field.name: getattr(sequences, field.name) for field in get_fields(BackgroundSequences)}}
 
     dc_fields = get_fields(bnp_data_class)
     if any([f'observed_{s.id}' in dc_fields for s in all_signals]):

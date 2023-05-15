@@ -36,7 +36,7 @@ class SimulationParser:
 def _parse_ligo_simulation(simulation: dict, key: str, symbol_table: SymbolTable) -> Tuple[SimConfig, dict]:
     location = SimulationParser.__name__
     valid_keys = {'is_repertoire': bool, 'paired': bool, 'sequence_type': str, 'p_gen_bin_count': int, 'simulation_strategy': str,
-                  'sim_items': dict, 'keep_p_gen_dist': bool, 'remove_seqs_with_signals': bool}
+                  'sim_items': dict, 'keep_p_gen_dist': bool, 'remove_seqs_with_signals': bool, 'species': str}
 
     simulation = {**DefaultParamsLoader.load("simulation", "ligo_sim_config"), **simulation}
 

@@ -202,6 +202,8 @@ class AIRRExporter(DataExporter):
     def _postprocess_dataframe(df, dataset_labels: dict):
         if "locus" in df.columns:
             df["locus"] = [Chain.get_chain(chain).value if chain and Chain.get_chain(chain) else '' for chain in df["locus"]]
+        else:
+            df['locus'] = df.apply(lambda row: Chain.get_chain(row['v_call'][:3]).value, axis=1)
 
         if "frame_type" in df.columns:
             AIRRExporter._enums_to_strings(df, "frame_type")

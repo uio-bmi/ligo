@@ -29,6 +29,8 @@ class SimConfig:
 
     - remove_seqs_with_signals (bool): if true, it explicitly controls the proportions of signals in sequences and removes any accidental occurrences
 
+    - species (str): species that the sequences come from; used to select correct genes to export full length sequences; default is 'human'
+
     YAML specification:
 
     .. code-block:: yaml
@@ -61,6 +63,7 @@ class SimConfig:
     p_gen_bin_count: int = None
     keep_p_gen_dist: bool = None
     remove_seqs_with_signals: bool = None
+    species: str = None
 
     def __str__(self):
         return ",\n".join(str(simulation_item) for simulation_item in self.sim_items)

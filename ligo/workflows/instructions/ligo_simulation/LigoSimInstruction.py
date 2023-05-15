@@ -121,7 +121,7 @@ class LigoSimInstruction(Instruction):
         examples = self._create_examples_wrapper()
         random.shuffle(examples)
 
-        labels = {signal.id: [True, False] for signal in self.state.signals}
+        labels = {**{signal.id: [True, False] for signal in self.state.signals}, **{'species': self.state.simulation.species}}
 
         if self.state.simulation.is_repertoire:
             self.state.resulting_dataset = RepertoireDataset.build_from_objects(labels=labels, repertoires=examples, name='simulated_dataset',
