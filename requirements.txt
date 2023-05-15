@@ -9,3 +9,5 @@ pystache
 pytest
 scipy
 npstructures
+stitchr
+IMGTgeneDL

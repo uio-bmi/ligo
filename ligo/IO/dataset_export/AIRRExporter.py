@@ -1,4 +1,4 @@
-# quality: gold
+import logging
 import math
 from enum import Enum
 from multiprocessing import Pool
@@ -7,6 +7,8 @@ from typing import List
 
 import airr
 import pandas as pd
+from Stitchr.stitchrfunctions import autofill_input
+from olga.utils import nt2aa
 
 from ligo.IO.dataset_export.DataExporter import DataExporter
 from ligo.data_model.dataset import Dataset
@@ -44,7 +46,7 @@ class AIRRExporter(DataExporter):
             repertoire_path = PathBuilder.build(path / repertoire_folder)
 
             with Pool(processes=number_of_processes) as pool:
-                pool.starmap(AIRRExporter.export_repertoire, [(repertoire, repertoire_path) for repertoire in dataset.repertoires])
+                pool.starmap(AIRRExporter.export_repertoire, [(repertoire, repertoire_path, dataset.labels) for repertoire in dataset.repertoires])
 
             AIRRExporter.export_updated_metadata(dataset, path, repertoire_folder)
         else:
@@ -60,15 +62,15 @@ class AIRRExporter(DataExporter):
                 else:
                     df = AIRRExporter._sequences_to_dataframe(batch)
 
-                df = AIRRExporter._postprocess_dataframe(df)
+                df = AIRRExporter._postprocess_dataframe(df, dataset.labels)
                 airr.dump_rearrangement(df, str(filename))
 
                 index += 1
 
     @staticmethod
-    def export_repertoire(repertoire: Repertoire, repertoire_path: Path):
+    def export_repertoire(repertoire: Repertoire, repertoire_path: Path, dataset_labels: dict):
         df = AIRRExporter._repertoire_to_dataframe(repertoire)
-        df = AIRRExporter._postprocess_dataframe(df)
+        df = AIRRExporter._postprocess_dataframe(df, dataset_labels)
         output_file = repertoire_path / f"{repertoire.data_filename.stem if 'subject_id' not in repertoire.metadata else repertoire.metadata['subject_id']}.tsv"
         airr.dump_rearrangement(df, str(output_file))
 
@@ -108,6 +110,32 @@ class AIRRExporter(DataExporter):
         df.drop(columns=['region_type'], inplace=True)
 
         return df
+
+    @staticmethod
+    def add_full_length_seq(df, species, unique_chains):
+        if unique_chains is not None and len(unique_chains) <= 2 and all(chain in [Chain.ALPHA.value, Chain.BETA.value] for chain in unique_chains):
+            try:
+                from Stitchr import stitchr as st
+                from Stitchr import stitchrfunctions as fxn
+
+                tcr_dat, functionality, partial = {}, {}, {}
+
+                for chain in unique_chains:
+                    tcr_dat[chain], functionality[chain], partial[chain] = fxn.get_imgt_data(chain, st.gene_types, species.upper())
+
+                codons = fxn.get_optimal_codons('', species)
+
+                df['full_sequence'] = df.apply(lambda row: st.stitch({'v': row['v_call'], 'j': row['j_call'], 'cdr3': row['cdr3_aa'],
+                                                                      'skip_c_checks': False, '5_prime_seq': '', '3_prime_seq': '', 'name': '',
+                                                                      'c': autofill_input({'c': None, 'species': species.upper(), 'j': row['j_call'],
+                                                                                           'l': row['v_call']}, row['locus'])['c'],
+                                                                      'species': species.upper(), 'l': row['v_call']},
+                                                                tcr_dat[row['locus']], functionality[row['locus']], partial[row['locus']], codons, 3, '')[1], axis=1)
+
+                df['full_sequence_aa'] = df.apply(lambda row: nt2aa(row['full_sequence']), axis=1)
+
+            except Exception as e:
+                logging.warning(f"An error occurred while exporting full length sequence. Only CDR3/JUNCTION region is exported instead.\nFull error: {e}")
 
     @staticmethod
     def _receptors_to_dataframe(receptors: List[Receptor]):
@@ -171,7 +199,7 @@ class AIRRExporter(DataExporter):
                     df.at[index, f"{gene}_{allele_name}"] = row[f"{gene}_{gene_name}"]
 
     @staticmethod
-    def _postprocess_dataframe(df):
+    def _postprocess_dataframe(df, dataset_labels: dict):
         if "locus" in df.columns:
             df["locus"] = [Chain.get_chain(chain).value if chain and Chain.get_chain(chain) else '' for chain in df["locus"]]
 
@@ -190,6 +218,8 @@ class AIRRExporter(DataExporter):
 
         if "region_type" in df.columns:
             df.drop(columns=["region_type"], inplace=True)
+
+        AIRRExporter.add_full_length_seq(df, dataset_labels.get('species', None) if dataset_labels else None, list(set(df['locus'].values.tolist())))
 
         return df
 

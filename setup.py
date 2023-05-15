@@ -13,7 +13,8 @@ setup(
     author="Milena Pavlovic",
     author_email="milenpa@student.matnat.uio.no",
     url="https://github.com/uio-bmi/ligo",
-    install_requires=["pandas", "bionumpy", "numpy", "olga", "pyyaml", "airr<1.4", "plotly", "pystache", "scipy", 'npstructures'],
+    install_requires=["pandas", "bionumpy", "numpy", "olga", "pyyaml", "airr<1.4", "plotly", "pystache", "scipy", 'npstructures', 'stitchr',
+                      'IMGTgeneDL'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Affero General Public License v3"

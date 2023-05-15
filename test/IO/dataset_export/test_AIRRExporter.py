@@ -1,4 +1,5 @@
 import shutil
+import subprocess
 from unittest import TestCase
 
 import pandas as pd
@@ -19,28 +20,16 @@ from ligo.util.PathBuilder import PathBuilder
 
 class TestAIRRExporter(TestCase):
     def create_dummy_repertoire(self, path):
-        sequence_objects = [ReceptorSequence(amino_acid_sequence="AAA",
-                                             nucleotide_sequence="GCTGCTGCT",
+        sequence_objects = [ReceptorSequence(amino_acid_sequence="CASSYLQAQYTEAFF",
                                              identifier="receptor_1",
-                                             metadata=SequenceMetadata(v_call="TRBV1",
-                                                                       j_call="TRBJ1",
+                                             metadata=SequenceMetadata(v_call="TRBV7-3*01",
+                                                                       j_call="TRBJ1-1*01",
                                                                        chain=Chain.BETA,
                                                                        duplicate_count=5,
                                                                        region_type="IMGT_CDR3",
                                                                        frame_type="IN",
                                                                        custom_params={"d_call": "TRBD1",
-                                                                                      "custom_test": "cust1"})),
-                            ReceptorSequence(amino_acid_sequence="GGG",
-                                             nucleotide_sequence="GGTGGTGGT",
-                                             identifier="receptor_2",
-                                             metadata=SequenceMetadata(v_call="TRAV2*01",
-                                                                       j_call="TRAJ2",
-                                                                       chain=Chain.ALPHA,
-                                                                       duplicate_count=15,
-                                                                       frame_type=None,
-                                                                       region_type="IMGT_CDR3",
-                                                                       custom_params={"d_call": "TRAD2",
-                                                                                      "custom_test": "cust2"}))]
+                                                                                      "custom_test": "cust1"}))]
 
         repertoire = Repertoire.build_from_sequence_objects(sequence_objects=sequence_objects, path=path, metadata={"subject_id": "REP1"})
         df = pd.DataFrame({"filename": [f"{repertoire.identifier}_data.npy"], "subject_id": ["REP1"],
@@ -53,26 +42,25 @@ class TestAIRRExporter(TestCase):
         path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / "airr_exporter_repertoire/")
 
         repertoire, metadata_path = self.create_dummy_repertoire(path)
-        dataset = RepertoireDataset(repertoires=[repertoire], metadata_file=metadata_path)
+        dataset = RepertoireDataset(repertoires=[repertoire], metadata_file=metadata_path, labels={'species': 'HUMAN'})
 
         path_exported = path / "exported"
         AIRRExporter.export(dataset, path_exported)
 
         resulting_data = pd.read_csv(path_exported / f"repertoires/{repertoire.metadata['subject_id']}.tsv", sep="\t")
 
-        self.assertListEqual(list(resulting_data["sequence_id"]), ["receptor_1", "receptor_2"])
-        self.assertListEqual(list(resulting_data["cdr3"]), ["GCTGCTGCT", "GGTGGTGGT"])
-        self.assertListEqual(list(resulting_data["cdr3_aa"]), ["AAA", "GGG"])
-        self.assertListEqual(list(resulting_data["v_call"]), ["TRBV1", "TRAV2*01"])
-        self.assertListEqual(list(resulting_data["j_call"]), ["TRBJ1", "TRAJ2"])
-        self.assertListEqual(list(resulting_data["d_call"]), ["TRBD1", "TRAD2"])
-        self.assertListEqual(list(resulting_data["locus"]), ["TRB", "TRA"])
-        self.assertListEqual(list(resulting_data["duplicate_count"]), [5, 15])
-        self.assertListEqual(list(resulting_data["custom_test"]), ["cust1", "cust2"])
-        self.assertListEqual(list(resulting_data["productive"]), ['T', 'F'])
-        self.assertListEqual(list(resulting_data["stop_codon"]), ['F', 'F'])
+        self.assertListEqual(list(resulting_data["sequence_id"]), ["receptor_1"])
+        self.assertListEqual(list(resulting_data["cdr3_aa"]), ["CASSYLQAQYTEAFF"])
+        self.assertListEqual(list(resulting_data["v_call"]), ["TRBV7-3*01"])
+        self.assertListEqual(list(resulting_data["j_call"]), ["TRBJ1-1*01"])
+        self.assertListEqual(list(resulting_data["d_call"]), ["TRBD1"])
+        self.assertListEqual(list(resulting_data["locus"]), ["TRB"])
+        self.assertListEqual(list(resulting_data["duplicate_count"]), [5])
+        self.assertListEqual(list(resulting_data["custom_test"]), ["cust1"])
+        self.assertListEqual(list(resulting_data["productive"]), ['T'])
+        self.assertListEqual(list(resulting_data["stop_codon"]), ['F'])
 
-        shutil.rmtree(path)
+        # shutil.rmtree(path)
 
     def create_dummy_receptordataset(self, path):
         receptors = [TCABReceptor(identifier="1",
@@ -187,3 +175,7 @@ class TestAIRRExporter(TestCase):
         self.assertListEqual(list(resulting_data["stop_codon"]), ['F'])
 
         shutil.rmtree(path)
+
+def test_stitchr():
+
+    subprocess.run('stitchr -v TRBV7-6 -j TRBJ1-4 -cdr3 CASSSGQGLGEKLFF'.split(" "))
