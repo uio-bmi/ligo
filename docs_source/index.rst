@@ -7,7 +7,7 @@ More detailed documentation is coming soon!
 
 
 .. toctree::
-  :maxdepth: 3
+  :maxdepth: 1
   :caption: Contents
 
   quickstart
