@@ -60,7 +60,7 @@ class TestAIRRExporter(TestCase):
         self.assertListEqual(list(resulting_data["productive"]), ['T'])
         self.assertListEqual(list(resulting_data["stop_codon"]), ['F'])
 
-        # shutil.rmtree(path)
+        shutil.rmtree(path)
 
     def create_dummy_receptordataset(self, path):
         receptors = [TCABReceptor(identifier="1",
