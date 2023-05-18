@@ -31,8 +31,106 @@ TRBs will be reported as a triple of TRBV gene name, CDR3 AA sequence, and TRBJ 
 YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Expected output
+Now we need to define the YAML file describing the simulation parameters. We define the immune signal 1 and 2 and the number of TRBs per each signal in the **definitions** section and technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.  
+
+Here is the complete YAML specification for the simulation:
+
+.. code-block:: yaml
+
+  definitions:
+    motifs:
+      motif1:
+        instantiation: GappedKmer
+        seed: AS 
+      motif2:
+        instantiation:
+          GappedKmer:
+            max_gap: 2
+            min_gap: 1
+        seed: G/G
+    signals:
+      signal1:
+        v_call: TRBV7
+        motifs:
+        - motif1
+      signal2:
+        motifs:
+        - motif2
+    simulations:
+      sim1:
+        is_repertoire: false
+        paired: false
+        sequence_type: amino_acid
+        simulation_strategy: RejectionSampling
+        sim_items:
+          sim_item1: # group of sequences with same sim params
+            generative_model:
+              chain: beta
+              default_model_name: humanTRB
+              model_path: null
+              type: OLGA
+            number_of_examples: 100
+            seed: 1002
+            signals:
+             signal1: 1
+          sim_item2: # group of sequences with same sim params
+            generative_model:
+              chain: beta
+              default_model_name: humanTRB
+              model_path: null
+              type: OLGA
+            number_of_examples: 100
+            seed: 2
+            signals:
+              signal2: 1 # all receptors will have the signal
+          sim_item3: # group of sequences with same sim params
+            generative_model:
+              chain: beta
+              default_model_name: humanTRB
+              model_path: null
+              type: OLGA
+            number_of_examples: 100
+            seed: 5231
+            signals: {} # no signal -> background sequences
+  instructions:
+    my_sim_inst:
+      export_p_gens: false # could take some time to compute
+      max_iterations: 100
+      number_of_processes: 4
+      sequence_batch_size: 1000
+      simulation: sim1
+      store_signal_in_receptors: true
+      type: LigoSim
+
+
+Running LIgO
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After saving the yaml specification to a file (e.g., quickstart.yaml), you can proceed with the analysis by following these steps:
+
+#. Activate the virtual environment where you have installed LIgO, for example
+
+.. code-block:: console
+
+  source ligo_env/bin/activate
+  
+#. Navigate to the directory where the yaml specification (quickstart.yaml) was saved.
+
+#. Execute the following command:
+
+.. code-block:: console
+
+  ligo quickstart.yaml quickstart_output
+  
+Note that the output folder (quickstart_output) should not exist before the run.
+
+
+Understanding the output
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Next steps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 
 How to use LIgO for reperoire-level simulation
