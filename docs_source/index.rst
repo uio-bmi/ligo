@@ -1,9 +1,18 @@
 Welcome to the LIgO documentation!
 ======================================
 
-LIgO is a Python tool for simulation of adaptive immune receptors and repertoires.
+LIgO is a Python tool for simulation of adaptive immune receptors (AIRs) and repertoires (AIRRs) with known ground-truth immune signals for the development and benchmarking of AIRR-based machine learning. To get started using LigO right now, check out our :doc:`quickstart` tutorial.
 
-More detailed documentation is coming soon!
+Why should you use LIgO?
+---------------------------------
+* LIgO makes **simulations reproducible**, all simulation parameters are specified through a YAML file. 
+* LIgO contains **different types of immune events and immune signals**, including (gapped) k-mers, PWMs, specific V and J genes.
+* LIgO supports simulation of signal-specific AIRs using **rejection sampling or signal implantation** and **preserves the AIRR generation probability distribution**.
+* LIgO simulates synthetic AIRR data both on the **receptor and repertoire level, BCRs and TCRs, signle and paired-chain**.
+* LIgO **guides the user** and helps to set optimal simulation parameters.
+* LIgO outputs detailed information about presence and position(s) of immune signal(s) for every AIR in AIRR-compliant format.  
+
+**Please check out LIgO manuscript (link will be added soon) for more information!**
 
 
 .. toctree::
