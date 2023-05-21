@@ -28,7 +28,7 @@ In this quickstart tutorial we will simulate a dataset of 300 productive TRB rec
 
 TRBs will be reported as a triple of TRBV gene name, CDR3 AA sequence, and TRBJ gene name. If you also want to report the generation probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the *export_p_gens* parameter to true. Please keep in mind, that pgen evaluation may take some time. 
 
-YAML specification
+Step 1: YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now we need to define the YAML file describing the simulation parameters. We define the immune signal 1 and 2 and the number of TRBs per each signal in the **definitions** section and technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.  
@@ -103,7 +103,7 @@ Here is the complete YAML specification for the simulation:
       type: LigoSim
 
 
-Running LIgO
+Step 2: Running LIgO
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 After saving the yaml specification to a file (e.g., quickstart.yaml), you can proceed with the analysis by following these steps:
@@ -125,7 +125,7 @@ After saving the yaml specification to a file (e.g., quickstart.yaml), you can p
 Note that the output folder (quickstart_output) should not exist before the run.
 
 
-Understanding the output
+Step 3: Understanding the output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Next steps
@@ -135,3 +135,15 @@ Next steps
 
 How to use LIgO for reperoire-level simulation
 ---------------------------------
+
+Step 1: YAML specification
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Step 2: Running LIgO
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Step 3: Understanding the output
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Next steps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
