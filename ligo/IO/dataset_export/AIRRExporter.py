@@ -7,7 +7,6 @@ from typing import List
 
 import airr
 import pandas as pd
-from Stitchr.stitchrfunctions import autofill_input
 from olga.utils import nt2aa
 
 from ligo.IO.dataset_export.DataExporter import DataExporter
@@ -125,12 +124,7 @@ class AIRRExporter(DataExporter):
 
                 codons = fxn.get_optimal_codons('', species)
 
-                df['full_sequence'] = df.apply(lambda row: st.stitch({'v': row['v_call'], 'j': row['j_call'], 'cdr3': row['cdr3_aa'],
-                                                                      'skip_c_checks': False, '5_prime_seq': '', '3_prime_seq': '', 'name': '',
-                                                                      'c': autofill_input({'c': None, 'species': species.upper(), 'j': row['j_call'],
-                                                                                           'l': row['v_call']}, row['locus'])['c'],
-                                                                      'species': species.upper(), 'l': row['v_call']},
-                                                                tcr_dat[row['locus']], functionality[row['locus']], partial[row['locus']], codons, 3, '')[1], axis=1)
+                df['full_sequence'] = df.apply(lambda row: stitch_wrapper(row, st, fxn, species, tcr_dat, functionality, partial, codons), axis=1)
 
                 df['full_sequence_aa'] = df.apply(lambda row: nt2aa(row['full_sequence']), axis=1)
 
@@ -228,3 +222,20 @@ class AIRRExporter(DataExporter):
     @staticmethod
     def _enums_to_strings(df, field):
         df.loc[:, field] = [field_value.value if isinstance(field_value, Enum) else field_value for field_value in df.loc[:, field]]
+
+
+def stitch_wrapper(row, st, fxn, species, tcr_dat, functionality, partial, codons):
+    full_sequence = ""
+
+    try:
+        full_sequence = st.stitch({'v': row['v_call'], 'j': row['j_call'], 'cdr3': row['junction_aa'],
+                   'skip_c_checks': False, '5_prime_seq': '', '3_prime_seq': '', 'name': '',
+                   'c': fxn.autofill_input({'c': None, 'species': species.upper(), 'j': row['j_call'],
+                                            'l': row['v_call']}, row['locus'])['c'],
+                   'species': species.upper(), 'l': row['v_call']},
+                  tcr_dat[row['locus']], functionality[row['locus']], partial[row['locus']], codons, 3, '')[1]
+
+    except Exception as e:
+        logging.warning(f"An error occurred while constructing full sequence from {row}. Error log: {e}")
+
+    return full_sequence

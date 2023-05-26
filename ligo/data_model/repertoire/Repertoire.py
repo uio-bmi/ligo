@@ -82,16 +82,6 @@ class Repertoire(DatasetItem):
 
         field_list, values, dtype = Repertoire.process_custom_lists(custom_lists)
 
-        if signals:
-            signals_filtered = {f'{signal}_info': signals[signal] for signal in signals if signal not in Repertoire.FIELDS}
-            field_list_signals, values_signals, dtype_signals = Repertoire.process_custom_lists(signals_filtered)
-
-            for index, field_name in enumerate(field_list_signals):
-                if field_name not in field_list:
-                    field_list.append(field_name)
-                    values.append(values_signals[index])
-                    dtype.append(dtype_signals[index])
-
         for field in Repertoire.FIELDS:
             if eval(field) is not None and not all(el is None for el in eval(field)):
                 field_list.append(field)

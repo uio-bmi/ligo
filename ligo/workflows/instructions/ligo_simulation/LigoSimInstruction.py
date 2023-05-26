@@ -150,23 +150,43 @@ class LigoSimInstruction(Instruction):
                 examples = {**examples, **self._create_examples(item)}
 
         if self.state.simulation.paired:
-            examples = self._pair_examples(examples)
+            examples = self._pair_examples(examples, self.state.result_path / 'paired')
         else:
             examples = list(chain.from_iterable(examples.values()))
 
         return examples
 
-    def _pair_examples(self, examples: Dict[str, list]) -> list:
+    def _pair_examples(self, examples: Dict[str, list], path: Path) -> list:
         paired_examples = []
         pair_func = self._pair_repertoires if self.state.simulation.is_repertoire else self._pair_sequences
         for paired_item1, paired_item2 in self.state.simulation.paired:
-            paired_examples.extend(pair_func(examples[paired_item1], examples[paired_item2]))
+            paired_examples.extend(pair_func(examples[paired_item1], examples[paired_item2], path))
         return paired_examples
 
-    def _pair_repertoires(self, repertoires1: list, repertoires2: list) -> List[Repertoire]:
-        raise NotImplementedError
+    def _pair_repertoires(self, repertoires1: list, repertoires2: list, path: Path) -> List[Repertoire]:
+        assert len(repertoires1) == len(repertoires2), f"{LigoSimInstruction.__name__}: cannot create paired repertoires, number of repertoires per chain don't match: {len(repertoires1)} and {len(repertoires2)}."
+        PathBuilder.build(path)
+        paired_repertoires = []
+        for i in range(len(repertoires1)):
+            repertoire = self._pair_two_repertories(repertoires1[i], repertoires2[i], path)
+            paired_repertoires.append(repertoire)
+        return paired_repertoires
 
-    def _pair_sequences(self, sequences1: list, sequences2: list) -> List[Receptor]:
+    def _pair_two_repertories(self, repertoire1: Repertoire, repertoire2: Repertoire, path: Path) -> Repertoire:
+        assert repertoire1.get_element_count() == repertoire2.get_element_count(), f"{LigoSimInstruction.__name__}: cannot pair repertoires {repertoire1.identifier} and {repertoire2.identifier}, they have different number of sequences: {repertoire1.get_element_count()} and {repertoire2.get_element_count()}."
+
+        sequences = []
+        sequences1, sequences2 = repertoire1.sequences, repertoire2.sequences
+        for index, seq1, seq2 in zip(list(range(len(sequences1))), sequences1, sequences2):
+            seq1.metadata.cell_id = index
+            seq2.metadata.cell_id = index
+            seq1.identifier = f"{seq1.identifier}_{seq1.metadata.chain.value}"
+            seq2.identifier = f"{seq2.identifier}_{seq2.metadata.chain.value}"
+            sequences.extend([seq1, seq2])
+
+        return Repertoire.build_from_sequence_objects(sequences, path, metadata={**repertoire1.metadata, **repertoire2.metadata})
+
+    def _pair_sequences(self, sequences1: list, sequences2: list, path: Path = None) -> List[Receptor]:
         assert len(sequences1) == len(sequences2), f"{LigoSimInstruction.__name__}: could not create paired dataset, the number of sequences in two simulation items did not match."
 
         random.shuffle(sequences1)

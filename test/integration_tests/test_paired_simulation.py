@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 import yaml
@@ -7,7 +8,7 @@ from ligo.environment.EnvironmentSettings import EnvironmentSettings
 from ligo.util.PathBuilder import PathBuilder
 
 
-def prepare_specs(path) -> Path:
+def prepare_specs(path, is_receptor_sim: bool = True) -> Path:
     specs = {
         "definitions": {
             "motifs": {
@@ -30,7 +31,7 @@ def prepare_specs(path) -> Path:
             },
             "simulations": {
                 "sim1": {
-                    "is_repertoire": False,
+                    "is_repertoire": not is_receptor_sim,
                     "paired": [
                         ['var1', 'var2']
                     ],
@@ -42,8 +43,9 @@ def prepare_specs(path) -> Path:
                               "ievent1": True,
                               "ievent2": False,
                             },
-                            "signals": {"signal2": 1},
+                            "signals": {"signal2": 1} if is_receptor_sim else {"signal2": 0.2, "signal1": 0.1},
                             "number_of_examples": 10,
+                            "receptors_in_repertoire_count": 10 if not is_receptor_sim else 0,
                             "is_noise": False,
                             "seed": 100,
                             "generative_model": {
@@ -58,8 +60,9 @@ def prepare_specs(path) -> Path:
                               "ievent1": False,
                               "ievent2": False,
                             },
-                            "signals": {"signal1": 1},
+                            "signals": {"signal1": 1} if is_receptor_sim else {"signal2": 0.1, "signal1": 0.2},
                             "number_of_examples": 10,
+                            "receptors_in_repertoire_count": 10 if not is_receptor_sim else 0,
                             "is_noise": True,
                             "seed": 2,
                             "generative_model": {
@@ -95,11 +98,13 @@ def prepare_specs(path) -> Path:
     return path / "specs.yaml"
 
 def test_paired_simulation():
-    path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / "integration_ligo_paired_simulation/")
 
-    specs_path = prepare_specs(path)
+    for receptor_sim in [False, True]:
+        path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / f"integration_ligo_paired_simulation_{receptor_sim}/")
 
-    app = LigoApp(specification_path=specs_path, result_path=path / "result/")
-    app.run()
+        specs_path = prepare_specs(path, receptor_sim)
 
-    # shutil.rmtree(path)
+        app = LigoApp(specification_path=specs_path, result_path=path / "result/")
+        app.run()
+
+        shutil.rmtree(path)
