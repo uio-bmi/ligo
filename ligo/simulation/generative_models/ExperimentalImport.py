@@ -25,6 +25,8 @@ class ExperimentalImport(GenerativeModel):
 
     - import_params (dict): as defined under the import format selected in the first parameter; for details see :ref:`Supported dataset formats`
 
+    # TODO: add chain info here
+
     YAML specification:
 
     .. indent with spaces
@@ -36,7 +38,7 @@ class ExperimentalImport(GenerativeModel):
             import_params:
                 path: path/to/files/
                 region_type: IMGT_CDR3 # what part of the sequence to import
-                column_mapping: # column mapping AIRR: immuneML
+                column_mapping: # column mapping AIRR: ligo
                     junction: sequence
                     junction_aa: sequence_aa
                     locus: chain
@@ -44,7 +46,8 @@ class ExperimentalImport(GenerativeModel):
 
     """
 
-    def __init__(self, dataset: SequenceDataset, original_input_file: Path = None):
+    def __init__(self, dataset: SequenceDataset, chain=None, original_input_file: Path = None):
+        super().__init__(chain)
         self._dataset = dataset
         self._counter = 0
         self._original_input_file = original_input_file

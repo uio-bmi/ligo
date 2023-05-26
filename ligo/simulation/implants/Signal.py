@@ -6,9 +6,6 @@ from ligo import Constants
 from ligo.environment.SequenceType import SequenceType
 from ligo.simulation.implants.Motif import Motif
 from ligo.simulation.implants.MotifInstance import MotifInstanceGroup
-from ligo.simulation.signal_implanting.SignalImplantingStrategy import SignalImplantingStrategy
-from ligo.util.ReflectionHandler import ReflectionHandler
-from scripts.specification_util import update_docs_per_mapping
 
 
 @dataclass
@@ -83,22 +80,6 @@ class Signal:
 
     def __str__(self):
         return str(vars(self))
-
-    @staticmethod
-    def get_documentation():
-        initial_doc = str(Signal.__doc__)
-
-        valid_implanting_values = str(
-            ReflectionHandler.all_nonabstract_subclass_basic_names(SignalImplantingStrategy, 'Implanting', 'signal_implanting/'))[
-                                  1:-1].replace("'", "`")
-
-        docs_mapping = {
-            "Valid values for this argument are class names of different signal implanting strategies.":
-                f"Valid values are: {valid_implanting_values}"
-        }
-
-        doc = update_docs_per_mapping(initial_doc, docs_mapping)
-        return doc
 
 
 @dataclass

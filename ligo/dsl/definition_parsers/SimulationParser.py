@@ -4,6 +4,7 @@ from itertools import chain
 from typing import Tuple
 
 from ligo import Constants
+from ligo.data_model.receptor.ChainPair import ChainPair
 from ligo.dsl.DefaultParamsLoader import DefaultParamsLoader
 from ligo.dsl.definition_parsers.SignalParser import check_clonal_frequency
 from ligo.dsl.symbol_table.SymbolTable import SymbolTable
@@ -35,14 +36,15 @@ class SimulationParser:
 
 def _parse_ligo_simulation(simulation: dict, key: str, symbol_table: SymbolTable) -> Tuple[SimConfig, dict]:
     location = SimulationParser.__name__
-    valid_keys = {'is_repertoire': bool, 'paired': bool, 'sequence_type': str, 'p_gen_bin_count': int, 'simulation_strategy': str,
+    valid_keys = {'is_repertoire': bool, 'paired': list, 'sequence_type': str, 'p_gen_bin_count': int, 'simulation_strategy': str,
                   'sim_items': dict, 'keep_p_gen_dist': bool, 'remove_seqs_with_signals': bool, 'species': str}
 
     simulation = {**DefaultParamsLoader.load("simulation", "ligo_sim_config"), **simulation}
 
     ParameterValidator.assert_keys(list(simulation.keys()), list(valid_keys.keys()), location, key, exclusive=True)
     for k, val_type in valid_keys.items():
-        ParameterValidator.assert_type_and_value(simulation[k], val_type, location, k)
+        if k != 'paired':
+            ParameterValidator.assert_type_and_value(simulation[k], val_type, location, k)
 
     sim_strategies = ReflectionHandler.all_nonabstract_subclass_basic_names(SimulationStrategy, drop_part='Strategy',
                                                                             subdirectory='simulation/simulation_strategy')
@@ -64,8 +66,31 @@ def _parse_ligo_simulation(simulation: dict, key: str, symbol_table: SymbolTable
                               'simulation_strategy': sim_strategy_cls()}})
 
     _signal_content_matches_seq_type(sim_obj)
+    _check_paired_specs(sim_obj)
     return sim_obj, simulation
 
+
+def _check_paired_specs(sim_obj: SimConfig):
+    assert sim_obj.paired is None or sim_obj.paired is False or isinstance(sim_obj.paired, list)
+
+    if isinstance(sim_obj.paired, list):
+        for paired_item in sim_obj.paired:
+            assert len(paired_item) == 2
+            sim_item1 = [item for item in sim_obj.sim_items if item.name == paired_item[0]]
+            assert len(sim_item1) == 1, f'Sim item {paired_item[0]} is not specified under sim_items.'
+            sim_item1 = sim_item1[0]
+
+            sim_item2 = [item for item in sim_obj.sim_items if item.name == paired_item[1]]
+            assert len(sim_item2) == 1, f'Sim item {paired_item[1]} is not specified under sim_items.'
+            sim_item2 = sim_item2[0]
+
+            assert sim_item1.number_of_examples == sim_item2.number_of_examples
+            assert sim_item1.receptors_in_repertoire_count == sim_item2.receptors_in_repertoire_count
+
+            ChainPair.get_chain_pair([sim_item1.generative_model.chain, sim_item2.generative_model.chain])
+
+        assert len(list(set(chain.from_iterable(sim_obj.paired)))) == 2 * len(sim_obj.paired)
+        assert all(item.name in list(chain.from_iterable(sim_obj.paired)) for item in sim_obj.sim_items)
 
 def _check_if_supported(sim_item, sim_strategy_cls):
     if "Implanting" in sim_strategy_cls.__name__:

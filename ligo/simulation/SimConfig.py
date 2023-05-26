@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Union
 
 from ligo.environment.SequenceType import SequenceType
 from ligo.simulation.SimConfigItem import SimConfigItem
@@ -17,7 +17,7 @@ class SimConfig:
 
     - is_repertoire (bool): whether the simulation is on a repertoire (person) or sequence/receptor level
 
-    - paired (bool): if the simulation should output paired data or not
+    - paired: if the simulation should output paired data, this parameter should contain a list of a list of sim_item pairs referenced by name that should be combined; if paired data is not needed, then it should be False
 
     - sequence_type (str): either amino_acid or nucleotide
 
@@ -57,7 +57,7 @@ class SimConfig:
     sim_items: List[SimConfigItem] = None
     identifier: str = None
     is_repertoire: bool = None
-    paired: bool = None
+    paired: Union[bool, List[List[str]]] = None
     sequence_type: SequenceType = None
     simulation_strategy: SimulationStrategy = None
     p_gen_bin_count: int = None

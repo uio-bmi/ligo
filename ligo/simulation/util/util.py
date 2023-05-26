@@ -18,6 +18,7 @@ from scipy.stats import zipf
 
 from ligo import Constants
 from ligo.data_model.receptor.RegionType import RegionType
+from ligo.data_model.receptor.receptor_sequence.Chain import Chain
 from ligo.data_model.receptor.receptor_sequence.ReceptorSequence import ReceptorSequence
 from ligo.data_model.receptor.receptor_sequence.SequenceMetadata import SequenceMetadata
 from ligo.data_model.repertoire.Repertoire import Repertoire
@@ -62,12 +63,12 @@ def get_bnp_data(sequence_path, bnp_data_class):
         return data
 
 
-def make_receptor_sequence_objects(sequences: BackgroundSequences, metadata, immune_events: dict, custom_params: list) -> List[ReceptorSequence]:
+def make_receptor_sequence_objects(sequences: BackgroundSequences, metadata, immune_events: dict, custom_params: list, chain) -> List[ReceptorSequence]:
     return [ReceptorSequence(seq.sequence_aa.to_string(), seq.sequence.to_string(), identifier=uuid.uuid4().hex,
-                             metadata=construct_sequence_metadata_object(seq, metadata, custom_params, immune_events)) for seq in sequences]
+                             metadata=construct_sequence_metadata_object(seq, metadata, custom_params, immune_events, chain)) for seq in sequences]
 
 
-def construct_sequence_metadata_object(sequence, metadata: dict, custom_params, immune_events: dict) -> SequenceMetadata:
+def construct_sequence_metadata_object(sequence, metadata: dict, custom_params, immune_events: dict, chain: Chain) -> SequenceMetadata:
     custom = {}
 
     for key, key_type in custom_params:
@@ -76,7 +77,7 @@ def construct_sequence_metadata_object(sequence, metadata: dict, custom_params, 
         else:
             custom[key] = getattr(sequence, key).item()
 
-    return SequenceMetadata(custom_params={**metadata, **custom, **immune_events},
+    return SequenceMetadata(custom_params={**metadata, **custom, **immune_events}, chain=chain,
                             v_call=sequence.v_call.to_string(), j_call=sequence.j_call.to_string(), region_type=sequence.region_type.to_string())
 
 

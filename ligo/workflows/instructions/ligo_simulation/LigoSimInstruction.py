@@ -12,8 +12,12 @@ import numpy as np
 from bionumpy.bnpdataclass import BNPDataClass
 
 from ligo.IO.dataset_export.AIRRExporter import AIRRExporter
+from ligo.data_model.dataset.ReceptorDataset import ReceptorDataset
 from ligo.data_model.dataset.RepertoireDataset import RepertoireDataset
 from ligo.data_model.dataset.SequenceDataset import SequenceDataset
+from ligo.data_model.receptor.Receptor import Receptor
+from ligo.data_model.receptor.ReceptorBuilder import ReceptorBuilder
+from ligo.data_model.repertoire.Repertoire import Repertoire
 from ligo.environment.SequenceType import SequenceType
 from ligo.simulation.LigoSimState import LigoSimState
 from ligo.simulation.SimConfig import SimConfig
@@ -127,7 +131,8 @@ class LigoSimInstruction(Instruction):
             self.state.resulting_dataset = RepertoireDataset.build_from_objects(labels=labels, repertoires=examples, name='simulated_dataset',
                                                                                 metadata_path=self.state.result_path / 'metadata.csv')
         elif self.state.simulation.paired:
-            raise NotImplementedError()
+            self.state.resulting_dataset = ReceptorDataset.build_from_objects(examples, path=self.state.result_path, name='simulated_dataset',
+                                                                              file_size=SequenceDataset.DEFAULT_FILE_SIZE, labels=labels)
         else:
             self.state.resulting_dataset = SequenceDataset.build_from_objects(examples, path=self.state.result_path, name='simulated_dataset',
                                                                               file_size=SequenceDataset.DEFAULT_FILE_SIZE, labels=labels)
@@ -138,15 +143,38 @@ class LigoSimInstruction(Instruction):
 
             with Pool(processes=max(self._number_of_processes, len(self.state.simulation.sim_items))) as pool:
                 result = pool.map(self._create_examples, [vars(item) for item in self.state.simulation.sim_items], chunksize=chunk_size)
-                examples = list(chain.from_iterable(result))
+                examples = {k: v for d in result for k, v in d.items()}
         else:
-            examples = []
+            examples = {}
             for item in self.state.simulation.sim_items:
-                examples.extend(self._create_examples(item))
+                examples = {**examples, **self._create_examples(item)}
+
+        if self.state.simulation.paired:
+            examples = self._pair_examples(examples)
+        else:
+            examples = list(chain.from_iterable(examples.values()))
 
         return examples
 
-    def _create_examples(self, item_in) -> list:
+    def _pair_examples(self, examples: Dict[str, list]) -> list:
+        paired_examples = []
+        pair_func = self._pair_repertoires if self.state.simulation.is_repertoire else self._pair_sequences
+        for paired_item1, paired_item2 in self.state.simulation.paired:
+            paired_examples.extend(pair_func(examples[paired_item1], examples[paired_item2]))
+        return paired_examples
+
+    def _pair_repertoires(self, repertoires1: list, repertoires2: list) -> List[Repertoire]:
+        raise NotImplementedError
+
+    def _pair_sequences(self, sequences1: list, sequences2: list) -> List[Receptor]:
+        assert len(sequences1) == len(sequences2), f"{LigoSimInstruction.__name__}: could not create paired dataset, the number of sequences in two simulation items did not match."
+
+        random.shuffle(sequences1)
+        random.shuffle(sequences2)
+
+        return ReceptorBuilder.build_objects_from_pairs(sequences1, sequences2)
+
+    def _create_examples(self, item_in) -> Dict[str, list]:
 
         item = SimConfigItem(**item_in) if isinstance(item_in, dict) else item_in
 
@@ -155,11 +183,9 @@ class LigoSimInstruction(Instruction):
         else:
             res = self._create_receptors(item)
 
-        return res
+        return {item.name: res}
 
     def _create_receptors(self, sim_item: SimConfigItem) -> list:
-        if self.state.simulation.paired:
-            raise NotImplementedError
 
         assert len(sim_item.signals) in [0, 1], f"{LigoSimInstruction.__name__}: for sequence datasets, only 0 or 1 signal or a signal pair per " \
                                                 f"sequence are supported, but {len(sim_item.signals)} were specified."
@@ -175,7 +201,8 @@ class LigoSimInstruction(Instruction):
                 sequences = signal_sequences if sequences is None else merge_dataclass_objects([sequences, signal_sequences])
 
         sequences = make_receptor_sequence_objects(sequences, metadata=make_signal_metadata(sim_item, self.state.signals),
-                                                   immune_events=sim_item.immune_events, custom_params=self._custom_fields)
+                                                   immune_events=sim_item.immune_events, custom_params=self._custom_fields,
+                                                   chain=sim_item.generative_model.chain)
 
         return sequences
 
