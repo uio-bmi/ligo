@@ -15,7 +15,7 @@ from ligo.util.PathBuilder import PathBuilder
 
 class ExperimentalImport(GenerativeModel):
     """
-    Allows to import existing experimental data and do annotations and simulations on top of them.
+    Allows to import existing experimental data and perform annotations and simulations on top of them.
 
     Arguments:
 

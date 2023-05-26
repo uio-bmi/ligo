@@ -8,7 +8,7 @@ from ligo.simulation.implants.Signal import Signal, SignalPair
 @dataclass
 class SimConfigItem:
     """
-    When performing one simulation, one or more simulation config items can be specified. Config items define groups of repertoires or receptors
+    When performing a simulation, one or more simulation config items can be specified. Config items define groups of repertoires or receptors
     that have the same simulation parameters, such as signals, generative model, clonal frequencies, noise parameters.
 
 
@@ -22,9 +22,9 @@ class SimConfigItem:
 
     - seed (int): starting random seed for the generative model (ideally should differ across simulation items)
 
-    - false_positives_prob_in_receptors (float): when doing repertoire level simulation, what percentage of sequences should be false positives
+    - false_positives_prob_in_receptors (float): when performing repertoire level simulation, what percentage of sequences should be false positives
 
-    - false_negative_prob_in_receptors (float): when doing repertoire level simulation, what percentage of sequences should be false negatives
+    - false_negative_prob_in_receptors (float): when performing repertoire level simulation, what percentage of sequences should be false negatives
 
     - immune_events (dict): a set of key-value pairs that will be added to the metadata (same values for all data generated in one simulation sim_item) and can be later used as labels
 

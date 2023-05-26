@@ -19,19 +19,23 @@ Where
 How to use LIgO for receptor-level simulation
 ---------------------------------
 
-Simulation of a TCR dataset containing 2 immune signals 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Simulation of a TCR dataset containing two immune signals
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this quickstart tutorial we will simulate a dataset of 300 productive TRB receptors — 100 TRBs containing signal1, 100 TRBs containing signal2, and 100 TRBs containing no immune signal (background receptors), see the illustration bellow. Signal 1 consists of a 2-mer {AS} and TRBV7, i.e., only TRBs containing both TRBV7 and 2-mer {AS} contain Signal1. Signal 2 consists of two gapped k-mers {G.G} and {G..G}.  Signal-specific TRBs will be generated using the rejection sampling strategy and the default OLGA model (humanTRB). 
+In this quickstart tutorial, we will simulate a dataset of 300 productive TRB receptors — 100 TRBs containing signal1, 100 TRBs containing signal2,
+and 100 TRBs containing no immune signal (background receptors), see the illustration below. Signal 1 consists of a 2-mer {AS} and TRBV7, i.e., only TRBs containing both TRBV7 and 2-mer {AS} contain Signal1. Signal 2 consists of two gapped k-mers {G.G} and {G..G}.  Signal-specific TRBs will be generated using the rejection sampling strategy and the default OLGA model (humanTRB).
 
 .. image:: ./quickstart_receptor-level.png
 
-TRBs will be reported as a triple of TRBV gene name, CDR3 AA sequence, and TRBJ gene name. If you also want to report the generation probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the *export_p_gens* parameter to true. Please keep in mind, that pgen evaluation may take some time. 
+LIgO reports the simulated TRBs as a triple of TRBV gene name, CDR3 AA sequence, and TRBJ gene name. If you also want to report the generation
+probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the *export_p_gens* parameter to true.
+Please keep in mind that pgen evaluation may take time.
 
 Step 1: YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Now we need to define the YAML file describing the simulation parameters. We define the immune signal 1 and 2 and the number of TRBs per each signal in the **definitions** section and technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.  
+First, we need to define the YAML file describing the simulation parameters. We define the immune signals 1 and 2 and the number of TRBs per each
+signal in the **definitions** section and technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.
 
 Here is the complete YAML specification for the simulation:
 
@@ -122,7 +126,7 @@ After saving the yaml specification to a file (e.g., quickstart.yaml), you can p
 
   ligo quickstart.yaml quickstart_output
   
-Note that the output folder (quickstart_output) should not exist before the run.
+Note that the output folder (quickstart_output) should not exist prior to the run.
 
 
 Step 3: Understanding the output
@@ -133,8 +137,8 @@ Next steps
 
 
 
-How to use LIgO for reperoire-level simulation
----------------------------------
+How to use LIgO for repertoire-level simulation
+-------------------------------------------------
 
 Step 1: YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

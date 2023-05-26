@@ -27,7 +27,7 @@ from ligo.util.PathBuilder import PathBuilder
 @dataclass
 class OLGA(GenerativeModel):
     """
-    This is a wrapper around OLGA package as described by Sethna et al. 2019 (`olga` package on PyPI or GitHub: https://github.com/statbiophys/OLGA).
+    This is a wrapper for the OLGA package as described by Sethna et al. 2019 (OLGA package on PyPI or GitHub: https://github.com/statbiophys/OLGA).
 
     Reference:
 
@@ -37,7 +37,7 @@ class OLGA(GenerativeModel):
 
     Note:
 
-    - OLGA model generates sequences that correspond to IMGT junction and are used for matching as such. See the https://github.com/statbiophys/OLGA for more details.
+    - OLGA generates sequences that correspond to IMGT junction and are used for matching as such. See the https://github.com/statbiophys/OLGA for more details.
 
     - Gene names are as provided in OLGA (either in default models or in the user-specified model files). For simulation, one should use gene names in the same format.
 

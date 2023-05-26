@@ -13,7 +13,7 @@ from scripts.specification_util import update_docs_per_mapping
 
 class TenxGenomicsImport(DataImport):
     """
-    Imports data from the 10x Genomics Cell Ranger analysis pipeline into a Repertoire-, Sequence- or ReceptorDataset.
+    Imports data from the 10xGenomics Cell Ranger analysis pipeline into a Repertoire-, Sequence- or ReceptorDataset.
     RepertoireDatasets should be used when making predictions per repertoire, such as predicting a disease state.
     SequenceDatasets or ReceptorDatasets should be used when predicting values for unpaired (single-chain) and paired
     immune receptors respectively, like antigen specificity.

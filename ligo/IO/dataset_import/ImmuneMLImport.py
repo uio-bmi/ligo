@@ -15,7 +15,7 @@ from ligo.util.ReflectionHandler import ReflectionHandler
 
 class ImmuneMLImport(DataImport):
     """
-    Imports the dataset from the files previously exported by immuneML. It closely resembles AIRR format but relies on binary
+    Imports the dataset from the files previously exported by immuneML. It closely resembles the AIRR format but relies on binary
     representations and is optimized for faster read-in at runtime.
 
     ImmuneMLImport can import any kind of dataset (RepertoireDataset, SequenceDataset, ReceptorDataset).
