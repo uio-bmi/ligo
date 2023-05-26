@@ -4,12 +4,12 @@ Installing LIgO
 .. toctree::
    :maxdepth: 2
 
-To install with LIgO, there are two options:
+There are two options for installing LIgO:
 
 #. Install on the local machine either from PyPI or from GitHub
 #. Use Docker image
 
-Installing LIgO on local machine
+Installing LIgO on the local machine
 ---------------------------------
 
 Requirements: Python 3.7 or later
