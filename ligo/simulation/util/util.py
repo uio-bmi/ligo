@@ -310,24 +310,21 @@ def check_sequence_count(sim_item, sequences: BackgroundSequences):
 
 
 def prepare_data_for_repertoire_obj(sequences: BNPDataClass, custom_fields: list) -> dict:
-    indices = np.arange(len(sequences))
-    np.random.shuffle(indices)
-    shuffled_sequences = sequences[indices]
 
     custom_lists = {}
     for field, field_type in custom_fields:
         if field_type is int or field_type is float:
-            custom_lists[field] = getattr(shuffled_sequences, field)
+            custom_lists[field] = getattr(sequences, field)
         else:
-            custom_lists[field] = [el.to_string() for el in getattr(shuffled_sequences, field)]
+            custom_lists[field] = [el.to_string() for el in getattr(sequences, field)]
 
     default_lists = {}
-    for field in dataclasses.fields(shuffled_sequences):
+    for field in dataclasses.fields(sequences):
         if field.name not in custom_lists:
-            if isinstance(getattr(shuffled_sequences, field.name), EncodedRaggedArray):
-                default_lists[field.name] = [el.to_string() for el in getattr(shuffled_sequences, field.name)]
+            if isinstance(getattr(sequences, field.name), EncodedRaggedArray):
+                default_lists[field.name] = [el.to_string() for el in getattr(sequences, field.name)]
             else:
-                default_lists[field.name] = getattr(shuffled_sequences, field.name)
+                default_lists[field.name] = getattr(sequences, field.name)
 
     return {**{"custom_lists": custom_lists}, **default_lists}
 
@@ -364,7 +361,8 @@ def update_seqs_with_signal(max_counts: dict, annotated_sequences, all_signals, 
     return max_counts
 
 
-def get_signal_sequences(sequences, bnp_data_class, used_seq_count: dict, sim_item: SimConfigItem, sequence_paths: Dict[str, Path]):
+def get_signal_sequences(bnp_data_class, used_seq_count: dict, sim_item: SimConfigItem, sequence_paths: Dict[str, Path]):
+    sequences = None
     for signal in sim_item.signals:
 
         skip_rows = used_seq_count[signal.id]
@@ -392,16 +390,22 @@ def assign_duplicate_counts(sequences, clonal_frequency_params: dict):
         return sequences
 
 
-def get_no_signal_sequences(used_seq_count: dict, seqs_no_signal_count: int, bnp_data_class, sequence_paths: Dict[str, Path],
+def get_no_signal_sequences(sequences, used_seq_count: dict, seqs_no_signal_count: int, bnp_data_class, sequence_paths: Dict[str, Path],
                             sim_item: SimConfigItem):
     if sequence_paths['no_signal'].is_file() and seqs_no_signal_count > 0:
         skip_rows = used_seq_count['no_signal']
         used_seq_count['no_signal'] = used_seq_count['no_signal'] + seqs_no_signal_count
-        sequences = get_bnp_data(sequence_paths['no_signal'], bnp_data_class)[skip_rows:skip_rows + seqs_no_signal_count]
-        sequences = assign_duplicate_counts(sequences, sim_item.default_clonal_frequency)
+        sequences_no_sig = get_bnp_data(sequence_paths['no_signal'], bnp_data_class)[skip_rows:skip_rows + seqs_no_signal_count]
+        sequences_no_sig = assign_duplicate_counts(sequences_no_sig, sim_item.default_clonal_frequency)
+
+        if sequences is None:
+            sequences = sequences_no_sig
+        else:
+            sequences = merge_dataclass_objects([sequences, sequences_no_sig])
+
         return sequences, used_seq_count
     else:
-        return None, used_seq_count
+        return sequences, used_seq_count
 
 
 def needs_seqs_with_signal(sequence_per_signal_count: dict) -> bool:

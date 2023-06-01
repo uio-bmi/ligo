@@ -238,11 +238,11 @@ class LigoSimInstruction(Instruction):
             seqs_no_signal_count = item.receptors_in_repertoire_count - sum(get_signal_sequence_count(1, proportion, item.receptors_in_repertoire_count)
                                                                             for _, proportion in item.signal_proportions.items())
 
-            sequences, used_seq_count = get_no_signal_sequences(used_seq_count=used_seq_count, seqs_no_signal_count=seqs_no_signal_count,
+            sequences, used_seq_count = get_signal_sequences(self._annotated_dataclass, used_seq_count, item, sequence_paths)
+
+            sequences, used_seq_count = get_no_signal_sequences(sequences=sequences, used_seq_count=used_seq_count, seqs_no_signal_count=seqs_no_signal_count,
                                                                 bnp_data_class=self._annotated_dataclass, sequence_paths=sequence_paths,
                                                                 sim_item=item)
-
-            sequences, used_seq_count = get_signal_sequences(sequences, self._annotated_dataclass, used_seq_count, item, sequence_paths)
 
             check_sequence_count(item, sequences)
 
