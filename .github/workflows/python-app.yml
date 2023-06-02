@@ -3,10 +3,10 @@ name: Python application
 on:
   push:
     branches: [ main ]
-    paths: [ '**.py', '**.yml' ]
+    paths: [ '**.py', '**.yaml' ]
   pull_request:
     branches: [ main ]
-    paths: [ '**.py', '**.yml' ]
+    paths: [ '**.py', '**.yaml' ]
 
 jobs:
   build:
