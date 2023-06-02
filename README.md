@@ -8,7 +8,7 @@ internally powered by [immuneML](https://immuneml.uio.no/).
 
 ## Installation
 
-Requirements: Python 3.7 or later.
+Requirements: Python 3.11 or later.
 
 To install LIgO from the repository, run the following command in your virtual environment:
 ```
