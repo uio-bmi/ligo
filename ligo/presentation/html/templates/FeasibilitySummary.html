@@ -119,6 +119,53 @@
                 {{/show_text}}
             </div>
             {{/sig_coocc}}
+            {{#sig_cond_probs}}
+            <h3>Signal co-occurrences - conditional probabilities for pairs of signals</h3>
+            <h4>Report {{name}}</h4>
+            <div>
+                {{#show_info}}
+                <p class="padded-bottom">{{info}}</p>
+                {{/show_info}}
+
+                {{#output_figures}}
+                <div class="center padded">
+                    {{#name}}<p>{{name}}</p>{{/name}}
+                    {{#is_embed}}
+                    <embed src="{{path}}">
+                    {{/is_embed}}
+                    {{^is_embed}}
+                    <img src="{{path}}">
+                    {{/is_embed}}
+                </div>
+                {{/output_figures}}
+
+                {{#show_tables}}
+                <p>Downloadable tables:</p>
+                {{#output_tables}}
+                <div>
+                    <ul>
+                    {{#is_download_link}}
+                    <li><a href="{{download_link}}" download>{{file_name}}</a></li>
+                    {{/is_download_link}}
+                    </ul>
+                </div>
+                {{/output_tables}}
+                {{/show_tables}}
+
+                {{#show_text}}
+                <p>Text reports:</p>
+                {{#output_text}}
+                <div>
+                    <ul>
+                    {{#is_download_link}}
+                    <li><a href="{{download_link}}" download>{{file_name}}</a></li>
+                    {{/is_download_link}}
+                    </ul>
+                </div>
+                {{/output_text}}
+                {{/show_text}}
+            </div>
+            {{/sig_cond_probs}}
             {{#p_gens}}
             <h3>Generation probabilities</h3>
             <h4>Report {{name}}</h4>

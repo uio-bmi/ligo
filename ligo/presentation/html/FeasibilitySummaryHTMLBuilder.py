@@ -40,6 +40,7 @@ class FeasibilitySummaryHTMLBuilder:
                 "name": name,
                 "sig_freq": make_from_report_result(reports.signal_frequencies, base_path),
                 "sig_coocc": make_from_report_result(reports.signal_cooccurrences, base_path),
+                "sig_cond_probs": make_from_report_result(reports.signal_cond_probs, base_path),
                 "p_gens": make_from_report_result(reports.p_gen_histogram, base_path),
                 "seq_len": make_from_report_result(reports.seq_len_dist, base_path)
             } for name, reports in state.reports.items()]

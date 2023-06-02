@@ -5,8 +5,8 @@ import pandas as pd
 import plotly.express as px
 
 from ligo.environment.SequenceType import SequenceType
-from ligo.util.Reports import ReportOutput, ReportResult
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
+from ligo.util.Reports import ReportOutput, ReportResult
 
 
 def report_signal_frequencies(frequencies: pd.DataFrame, path: Path) -> ReportResult:
@@ -26,11 +26,33 @@ def report_signal_cooccurrences(unique_values: np.ndarray, counts: np.ndarray, p
     df.to_csv(csv_output.path, index=False)
 
     fig = px.bar(df, x='signal_count', y='sequence_count', template='plotly_white', color_discrete_sequence=px.colors.diverging.Tealrose)
-    fig.update_layout(xaxis_title_text='signal count', yaxis_title_text='sequence count')
+    fig.update_layout(xaxis_title_text='signal count', yaxis_title_text='sequence count', xaxis={"tickmode": 'linear', "tick0": 0, "dtick": 1})
     fig_output = ReportOutput(path / 'signal_counts_per_sequence.html', 'signal counts per sequence')
     fig.write_html(str(fig_output.path))
 
     return ReportResult('signal co-occurrences', output_figures=[fig_output], output_tables=[csv_output])
+
+
+def report_signal_cond_probs(signal_matrix: np.ndarray, signal_names: list, path: Path) -> ReportResult:
+    cond_probs = np.zeros(shape=(len(signal_names), len(signal_names)))
+    for outer_index, outer_signal in enumerate(signal_names):
+        for inner_index, inner_signal in enumerate(signal_names):
+            if inner_index == outer_index:
+                cond_probs[inner_index, outer_index] = 1.
+            elif inner_index < outer_index:
+                cond_probs[inner_index, outer_index] = cond_probs[outer_index, inner_index]
+            else:
+                cond_probs[inner_index, outer_index] = np.logical_and(signal_matrix[:, inner_index], signal_matrix[:, outer_index]).sum() / signal_matrix.shape[0]
+
+    table_output = ReportOutput(path / 'conditional_probabilities_of_signals_co-occurring.csv', "conditional probabilities of signals co-occurring")
+    df = pd.DataFrame(cond_probs, index=signal_names, columns=signal_names)
+    df.to_csv(str(table_output.path))
+
+    fig = px.imshow(df, text_auto=True, color_continuous_scale='Aggrnyl')
+    fig_output = ReportOutput(path / 'conditional_probabilities_of_signals_co-occurring.html', "conditional probabilities of signals co-occurring")
+    fig.write_html(str(fig_output.path))
+
+    return ReportResult('conditional probabilities of signals co-occurring', output_figures=[fig_output], output_tables=[table_output])
 
 
 def report_p_gen_histogram(sequences: BackgroundSequences, p_gen_bin_count: int, path: Path) -> ReportResult:

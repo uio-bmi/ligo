@@ -7,22 +7,24 @@ import numpy as np
 import pandas as pd
 
 from ligo.environment.SequenceType import SequenceType
-from ligo.util.Reports import ReportResult
 from ligo.simulation.SimConfig import SimConfig
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
 from ligo.simulation.generative_models.GenerativeModel import GenerativeModel
 from ligo.simulation.implants.Signal import Signal
 from ligo.simulation.util.util import annotate_sequences, make_annotated_dataclass, get_bnp_data
+from ligo.util.Logger import print_log
 from ligo.util.PathBuilder import PathBuilder
+from ligo.util.Reports import ReportResult
 from ligo.workflows.instructions.Instruction import Instruction
 from ligo.workflows.instructions.ligo_sim_feasibility.feasibility_reports import report_signal_frequencies, report_signal_cooccurrences, \
-    report_p_gen_histogram, report_seq_len_dist
+    report_p_gen_histogram, report_seq_len_dist, report_signal_cond_probs
 
 
 @dataclass
 class FeasibilitySumReports:
     signal_frequencies: ReportResult = None
     signal_cooccurrences: ReportResult = None
+    signal_cond_probs: ReportResult = None
     p_gen_histogram: ReportResult = None
     seq_len_dist: ReportResult = None
 
@@ -70,7 +72,7 @@ class FeasibilitySummaryInstruction(Instruction):
         self.state = FeasibilitySummaryState(simulation=simulation, sequence_count=sequence_count, signals=signals, name=name)
         self._number_of_processes = number_of_processes
 
-        self._annotation_fields = sorted([(signal.id, int) for signal in self.state.signals] +
+        self._annotation_fields = sorted([(signal.id, int) for signal in self.state.signals] + [('signals_aggregated', str)] +
                                          [(f"{signal.id}_positions", str) for signal in self.state.signals],
                                          key=lambda x: x[0])
 
@@ -88,7 +90,7 @@ class FeasibilitySummaryInstruction(Instruction):
         return self.state
 
     def _make_summary(self, model: GenerativeModel, summary_path: Path, model_name: str):
-        sequences = self._make_sequences(model, summary_path / "receptors.tsv")
+        sequences = self._make_sequences(model, summary_path / "receptors.tsv", model_name)
         self.state.reports[model_name] = FeasibilitySumReports()
 
         self._make_signal_frequencies(sequences, summary_path / 'signal_frequencies', model_name)
@@ -100,6 +102,8 @@ class FeasibilitySummaryInstruction(Instruction):
         PathBuilder.build(path)
         self.state.reports[model_name].seq_len_dist = report_seq_len_dist(sequences, self.state.simulation.sequence_type, path)
 
+        print_log(f"Estimated sequence length distribution for model {model_name}.", include_datetime=True)
+
     def _make_signal_frequencies(self, sequences: BackgroundSequences, path: Path, model_name: str):
         if len(self.state.signals) > 0:
             frequencies = pd.DataFrame({'signal': [signal.id for signal in self.state.signals],
@@ -108,24 +112,35 @@ class FeasibilitySummaryInstruction(Instruction):
 
             self.state.reports[model_name].signal_frequencies = report_signal_frequencies(frequencies, PathBuilder.build(path))
 
+            print_log(f"Computed signal frequencies for {len(self.state.signals)} signals for model {model_name}.", include_datetime=True)
+
     def _report_signal_co_occurrence(self, sequences: BackgroundSequences, path: Path, model_name: str):
         if len(self.state.signals) > 0:
             PathBuilder.build(path)
             unique_values, counts = np.unique(sequences.get_signal_matrix().sum(axis=1).reshape(-1, 1), return_counts=True)
             self.state.reports[model_name].signal_cooccurrences = report_signal_cooccurrences(unique_values, counts, path)
+            self.state.reports[model_name].signal_cond_probs = report_signal_cond_probs(sequences.get_signal_matrix(), sequences.get_signal_names(), path)
+
+            print_log(f"Examined signal co-occurrences for {len(self.state.signals)} signals for model {model_name}.", include_datetime=True)
+
 
     def _make_pgen_dist(self, sequences: BackgroundSequences, path: Path, model: GenerativeModel, model_name: str):
         if self.state.simulation.keep_p_gen_dist and model.can_compute_p_gens() and self.state.simulation.p_gen_bin_count > 0:
             PathBuilder.build(path)
             self.state.reports[model_name].p_gen_histogram = report_p_gen_histogram(sequences, self.state.simulation.p_gen_bin_count, path)
 
-    def _make_sequences(self, model, path: Path) -> BackgroundSequences:
+            print_log(f"Estimated generation probability distribution for model {model_name}.", include_datetime=True)
+
+
+    def _make_sequences(self, model, path: Path, model_name: str) -> BackgroundSequences:
         seq_path = model.generate_sequences(self.state.sequence_count, seed=0, path=path, sequence_type=self.state.simulation.sequence_type,
                                             compute_p_gen=model.can_compute_p_gens())
 
         default_seqs = get_bnp_data(seq_path, BackgroundSequences)
         default_seqs = annotate_sequences(default_seqs, self.state.simulation.sequence_type == SequenceType.AMINO_ACID, self.state.signals,
                                           self._annotated_dc)
+
+        print_log(f"Generated and annotated {self.state.sequence_count} sequences for model {model_name}", include_datetime=True)
 
         return default_seqs
 
