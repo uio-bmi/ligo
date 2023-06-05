@@ -1,3 +1,5 @@
+.. role:: red
+
 Welcome to the LIgO documentation!
 ======================================
 
@@ -12,7 +14,7 @@ Why should you use LIgO?
 * LIgO **guides the user** and helps to set optimal simulation parameters.
 * LIgO outputs detailed information about presence and position(s) of immune signal(s) for every AIR in AIRR-compliant format.  
 
-**Please check out LIgO manuscript (link will be added soon) for more information!**
+**Please check out LIgO manuscript :red:`(link will be added soon)` for more information!**
 
 
 .. toctree::
