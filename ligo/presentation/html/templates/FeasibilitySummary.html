@@ -16,13 +16,18 @@
 
         <div>
             <h2>Parameters for the feasibility study</h2>
-            <p><b>Sequence count:</b> {{{sequence_count}}}</p>
+            <p><b>Sequence count per generative model:</b> {{{sequence_count}}}</p>
             <p><b>Signals:</b> {{{signal_names}}}</p>
         </div>
 
         {{#gen_models}}
         <h2>Generative model {{{name}}}</h2>
         <div>
+            {{#warnings}}
+            <div class="alert">
+                {{text}}
+            </div>
+            {{/warnings}}
             {{#sig_freq}}
             <h3>Signal frequencies</h3>
             <h4>Report {{name}}</h4>

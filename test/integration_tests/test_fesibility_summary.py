@@ -23,10 +23,10 @@ def prepare_specs(path) -> Path:
         "definitions": {
             "motifs": {
                 "motif1": {
-                    "seed": "AS"
+                    "seed": "A"
                 },
                 "motif2": {
-                    "seed": "GG"
+                    "seed": "GGTSAYY"
                 }
             },
             "signals": {

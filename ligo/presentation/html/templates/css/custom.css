@@ -203,3 +203,10 @@ code {
     max-width: 100%;
     white-space: pre-wrap;
 }
+
+.alert {
+  padding: 20px;
+  background-color: #ff9800;
+  color: white;
+  margin-bottom: 15px;
+}

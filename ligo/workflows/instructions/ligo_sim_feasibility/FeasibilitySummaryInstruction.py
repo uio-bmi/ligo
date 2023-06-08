@@ -27,6 +27,7 @@ class FeasibilitySumReports:
     signal_cond_probs: ReportResult = None
     p_gen_histogram: ReportResult = None
     seq_len_dist: ReportResult = None
+    warnings: list = field(default_factory=list)
 
 
 @dataclass
@@ -68,6 +69,9 @@ class FeasibilitySummaryInstruction(Instruction):
 
     """
 
+    MIN_SIG_FREQ = 0.001
+    MAX_SIG_FREQ = 0.8
+
     def __init__(self, simulation, sequence_count: int, number_of_processes: int, signals: List[Signal], name: str = None):
         self.state = FeasibilitySummaryState(simulation=simulation, sequence_count=sequence_count, signals=signals, name=name)
         self._number_of_processes = number_of_processes
@@ -91,8 +95,8 @@ class FeasibilitySummaryInstruction(Instruction):
 
     def _make_summary(self, model: GenerativeModel, summary_path: Path, model_name: str):
         sequences = self._make_sequences(model, summary_path / "receptors.tsv", model_name)
-        self.state.reports[model_name] = FeasibilitySumReports()
 
+        self.state.reports[model_name] = FeasibilitySumReports()
         self._make_signal_frequencies(sequences, summary_path / 'signal_frequencies', model_name)
         self._report_signal_co_occurrence(sequences, summary_path / 'signal_cooccurrence', model_name)
         self._make_pgen_dist(sequences, summary_path / 'p_gen_distribution', model, model_name)
@@ -107,12 +111,27 @@ class FeasibilitySummaryInstruction(Instruction):
     def _make_signal_frequencies(self, sequences: BackgroundSequences, path: Path, model_name: str):
         if len(self.state.signals) > 0:
             frequencies = pd.DataFrame({'signal': [signal.id for signal in self.state.signals],
-                                        'frequency': [round(getattr(sequences, signal.id).sum() / len(sequences), 2) for signal in
+                                        'frequency': [getattr(sequences, signal.id).sum() / len(sequences) for signal in
                                                       self.state.signals]})
 
             self.state.reports[model_name].signal_frequencies = report_signal_frequencies(frequencies, PathBuilder.build(path))
 
+            self._add_low_freq_warning(frequencies, model_name)
+            self._add_high_freq_warning(frequencies, model_name)
+
             print_log(f"Computed signal frequencies for {len(self.state.signals)} signals for model {model_name}.", include_datetime=True)
+
+    def _add_high_freq_warning(self, frequencies: pd.DataFrame, model_name: str):
+        high_frequencies = frequencies[frequencies['frequency'] >= FeasibilitySummaryInstruction.MAX_SIG_FREQ]
+        for _, row in high_frequencies.iterrows():
+            self.state.reports[model_name].warnings.append(
+                f"Signal {row['signal']} has very high frequency. It is found in {round(row['frequency'] * self.state.sequence_count)} out of {self.state.sequence_count} sequences. It might take many iterations to simulate sequences that do not contain this signal.")
+
+    def _add_low_freq_warning(self, frequencies: pd.DataFrame, model_name: str):
+        low_frequencies = frequencies[frequencies['frequency'] <= FeasibilitySummaryInstruction.MIN_SIG_FREQ]
+        for _, row in low_frequencies.iterrows():
+            self.state.reports[model_name].warnings.append(
+                f"Signal {row['signal']} has very low frequency. It is found in {round(row['frequency'] * self.state.sequence_count)} out of {self.state.sequence_count} sequences, and it might take many iterations to simulate the desired number of signal-containing sequences if using rejection sampling.")
 
     def _report_signal_co_occurrence(self, sequences: BackgroundSequences, path: Path, model_name: str):
         if len(self.state.signals) > 0:
@@ -128,6 +147,8 @@ class FeasibilitySummaryInstruction(Instruction):
         if self.state.simulation.keep_p_gen_dist and model.can_compute_p_gens() and self.state.simulation.p_gen_bin_count > 0:
             PathBuilder.build(path)
             self.state.reports[model_name].p_gen_histogram = report_p_gen_histogram(sequences, self.state.simulation.p_gen_bin_count, path)
+
+            self.state.reports[model_name].warnings.append("This simulation relies on using generation probabilities, which can significantly slow down the simulation, especially for large dataset sizes.")
 
             print_log(f"Estimated generation probability distribution for model {model_name}.", include_datetime=True)
 

@@ -38,6 +38,7 @@ class FeasibilitySummaryHTMLBuilder:
             "signal_names": ", ".join(s.id for s in state.signals),
             "gen_models": [{
                 "name": name,
+                "warnings": [{'text': warning} for warning in reports.warnings],
                 "sig_freq": make_from_report_result(reports.signal_frequencies, base_path),
                 "sig_coocc": make_from_report_result(reports.signal_cooccurrences, base_path),
                 "sig_cond_probs": make_from_report_result(reports.signal_cond_probs, base_path),
