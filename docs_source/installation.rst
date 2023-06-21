@@ -12,7 +12,9 @@ There are two options for installing LIgO:
 Installing LIgO on the local machine
 ---------------------------------
 
-Requirements: Python 3.11 or later
+.. note::
+
+  Requirements: Python 3.11 or later
 
 To install LIgO on the local machine with pip:
 
