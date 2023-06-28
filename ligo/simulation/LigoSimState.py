@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Dict, Any
 
 import numpy as np
 
@@ -17,7 +18,7 @@ class LigoSimState:
     formats = None
 
     # defined at runtime
-    target_p_gen_histogram: np.ndarray = None
-    p_gen_bins = None
+    target_p_gen_histogram: Dict[str, np.ndarray] = field(default_factory=dict)
+    p_gen_bins: Dict[str, Any] = field(default_factory=dict)
     resulting_dataset: Dataset = None
     result_path: Path = None

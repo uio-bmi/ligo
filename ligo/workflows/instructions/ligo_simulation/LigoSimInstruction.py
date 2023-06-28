@@ -262,7 +262,7 @@ class LigoSimInstruction(Instruction):
                                                         need_background_seqs=iteration == 0 and self.state.simulation.keep_p_gen_dist)
 
             if self.state.simulation.keep_p_gen_dist and sim_item.generative_model.can_compute_p_gens() and iteration == 0:
-                self._make_p_gen_histogram(sequences)
+                self._make_p_gen_histogram(sequences, sim_item.name)
                 print_log("Computed a histogram from the first batch of background sequences.", include_datetime=True)
 
             sequences = filter_sequences_by_length(sequences, sim_item, self.sequence_type)
@@ -321,16 +321,16 @@ class LigoSimInstruction(Instruction):
 
         return data
 
-    def _make_p_gen_histogram(self, sequences: BackgroundSequences):
+    def _make_p_gen_histogram(self, sequences: BackgroundSequences, sim_item_name: str):
 
         log_p_gens = np.log10(sequences[sequences.from_default_model].p_gen)
-        hist, self.state.p_gen_bins = np.histogram(log_p_gens, density=False, bins=np.concatenate(
+        hist, self.state.p_gen_bins[sim_item_name] = np.histogram(log_p_gens, density=False, bins=np.concatenate(
             ([np.NINF], np.histogram_bin_edges(log_p_gens, self.state.simulation.p_gen_bin_count), [np.PINF])))
-        self.state.target_p_gen_histogram = hist / np.sum(sequences.from_default_model)
+        self.state.target_p_gen_histogram[sim_item_name] = hist / np.sum(sequences.from_default_model)
 
-        zero_regions = self.state.target_p_gen_histogram == 0
-        self.state.target_p_gen_histogram[zero_regions] = ImplantingStrategy.MIN_RANGE_PROBABILITY
-        self.state.target_p_gen_histogram[np.logical_not(zero_regions)] -= \
+        zero_regions = self.state.target_p_gen_histogram[sim_item_name] == 0
+        self.state.target_p_gen_histogram[sim_item_name][zero_regions] = ImplantingStrategy.MIN_RANGE_PROBABILITY
+        self.state.target_p_gen_histogram[sim_item_name][np.logical_not(zero_regions)] -= \
             ImplantingStrategy.MIN_RANGE_PROBABILITY * np.sum(zero_regions) / np.sum(np.logical_not(zero_regions))
 
     def _filter_using_p_gens(self, sequences: BackgroundSequences, sim_item: SimConfigItem) -> Tuple[BNPDataClass, dict]:
@@ -339,8 +339,8 @@ class LigoSimInstruction(Instruction):
             sequences.p_gen[missing_p_gens] = sim_item.generative_model.compute_p_gens(sequences[missing_p_gens], self.state.simulation.sequence_type)
 
         p_gens = np.log10(sequences.p_gen)
-        sequence_bins = np.digitize(p_gens, self.state.p_gen_bins) - 1
-        keep_sequences = np.random.uniform(0, 1, len(sequences)) <= self.state.target_p_gen_histogram[sequence_bins]
+        sequence_bins = np.digitize(p_gens, self.state.p_gen_bins[sim_item.name]) - 1
+        keep_sequences = np.random.uniform(0, 1, len(sequences)) <= self.state.target_p_gen_histogram[sim_item.name][sequence_bins]
 
         print_log(f"Removed {len(sequences) - sum(keep_sequences)} out of {len(sequences)} when filtering by p_gens.", True)
 
