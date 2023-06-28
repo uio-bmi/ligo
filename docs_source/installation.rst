@@ -46,7 +46,9 @@ Alternatively, to install LIgO from GitHub run the following:
 Use LIgO with Docker
 ----------------------
 
-This tutorial assumes you have Docker installed on your machine. To install it, see `the official Docker documentation <https://docs.docker.com/get-docker/>`_.
+.. note::
+
+   This tutorial assumes you have Docker installed on your machine. To install it, see `the official Docker documentation <https://docs.docker.com/get-docker/>`_.
 
 Getting started with LIgO and Docker
 ********************************************
