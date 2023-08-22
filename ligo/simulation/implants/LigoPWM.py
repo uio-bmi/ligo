@@ -1,7 +1,9 @@
+import random
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
+import numpy as np
 from bionumpy.io.motifs import read_motif
 from bionumpy.sequence.position_weight_matrix import PWM as bnp_PWM
 
@@ -55,4 +57,7 @@ class LigoPWM(Motif):
         return list(self.pwm_matrix.alphabet)
 
     def instantiate_motif(self, sequence_type: SequenceType = SequenceType.AMINO_ACID):
-        pass
+        return "".join([random.choices(list(self.pwm_matrix.alphabet),
+                                       weights=[el if el != -np.inf else 0.
+                                                for el in self.pwm_matrix._matrix[:, position]])[0]
+                        for position in range(self.pwm_matrix.window_size)])
