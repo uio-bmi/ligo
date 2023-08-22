@@ -57,6 +57,10 @@ class LigoPWM(Motif):
         return list(self.pwm_matrix.alphabet)
 
     def instantiate_motif(self, sequence_type: SequenceType = SequenceType.AMINO_ACID):
+        if len(EnvironmentSettings.get_sequence_alphabet(sequence_type)) != self.pwm_matrix.alphabet:
+            raise RuntimeError(f"{LigoPWM.__name__}: could not instantiate motif for sequence type {sequence_type.name},"
+                               f" check if the motif sequence type is a match at {self.file_path}.")
+
         return "".join([random.choices(list(self.pwm_matrix.alphabet),
                                        weights=[el if el != -np.inf else 0.
                                                 for el in self.pwm_matrix._matrix[:, position]])[0]
