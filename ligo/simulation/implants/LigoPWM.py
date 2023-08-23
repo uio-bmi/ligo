@@ -37,13 +37,13 @@ class LigoPWM(Motif):
 
     """
     file_path: Path
-    pwm_matrix: bnp_PWM
+    pwm_matrix: bnp_PWM  # with log-likelihood
     threshold: float
 
     @classmethod
     def build(cls, identifier: str, file_path, threshold: float):
         assert Path(file_path).is_file(), file_path
-        pwm_matrix = read_motif(file_path)  # TODO: switch off log-likelihood transform
+        pwm_matrix = read_motif(file_path)
         return LigoPWM(identifier, file_path, pwm_matrix, threshold)
 
     def get_all_possible_instances(self, sequence_type: SequenceType):
@@ -61,7 +61,7 @@ class LigoPWM(Motif):
             raise RuntimeError(f"{LigoPWM.__name__}: could not instantiate motif for sequence type {sequence_type.name},"
                                f" check if the motif sequence type is a match at {self.file_path}.")
 
-        return "".join([random.choices(list(self.pwm_matrix.alphabet),
-                                       weights=[el if el != -np.inf else 0.
-                                                for el in self.pwm_matrix._matrix[:, position]])[0]
+        counts_per_position = np.exp(self.pwm_matrix._matrix + np.log([0.25])[:, np.newaxis])
+
+        return "".join([random.choices(list(self.pwm_matrix.alphabet), weights=counts_per_position[:, position])[0]
                         for position in range(self.pwm_matrix.window_size)])
