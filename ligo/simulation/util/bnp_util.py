@@ -62,7 +62,7 @@ def merge_dataclass_objects(objects: list):  # TODO: replace with equivalent fro
     field_names = sorted(list(set(chain.from_iterable([field.name for field in get_fields(obj)] for obj in objects))))
 
     for obj in objects:
-        assert all(hasattr(obj, field) for field in field_names), (obj, field_names)
+        assert all(hasattr(obj, field) for field in field_names), ([f.name for f in get_fields(obj)], field_names)
 
     cls = type(objects[0])
     return cls(**{field_name: list(chain.from_iterable([getattr(obj, field_name) for obj in objects])) for field_name in field_names})

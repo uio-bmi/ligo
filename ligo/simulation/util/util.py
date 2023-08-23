@@ -257,7 +257,7 @@ def make_bnp_annotated_sequences(sequences: BackgroundSequences, bnp_data_class,
     kwargs = {**{s.id: signal_matrix[:, ind].astype(int) for ind, s in enumerate(all_signals)},
               **{f"{s.id}_positions": bnp.as_encoded_array(signal_positions[f"{s.id}_positions"], bnp.encodings.BaseEncoding) for ind, s in
                  enumerate(all_signals)},
-              **{field.name: getattr(sequences, field.name) for field in get_fields(BackgroundSequences)}}
+              **{field.name: getattr(sequences, field.name) for field in get_fields(sequences)}}
 
     dc_fields = get_fields(bnp_data_class)
     if any([f'observed_{s.id}' in dc_fields for s in all_signals]):
@@ -267,6 +267,10 @@ def make_bnp_annotated_sequences(sequences: BackgroundSequences, bnp_data_class,
     kwargs['signals_aggregated'] = [s if s != "" else "no_signal" for s in
                                     ["_".join(s for index, s in enumerate([sig.id for sig in all_signals]) if el[index] == 1)
                                      for el in signal_matrix]]
+
+    for field in dc_fields:
+        if field.name not in kwargs:
+            kwargs[field.name] = [field.default for _ in range(len(sequences))]
 
     return bnp_data_class(**kwargs)
 
@@ -312,11 +316,11 @@ def check_sequence_count(sim_item, sequences: BackgroundSequences):
 def prepare_data_for_repertoire_obj(sequences: BNPDataClass, custom_fields: list) -> dict:
 
     custom_lists = {}
-    for field, field_type in custom_fields:
-        if field_type is int or field_type is float:
-            custom_lists[field] = getattr(sequences, field)
+    for field in custom_fields:
+        if field[1] is int or field[1] is float:
+            custom_lists[field[0]] = getattr(sequences, field[0])
         else:
-            custom_lists[field] = [el.to_string() for el in getattr(sequences, field)]
+            custom_lists[field[0]] = [el.to_string() for el in getattr(sequences, field[0])]
 
     default_lists = {}
     for field in dataclasses.fields(sequences):

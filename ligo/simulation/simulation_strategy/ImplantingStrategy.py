@@ -34,8 +34,16 @@ class ImplantingStrategy(SimulationStrategy):
         remaining_seq_mask, implanted_sequences = self._implant_in_sequences(filtered_sequences, sequence_type, sim_item, seqs_per_signal_count,
                                                                              all_signals, use_p_gens)
 
-        annotated_dc = type(sequences)
-        processed_seqs = merge_dataclass_objects([filtered_sequences[remaining_seq_mask], annotated_dc(**implanted_sequences)])
+        annotated_dc = type(sequences).extend((('original_sequence', str), ('original_p_gen', float)))
+        if remaining_seq_mask.sum() > 0:
+            added_fields = {'original_sequence': ['' for _ in range(remaining_seq_mask.sum())],
+                            'original_p_gen': [-1. for _ in range(remaining_seq_mask.sum())]}
+            remaining_seqs = filtered_sequences[remaining_seq_mask].add_fields(added_fields,
+                                                                               field_type_map={'original_sequence': str,
+                                                                                               'original_p_gen': float})
+            processed_seqs = merge_dataclass_objects([remaining_seqs, annotated_dc(**implanted_sequences)])
+        else:
+            processed_seqs = annotated_dc(**implanted_sequences)
 
         if remove_positives_first:
             processed_seqs = self._remove_invalid(processed_seqs, sequence_type, sim_item, all_signals, annotated_dc)
@@ -51,7 +59,8 @@ class ImplantingStrategy(SimulationStrategy):
 
         sequence_lengths = getattr(filtered_sequences, sequence_type.value).lengths
         remaining_seq_mask = np.ones(len(filtered_sequences), dtype=bool)
-        implanted_sequences = {field.name: [] for field in get_fields(filtered_sequences)}
+        implanted_sequences = {**{field.name: [] for field in get_fields(filtered_sequences)},
+                               **{'original_sequence': [], 'original_p_gen': []}}
 
         for signal in sim_item.signals:
             if seqs_per_signal_count[signal.id] > 0 and remaining_seq_mask.sum() > 0:
@@ -64,8 +73,8 @@ class ImplantingStrategy(SimulationStrategy):
 
                         sequence_obj = self._implant_in_sequence(filtered_sequences[sequence_index], signal, instance, use_p_gens, sequence_type,
                                                                  sim_item, all_signals)
-                        for field in get_fields(filtered_sequences):
-                            implanted_sequences[field.name].append(sequence_obj[field.name])
+                        for field in implanted_sequences.keys():
+                            implanted_sequences[field].append(sequence_obj[field])
 
                         remaining_seq_mask[sequence_index] = False
                         seqs_per_signal_count[signal.id] -= 1
@@ -103,7 +112,9 @@ class ImplantingStrategy(SimulationStrategy):
         zero_mask = "m" + "".join(["0" for _ in range(len(new_sequence[sequence_type.value]))])
         new_sequence = {**{f"{s.id}_positions": zero_mask for s in all_signals}, **{s.id: 0 for s in all_signals if s.id != signal.id},
                         **new_sequence, f'observed_{signal.id}': int(random.uniform(0, 1) > sim_item.false_negative_prob_in_receptors),
-                        f'from_default_model': 0, 'duplicate_count': -1, 'signals_aggregated': signal.id}
+                        f'from_default_model': 0, 'duplicate_count': -1, 'signals_aggregated': signal.id,
+                        f'original_sequence': getattr(sequence_row, sequence_type.value).to_string(),
+                        'original_p_gen': getattr(sequence_row, 'p_gen'), 'chain': getattr(sequence_row, 'chain').to_string()}
 
         return new_sequence
 

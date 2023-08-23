@@ -43,7 +43,7 @@ class LigoPWM(Motif):
     @classmethod
     def build(cls, identifier: str, file_path, threshold: float):
         assert Path(file_path).is_file(), file_path
-        pwm_matrix = read_motif(file_path)
+        pwm_matrix = read_motif(file_path)  # TODO: switch off log-likelihood transform
         return LigoPWM(identifier, file_path, pwm_matrix, threshold)
 
     def get_all_possible_instances(self, sequence_type: SequenceType):

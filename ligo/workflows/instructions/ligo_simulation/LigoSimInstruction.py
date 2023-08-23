@@ -2,7 +2,7 @@ import copy
 import math
 import os
 import random
-from dataclasses import fields
+from dataclasses import fields, field
 from itertools import chain
 from multiprocessing import Pool
 from pathlib import Path
@@ -88,9 +88,15 @@ class LigoSimInstruction(Instruction):
 
         self._noise_fields = [(f"observed_{s.id}", int) for s in self.state.signals] if self._export_observed_signals else []
 
+        if isinstance(self.state.simulation.simulation_strategy, ImplantingStrategy):
+            implanting_fields = [('original_sequence', str, field(default='')),
+                                 ('original_p_gen', float, field(default=-1))]
+        else:
+            implanting_fields = []
+
         self._annotation_fields = sorted([(signal.id, int) for signal in self.state.signals] + [('signals_aggregated', str)] +
                                          [(f"{signal.id}_positions", str) for signal in self.state.signals] + self._noise_fields,
-                                         key=lambda x: x[0])
+                                         key=lambda x: x[0]) + implanting_fields
 
         self._custom_fields = self._annotation_fields + [('p_gen', float), ('from_default_model', int)]
         self._background_fields = [(f.name, f.type) for f in fields(BackgroundSequences)]
