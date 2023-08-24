@@ -1,13 +1,16 @@
 import copy
+import dataclasses
 import math
 import os
 import random
-from dataclasses import fields, field
+from dataclasses import fields, field, Field
 from itertools import chain
 from multiprocessing import Pool
 from pathlib import Path
+from pprint import pprint
 from typing import List, Dict, Tuple
 
+import dill
 import numpy as np
 from bionumpy.bnpdataclass import BNPDataClass
 
@@ -89,8 +92,9 @@ class LigoSimInstruction(Instruction):
         self._noise_fields = [(f"observed_{s.id}", int) for s in self.state.signals] if self._export_observed_signals else []
 
         if isinstance(self.state.simulation.simulation_strategy, ImplantingStrategy):
-            implanting_fields = [('original_sequence', str, field(default='')),
-                                 ('original_p_gen', float, field(default=-1))]
+            field_seq, field_p_gen = field(default='', metadata=None), field(default=-1., metadata=None)
+            implanting_fields = [('original_sequence', str, dill.dumps(field_seq)),
+                                 ('original_p_gen', float, dill.dumps(field_p_gen))]
         else:
             implanting_fields = []
 
@@ -148,7 +152,7 @@ class LigoSimInstruction(Instruction):
             chunk_size = math.ceil(len(self.state.simulation.sim_items) / self._number_of_processes)
 
             with Pool(processes=max(self._number_of_processes, len(self.state.simulation.sim_items))) as pool:
-                result = pool.map(self._create_examples, [vars(item) for item in self.state.simulation.sim_items], chunksize=chunk_size)
+                result = pool.map(self._create_examples, [dill.dumps(item) for item in self.state.simulation.sim_items], chunksize=chunk_size)
                 examples = {k: v for d in result for k, v in d.items()}
         else:
             examples = {}
@@ -202,7 +206,7 @@ class LigoSimInstruction(Instruction):
 
     def _create_examples(self, item_in) -> Dict[str, list]:
 
-        item = SimConfigItem(**item_in) if isinstance(item_in, dict) else item_in
+        item = dill.loads(item_in) if isinstance(item_in, bytes) else item_in
 
         if self.state.simulation.is_repertoire:
             res = self._create_repertoires(item)

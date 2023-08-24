@@ -4,6 +4,7 @@ numpy
 olga
 pyyaml
 airr<1.4
+dill
 plotly
 pystache
 pytest

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import List, Dict, Union
 
 import bionumpy as bnp
+import dill
 import numpy as np
 from bionumpy import AminoAcidEncoding, DNAEncoding, EncodedRaggedArray, get_motif_scores
 from bionumpy.bnpdataclass import bnpdataclass, BNPDataClass
@@ -280,7 +281,9 @@ def make_annotated_dataclass(annotation_fields: list, signals: list):
         "get_signal_matrix": lambda self: np.array([getattr(self, signal.id) for signal in signals]).T if signals and len(signals) > 0 else None,
         "get_signal_names": lambda self: [signal.id for signal in signals]}
 
-    return bnpdataclass(make_dataclass("AnnotatedGenData", namespace=functions, bases=tuple([BackgroundSequences]), fields=annotation_fields))
+    fields = [f if len(f) != 3 else (f[0], f[1], dill.loads(f[2])) for f in annotation_fields]
+
+    return bnpdataclass(make_dataclass("AnnotatedGenData", namespace=functions, bases=tuple([BackgroundSequences]), fields=fields))
 
 
 def build_imgt_positions(sequence_length: int, motif_instance: MotifInstance, sequence_region_type):
@@ -372,16 +375,18 @@ def get_signal_sequences(bnp_data_class, used_seq_count: dict, sim_item: SimConf
         skip_rows = used_seq_count[signal.id]
         n_rows = round(sim_item.receptors_in_repertoire_count * sim_item.signal_proportions[signal])
 
-        sequences_sig = get_bnp_data(sequence_paths[signal.id], bnp_data_class)[skip_rows:skip_rows + n_rows]
+        data = get_bnp_data(sequence_paths[signal.id], bnp_data_class)
+        if data is not None:
+            sequences_sig = data[skip_rows:skip_rows + n_rows]
 
-        used_seq_count[signal.id] += n_rows
+            used_seq_count[signal.id] += n_rows
 
-        sequences_sig = assign_duplicate_counts(sequences_sig, signal.clonal_frequency)
+            sequences_sig = assign_duplicate_counts(sequences_sig, signal.clonal_frequency)
 
-        if sequences is None:
-            sequences = sequences_sig
-        else:
-            sequences = merge_dataclass_objects([sequences, sequences_sig])
+            if sequences is None:
+                sequences = sequences_sig
+            else:
+                sequences = merge_dataclass_objects([sequences, sequences_sig])
 
     return sequences, used_seq_count
 
