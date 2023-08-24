@@ -1,8 +1,11 @@
+import sys
 from pathlib import Path
+from pprint import pprint
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 from ligo.environment.SequenceType import SequenceType
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
@@ -33,26 +36,56 @@ def report_signal_cooccurrences(unique_values: np.ndarray, counts: np.ndarray, p
     return ReportResult('signal co-occurrences', output_figures=[fig_output], output_tables=[csv_output])
 
 
-def report_signal_cond_probs(signal_matrix: np.ndarray, signal_names: list, path: Path) -> ReportResult:
-    cond_probs = np.zeros(shape=(len(signal_names), len(signal_names)))
+def report_signal_joint_probs(signal_matrix: np.ndarray, signal_names: list, path: Path) -> ReportResult:
+    joint_probs = np.zeros(shape=(len(signal_names), len(signal_names)))
     for outer_index, outer_signal in enumerate(signal_names):
         for inner_index, inner_signal in enumerate(signal_names):
             if inner_index == outer_index:
-                cond_probs[inner_index, outer_index] = 1.
+                joint_probs[inner_index, outer_index] = 1.
             elif inner_index < outer_index:
-                cond_probs[inner_index, outer_index] = cond_probs[outer_index, inner_index]
+                joint_probs[inner_index, outer_index] = joint_probs[outer_index, inner_index]
             else:
-                cond_probs[inner_index, outer_index] = np.logical_and(signal_matrix[:, inner_index], signal_matrix[:, outer_index]).sum() / signal_matrix.shape[0]
+                joint_probs[inner_index, outer_index] = np.logical_and(signal_matrix[:, inner_index], signal_matrix[:, outer_index]).sum() / signal_matrix.shape[0]
 
-    table_output = ReportOutput(path / 'conditional_probabilities_of_signals_co-occurring.csv', "conditional probabilities of signals co-occurring")
-    df = pd.DataFrame(cond_probs, index=signal_names, columns=signal_names)
+    table_output = ReportOutput(path / 'joint_probabilities_of_signals_co-occurring.csv', "joint probabilities of signals co-occurring")
+    df = pd.DataFrame(joint_probs, index=signal_names, columns=signal_names)
     df.to_csv(str(table_output.path))
 
     fig = px.imshow(df, text_auto=True, color_continuous_scale='Aggrnyl')
-    fig_output = ReportOutput(path / 'conditional_probabilities_of_signals_co-occurring.html', "conditional probabilities of signals co-occurring")
+    fig_output = ReportOutput(path / 'joint_probabilities_of_signals_co-occurring.html', "joint probabilities of signals co-occurring")
     fig.write_html(str(fig_output.path))
 
-    return ReportResult('conditional probabilities of signals co-occurring', output_figures=[fig_output], output_tables=[table_output])
+    return ReportResult('joint probabilities of signals co-occurring', output_figures=[fig_output], output_tables=[table_output])
+
+
+def report_signal_cond_probs(signal_matrix: np.ndarray, signal_names: list, path: Path) -> ReportResult:
+    cond_probs = np.zeros(shape=(len(signal_names), len(signal_names)))
+
+    for outer_index, outer_signal in enumerate(signal_names):
+        for inner_index, inner_signal in enumerate(signal_names):
+            if inner_index == outer_index:
+                cond_probs[outer_index, inner_index] = 1.
+            else:
+                cond_probs[outer_index, inner_index] = np.logical_and(signal_matrix[:, inner_index], signal_matrix[:, outer_index]).sum() / signal_matrix[:, inner_index].sum()
+
+    description = "conditional probabilities of one signal given another signal"
+
+    table_output = ReportOutput(path / 'cond_probabilities_of_signals_co-occurring.csv', description)
+    df = pd.DataFrame(cond_probs, index=signal_names, columns=signal_names)
+    df.to_csv(str(table_output.path))
+
+    hovertext = [[f'P({signal_names[outer_ind]} | {signal_names[inner_ind]}) = ' \
+                  f'{round(df.values[outer_ind, inner_ind], 3) if df.values[outer_ind, inner_ind] != np.nan else np.nan}'
+                  for inner_ind in range(len(signal_names))] for outer_ind in range(len(signal_names))]
+
+    fig = px.imshow(df, color_continuous_scale='Aggrnyl')
+    fig.update_traces(text=df.values.round(3), texttemplate="%{text}", customdata=hovertext,
+                      hovertemplate="%{customdata}<extra></extra>")
+    fig.update_layout(template='plotly_white', xaxis_title='', yaxis_title='')
+    fig_output = ReportOutput(path / 'cond_probabilities_of_signals_co-occurring.html', description)
+    fig.write_html(str(fig_output.path))
+
+    return ReportResult(description, output_figures=[fig_output], output_tables=[table_output])
 
 
 def report_p_gen_histogram(sequences: BackgroundSequences, p_gen_bin_count: int, path: Path) -> ReportResult:

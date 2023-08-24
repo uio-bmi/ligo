@@ -16,8 +16,9 @@ from ligo.util.Logger import print_log
 from ligo.util.PathBuilder import PathBuilder
 from ligo.util.Reports import ReportResult
 from ligo.workflows.instructions.Instruction import Instruction
-from ligo.workflows.instructions.ligo_sim_feasibility.feasibility_reports import report_signal_frequencies, report_signal_cooccurrences, \
-    report_p_gen_histogram, report_seq_len_dist, report_signal_cond_probs
+from ligo.workflows.instructions.ligo_sim_feasibility.feasibility_reports import report_signal_frequencies, \
+    report_signal_cooccurrences, \
+    report_p_gen_histogram, report_seq_len_dist, report_signal_joint_probs, report_signal_cond_probs
 
 
 @dataclass
@@ -25,6 +26,7 @@ class FeasibilitySumReports:
     signal_frequencies: ReportResult = None
     signal_cooccurrences: ReportResult = None
     signal_cond_probs: ReportResult = None
+    signal_joint_probs: ReportResult = None
     p_gen_histogram: ReportResult = None
     seq_len_dist: ReportResult = None
     warnings: list = field(default_factory=list)
@@ -138,6 +140,7 @@ class FeasibilitySummaryInstruction(Instruction):
             PathBuilder.build(path)
             unique_values, counts = np.unique(sequences.get_signal_matrix().sum(axis=1).reshape(-1, 1), return_counts=True)
             self.state.reports[model_name].signal_cooccurrences = report_signal_cooccurrences(unique_values, counts, path)
+            self.state.reports[model_name].signal_joint_probs = report_signal_joint_probs(sequences.get_signal_matrix(), sequences.get_signal_names(), path)
             self.state.reports[model_name].signal_cond_probs = report_signal_cond_probs(sequences.get_signal_matrix(), sequences.get_signal_names(), path)
 
             print_log(f"Examined signal co-occurrences for {len(self.state.signals)} signals for model {model_name}.", include_datetime=True)

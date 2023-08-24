@@ -23,10 +23,13 @@ def prepare_specs(path) -> Path:
         "definitions": {
             "motifs": {
                 "motif1": {
-                    "seed": "A"
+                    "seed": "AS"
                 },
                 "motif2": {
-                    "seed": "GGTSAYY"
+                    "seed": "G"
+                },
+                "motif3": {
+                    "seed": "C"
                 }
             },
             "signals": {
@@ -35,6 +38,9 @@ def prepare_specs(path) -> Path:
                 },
                 "signal2": {
                     "motifs": ["motif2"]
+                },
+                "signal3": {
+                    "motifs": ["motif3"]
                 }
             },
             "simulations": {
@@ -89,7 +95,7 @@ def prepare_specs(path) -> Path:
             "inst1": {
                 "type": "FeasibilitySummary",
                 "simulation": "sim1",
-                "sequence_count": 100
+                "sequence_count": 10
             }
         },
         "output": {

@@ -16,7 +16,6 @@ def test_make_bnpdataclass_from_dict():
     encoding_dict = {"sequence": DNAEncoding}
 
     obj = make_bnp_dataclass_object_from_dicts(dict_list, encoding_dict)
-    print(obj)
 
     with pytest.raises(Exception):
         dict_list[0]["a"] = "e"
