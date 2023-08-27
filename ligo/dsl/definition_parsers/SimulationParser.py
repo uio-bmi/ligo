@@ -61,6 +61,11 @@ def _parse_ligo_simulation(simulation: dict, key: str, symbol_table: SymbolTable
         sim_items.append(sim_item)
         simulation['sim_items'][sim_key] = sim_item_dict
 
+        if simulation['simulation_strategy'] == "Implanting":
+            assert all(signal.is_present_custom_func is None for signal in sim_item.signals), \
+                f"Simulation {key}: if using signals with custom functions, switch to RejectionSampling simulation " \
+                f"strategy; Implanting does not support custom functions."
+
     sim_obj = SimConfig(**{**{k: v for k, v in simulation.items() if k != 'type'},
                            **{'sequence_type': SequenceType[simulation['sequence_type'].upper()], "sim_items": sim_items, "identifier": key,
                               'simulation_strategy': sim_strategy_cls()}})
@@ -201,9 +206,9 @@ def _parse_generative_model(simulation_item: dict, location: str):
 def _signal_content_matches_seq_type(simulation: SimConfig):
     for sim_item in simulation.sim_items:
         for signal in sim_item.signals:
-            if isinstance(signal, SignalPair):
+            if isinstance(signal, SignalPair) and signal.signal1.is_present_custom_func is None and signal.signal2.is_present_custom_func is None:
                 _motif_content_matches_seq_type(signal.signal1.motifs + signal.signal2.motifs, simulation.sequence_type)
-            else:
+            elif signal.is_present_custom_func is None:
                 _motif_content_matches_seq_type(signal.motifs, simulation.sequence_type)
 
 

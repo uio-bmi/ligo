@@ -1,4 +1,5 @@
 import random
+import typing
 from dataclasses import dataclass
 from typing import List, Union
 
@@ -28,6 +29,15 @@ class Signal:
 
     - j_call (str): J gene with allele if available that has to co-occur with one of the motifs for the signal to exist; can be used in combination with rejection sampling, or full sequence implanting, otherwise ignored; to match in a sequence for rejection sampling, it is checked if this value is contained in the same field of generated sequence;
 
+    - source_file (str): path to the file where the custom signal function is; cannot be combined with the arguments listed above (motifs, v_call, j_call, sequence_position_weights)
+
+    - is_present_func (str): name of the function from the source_file file that will be used to specify the signal; the function's signature must be:
+
+    .. code-block:: python
+
+        def is_present(sequence_aa: str, sequence: str, v_call: str, j_call: str) -> bool:
+            # custom implementation where all or some of these arguments can be used
+
     - clonal_frequency (dict): clonal frequency in Ligo is simulated through `scipy's zeta distribution function for generating random numbers <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.zipf.html>`_, with parameters provided under clonal_frequency parameter. If clonal frequency should not be used, this parameter can be None
 
     .. code-block:: yaml
@@ -54,14 +64,21 @@ class Signal:
                 clonal_frequency:
                     a: 2
                     loc: 0
+            signal_with_custom_func:
+                source_file: signal_func.py
+                is_present_func: is_signal_present
+                clonal_frequency:
+                    a: 2
+                    loc: 0
 
     """
     id: str
-    motifs: List[Union[Motif, List[Motif]]]
+    motifs: List[Union[Motif, List[Motif]]] = None
     sequence_position_weights: dict = None
     v_call: str = None
     j_call: str = None
     clonal_frequency: dict = None
+    is_present_custom_func: typing.Callable = None
 
     def get_all_motif_instances(self, sequence_type: SequenceType):
         motif_instances = []
