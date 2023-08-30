@@ -105,8 +105,21 @@ class ImmuneMLParser:
     @staticmethod
     def parse_yaml_file(file_path: Path, result_path: Path = None, parse_func=None):
         try:
+
+            loader = yaml.SafeLoader
+            loader.add_implicit_resolver(
+                u'tag:yaml.org,2002:float',
+                re.compile(u'''^(?:
+                 [-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+]?[0-9]+)?
+                |[-+]?(?:[0-9][0-9_]*)(?:[eE][-+]?[0-9]+)
+                |\\.[0-9_]+(?:[eE][-+][0-9]+)?
+                |[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*
+                |[-+]?\\.(?:inf|Inf|INF)
+                |\\.(?:nan|NaN|NAN))$''', re.X),
+                list(u'-+0123456789.'))
+
             with file_path.open("r") as file:
-                workflow_specification = yaml.safe_load(file)
+                workflow_specification = yaml.load(file, Loader=loader)
                 ImmuneMLParser.check_keys(workflow_specification)
         except yaml.YAMLError as exc:
             problem_description = "\n--------------------------------------------------------------------------------\n" \
