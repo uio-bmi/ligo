@@ -77,8 +77,9 @@ def construct_sequence_metadata_object(sequence, metadata: dict, custom_params, 
                                        chain: Chain) -> SequenceMetadata:
     custom = {}
 
-    for key, key_type in custom_params:
-        if 'position' in key or 'signals_aggregated' in key:
+    for param in custom_params:
+        key, key_type = param[0], param[1]
+        if any(str_key in key for str_key in ['position', 'signals_aggregated', 'original_sequence']):
             custom[key] = getattr(sequence, key).to_string()
         else:
             custom[key] = getattr(sequence, key).item()
