@@ -30,23 +30,25 @@ class ImplantingStrategy(SimulationStrategy):
         filtered_sequences = filter_out_illegal_sequences(sequences, sim_item, all_signals,
                                                           max_signals_per_sequence=0 if remove_positives_first else -1,
                                                           max_motifs_per_sequence=1)
+        if len(filtered_sequences) > 0:
+            remaining_seq_mask, implanted_sequences = self._implant_in_sequences(filtered_sequences, sequence_type, sim_item, seqs_per_signal_count,
+                                                                                 all_signals, use_p_gens)
 
-        remaining_seq_mask, implanted_sequences = self._implant_in_sequences(filtered_sequences, sequence_type, sim_item, seqs_per_signal_count,
-                                                                             all_signals, use_p_gens)
+            annotated_dc = type(sequences).extend((('original_sequence', str), ('original_p_gen', float)))
+            if remaining_seq_mask.sum() > 0:
+                added_fields = {'original_sequence': ['' for _ in range(remaining_seq_mask.sum())],
+                                'original_p_gen': [-1. for _ in range(remaining_seq_mask.sum())]}
+                remaining_seqs = filtered_sequences[remaining_seq_mask].add_fields(added_fields,
+                                                                                   field_type_map={'original_sequence': str,
+                                                                                                   'original_p_gen': float})
+                processed_seqs = merge_dataclass_objects([remaining_seqs, annotated_dc(**implanted_sequences)])
+            else:
+                processed_seqs = annotated_dc(**implanted_sequences)
 
-        annotated_dc = type(sequences).extend((('original_sequence', str), ('original_p_gen', float)))
-        if remaining_seq_mask.sum() > 0:
-            added_fields = {'original_sequence': ['' for _ in range(remaining_seq_mask.sum())],
-                            'original_p_gen': [-1. for _ in range(remaining_seq_mask.sum())]}
-            remaining_seqs = filtered_sequences[remaining_seq_mask].add_fields(added_fields,
-                                                                               field_type_map={'original_sequence': str,
-                                                                                               'original_p_gen': float})
-            processed_seqs = merge_dataclass_objects([remaining_seqs, annotated_dc(**implanted_sequences)])
+            if remove_positives_first and len(processed_seqs) > 0:
+                processed_seqs = self._remove_invalid(processed_seqs, sequence_type, sim_item, all_signals, annotated_dc)
         else:
-            processed_seqs = annotated_dc(**implanted_sequences)
-
-        if remove_positives_first:
-            processed_seqs = self._remove_invalid(processed_seqs, sequence_type, sim_item, all_signals, annotated_dc)
+            processed_seqs = None
 
         return processed_seqs
 
@@ -96,7 +98,14 @@ class ImplantingStrategy(SimulationStrategy):
         position_weights = PositionHelper.build_position_weights(signal.sequence_position_weights, imgt_aa_positions, limit)
         implant_position = choose_implant_position(imgt_aa_positions, position_weights)
 
-        new_sequence = self._make_new_sequence(sequence_row, motif_instance, implant_position, sequence_type)
+        try:
+            new_sequence = self._make_new_sequence(sequence_row, motif_instance, implant_position, sequence_type)
+        except AssertionError as ae:
+            print(f"imgt positions: {imgt_aa_positions}")
+            print(f"motif length: {limit}")
+            print(f"position_weights: {position_weights}")
+            print(f"implant position: {implant_position}")
+            raise ae
 
         if use_p_gens:
             new_sequence['p_gen'] = sim_item.generative_model.compute_p_gen(
@@ -134,6 +143,10 @@ class ImplantingStrategy(SimulationStrategy):
 
         new_sequence_string = sequence_string[:position] + motif_left + sequence_string[gap_start:gap_end] + motif_right + \
                               sequence_string[gap_end + len(motif_right):]
+
+        assert len(new_sequence_string) == len(sequence_string), \
+            (f"An error occurred during implanting:\noriginal sequence: {sequence_string}\n"
+             f"new sequence: {new_sequence_string}\nposition: {position}\nmotif: {motif_instance.instance}")
 
         sequence_dict = {'region_type': sequence_row.region_type, 'frame_type': '', 'v_call': sequence_row.v_call, 'j_call': sequence_row.j_call,
                          'sequence': '', 'sequence_aa': new_sequence_string}

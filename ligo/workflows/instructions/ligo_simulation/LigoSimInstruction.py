@@ -283,12 +283,13 @@ class LigoSimInstruction(Instruction):
                                                                                     self.sequence_type, sim_item, self.state.signals,
                                                                                     self.state.simulation.remove_seqs_with_signals)
 
-            if self.state.simulation.keep_p_gen_dist and sim_item.generative_model.can_compute_p_gens():
-                sequences = self._filter_using_p_gens(sequences, sim_item)
+            if sequences is not None and len(sequences) > 0:
+                if self.state.simulation.keep_p_gen_dist and sim_item.generative_model.can_compute_p_gens():
+                    sequences = self._filter_using_p_gens(sequences, sim_item)
 
-            seqs_per_signal_count['no_signal'] = update_seqs_without_signal(seqs_per_signal_count['no_signal'], sequences, seq_paths['no_signal'])
-            seqs_per_signal_count = update_seqs_with_signal(copy.deepcopy(seqs_per_signal_count), sequences, self.state.signals, sim_item.signals,
-                                                            seq_paths)
+                seqs_per_signal_count['no_signal'] = update_seqs_without_signal(seqs_per_signal_count['no_signal'], sequences, seq_paths['no_signal'])
+                seqs_per_signal_count = update_seqs_with_signal(copy.deepcopy(seqs_per_signal_count), sequences, self.state.signals, sim_item.signals,
+                                                                seq_paths)
 
             print_log(f"Finished iteration {iteration} in {sim_item.name}: remaining sequence count per signal for {sim_item.name}: "
                       f"{seqs_per_signal_count}" if sum(seqs_per_signal_count.values()) > 0 else f"{sim_item.name} simulation finished", True)

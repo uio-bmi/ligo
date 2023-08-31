@@ -1,5 +1,6 @@
 import logging
 import math
+import numpy as np
 
 from ligo.data_model.receptor.RegionType import RegionType
 from ligo.data_model.receptor.receptor_sequence.ReceptorSequence import ReceptorSequence
@@ -73,9 +74,10 @@ class PositionHelper:
         if sequence_position_weights is not None:
             position_weights = PositionHelper.adjust_position_weights(sequence_position_weights, imgt_positions, limit)
         else:
-            valid_position_count = len(imgt_positions) - limit
+            valid_position_count = len(imgt_positions) - limit + 1
             position_weights = {imgt_positions[i]: 1.0 / valid_position_count if i < valid_position_count else 0
                                 for i in range(len(imgt_positions))}
+            assert np.isclose(sum(list(position_weights.values())), 1.0), (sum(list(position_weights.values())), position_weights)
             logging.warning('Position weights are not defined. Randomly choosing position to implant motif_instance instead.')
 
         return position_weights
