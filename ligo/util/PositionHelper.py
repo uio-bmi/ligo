@@ -71,7 +71,7 @@ class PositionHelper:
 
     @staticmethod
     def build_position_weights(sequence_position_weights: dict, imgt_positions, limit: int) -> dict:
-        if sequence_position_weights is not None:
+        if sequence_position_weights is not None and bool(sequence_position_weights):
             position_weights = PositionHelper.adjust_position_weights(sequence_position_weights, imgt_positions, limit)
         else:
             valid_position_count = len(imgt_positions) - limit + 1
