@@ -98,14 +98,7 @@ class ImplantingStrategy(SimulationStrategy):
         position_weights = PositionHelper.build_position_weights(signal.sequence_position_weights, imgt_aa_positions, limit)
         implant_position = choose_implant_position(imgt_aa_positions, position_weights)
 
-        try:
-            new_sequence = self._make_new_sequence(sequence_row, motif_instance, implant_position, sequence_type)
-        except AssertionError as ae:
-            print(f"imgt positions: {imgt_aa_positions}")
-            print(f"motif length: {limit}")
-            print(f"position_weights: {position_weights}")
-            print(f"implant position: {implant_position}")
-            raise ae
+        new_sequence = self._make_new_sequence(sequence_row, motif_instance, implant_position, sequence_type)
 
         if use_p_gens:
             new_sequence['p_gen'] = sim_item.generative_model.compute_p_gen(
