@@ -187,7 +187,13 @@ def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encod
             matches = match_motif_regexes(motifs, encoding, sequence_array, matches_gene, matches)
 
         if allowed_positions is not None:
-            matches = np.logical_and(matches, allowed_positions)
+            try:
+                matches = np.logical_and(matches, allowed_positions)
+            except TypeError as e:
+                print(allowed_positions)
+                print(matches)
+                print(signal)
+                raise e
 
         signal_pos_col = np.logical_or(signal_pos_col, matches) if signal_pos_col is not None else matches
         signal_matrix[:, signal_index] = np.logical_or(signal_matrix[:, signal_index],

@@ -17,8 +17,8 @@ class PositionHelper:
         imgt_positions = imgt_range[:math.ceil(length / 2)] + imgt_range[-math.floor(length / 2):]
         if input_length > 13:
             len_insert = input_length - 13
-            insert_left = [111 + 0.001 * i for i in range(1, math.floor(len_insert / 2) + 1)]
-            insert_right = [112 + 0.001 * i for i in range(1, math.ceil(len_insert / 2) + 1)]
+            insert_left = [111 + 0.1 * i for i in range(1, math.floor(len_insert / 2) + 1)]
+            insert_right = [112 + 0.1 * i for i in range(1, math.ceil(len_insert / 2) + 1)]
             insert = insert_left + list(reversed(insert_right))
             imgt_positions[math.ceil(len(imgt_range) / 2):math.ceil(len(imgt_range) / 2)] = insert
         return imgt_positions

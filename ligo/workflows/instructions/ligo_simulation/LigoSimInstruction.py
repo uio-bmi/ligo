@@ -28,6 +28,7 @@ from ligo.simulation.SimConfigItem import SimConfigItem
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
 from ligo.simulation.implants.Signal import Signal
 from ligo.simulation.simulation_strategy.ImplantingStrategy import ImplantingStrategy
+from ligo.simulation.simulation_strategy.RejectionSamplingStrategy import RejectionSamplingStrategy
 from ligo.simulation.util.bnp_util import merge_dataclass_objects
 from ligo.simulation.util.util import get_bnp_data, make_receptor_sequence_objects, make_annotated_dataclass, get_sequence_per_signal_count, \
     update_seqs_without_signal, update_seqs_with_signal, check_iteration_progress, make_sequence_paths, make_signal_metadata, needs_seqs_with_signal, \
@@ -83,7 +84,7 @@ class LigoSimInstruction(Instruction):
         self._max_iterations = max_iterations
         self._export_p_gens = export_p_gens
 
-        self._use_p_gens = (self._export_p_gens or self.state.simulation.keep_p_gen_dist) and \
+        self._use_p_gens = self.state.simulation.keep_p_gen_dist and \
                            all(sim_item.generative_model.can_compute_p_gens() for sim_item in self.state.simulation.sim_items)
 
         self._export_observed_signals = any([it.false_negative_prob_in_receptors > 0 or it.false_positive_prob_in_receptors > 0
@@ -284,6 +285,11 @@ class LigoSimInstruction(Instruction):
                                                                                     self.state.simulation.remove_seqs_with_signals)
 
             if sequences is not None and len(sequences) > 0:
+
+                if self._export_p_gens and sim_item.generative_model.can_compute_p_gens() and isinstance(
+                        self.state.simulation.simulation_strategy, RejectionSamplingStrategy):
+                    sequences = self._update_sequences_with_missing_p_gens(sequences, sim_item)
+
                 if self.state.simulation.keep_p_gen_dist and sim_item.generative_model.can_compute_p_gens():
                     sequences = self._filter_using_p_gens(sequences, sim_item)
 
@@ -344,11 +350,15 @@ class LigoSimInstruction(Instruction):
         self.state.target_p_gen_histogram[sim_item_name][np.logical_not(zero_regions)] -= \
             ImplantingStrategy.MIN_RANGE_PROBABILITY * np.sum(zero_regions) / np.sum(np.logical_not(zero_regions))
 
-    def _filter_using_p_gens(self, sequences: BackgroundSequences, sim_item: SimConfigItem) -> Tuple[BNPDataClass, dict]:
+
+    def _update_sequences_with_missing_p_gens(self, sequences: BackgroundSequences, sim_item: SimConfigItem):
         if np.any(sequences.p_gen == -1):
             missing_p_gens = sequences.p_gen == -1
             sequences.p_gen[missing_p_gens] = sim_item.generative_model.compute_p_gens(sequences[missing_p_gens], self.state.simulation.sequence_type)
+        return sequences
 
+    def _filter_using_p_gens(self, sequences: BackgroundSequences, sim_item: SimConfigItem) -> Tuple[BNPDataClass, dict]:
+        sequences = self._update_sequences_with_missing_p_gens(sequences, sim_item)
         p_gens = np.log10(sequences.p_gen)
         sequence_bins = np.digitize(p_gens, self.state.p_gen_bins[sim_item.name]) - 1
         keep_sequences = np.random.uniform(0, 1, len(sequences)) <= self.state.target_p_gen_histogram[sim_item.name][sequence_bins]

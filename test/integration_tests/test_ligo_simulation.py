@@ -51,7 +51,6 @@ class TestLIgOSimulation(TestCase):
                                 "signals": {"signal1": 0.3, "signal2": 0.3},
                                 "number_of_examples": 10,
                                 "is_noise": False,
-                                "seed": 100,
                                 "receptors_in_repertoire_count": 6,
                                 "generative_model": {
                                     "type": "OLGA",
@@ -68,7 +67,6 @@ class TestLIgOSimulation(TestCase):
                                 "signals": {"signal1": 0.5, "signal2": 0.5},
                                 "number_of_examples": 10,
                                 "is_noise": True,
-                                "seed": 2,
                                 "receptors_in_repertoire_count": 6,
                                 "generative_model": {
                                     'type': 'OLGA',

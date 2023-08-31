@@ -118,7 +118,7 @@ def _parse_sim_config_item(simulation_item: dict, key: str, symbol_table: Symbol
 
     _validate_sequence_len_limits(simulation_item)
 
-    for k in ['number_of_examples', 'seed']:
+    for k in ['number_of_examples']:
         ParameterValidator.assert_type_and_value(simulation_item[k], int, location, k, min_inclusive=1)
 
     for k, val_type in zip(['receptors_in_repertoire_count', 'immune_events'], [int, dict]):
