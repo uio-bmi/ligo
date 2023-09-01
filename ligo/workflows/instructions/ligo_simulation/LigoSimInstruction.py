@@ -84,7 +84,7 @@ class LigoSimInstruction(Instruction):
         self._max_iterations = max_iterations
         self._export_p_gens = export_p_gens
 
-        self._use_p_gens = self.state.simulation.keep_p_gen_dist and \
+        self._use_p_gens = (self.state.simulation.keep_p_gen_dist or (isinstance(self.state.simulation.simulation_strategy, ImplantingStrategy) and self._export_p_gens)) and \
                            all(sim_item.generative_model.can_compute_p_gens() for sim_item in self.state.simulation.sim_items)
 
         self._export_observed_signals = any([it.false_negative_prob_in_receptors > 0 or it.false_positive_prob_in_receptors > 0
