@@ -1,3 +1,6 @@
+import numpy as np
+
+from ligo.data_model.receptor.RegionType import RegionType
 from ligo.util.PositionHelper import PositionHelper
 
 
@@ -14,3 +17,12 @@ def test_build_position_weights():
                                                     imgt_positions=imgt_positions, limit=3)
 
     print(weights)
+
+
+def test_compute_pos_weights_from_length():
+    weights = PositionHelper.compute_pos_weights_from_length(7, RegionType.IMGT_JUNCTION,
+                                                             {104: 0, 105: 0}, 2)
+
+    assert np.isclose(sum(list(weights.values())), 1), weights
+    assert all(weights[pos] == 0 for pos in [104, 105, 117, 118])
+    assert all(np.isclose(weights[pos], 0.3333333333333333) for pos in [106, 107, 116])

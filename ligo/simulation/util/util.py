@@ -114,9 +114,8 @@ def make_sequence_paths(path: Path, signals: List[Signal]) -> Dict[str, Path]:
 def get_allowed_positions(signal: Signal, sequence_array: RaggedArray, region_type: RegionType):
     sequence_lengths = sequence_array.lengths
     if bool(signal.sequence_position_weights):
-        signal_positions = [key for key, val in signal.sequence_position_weights.items() if val > 0]
         allowed_positions = RaggedArray(
-            [[pos in signal_positions for pos in PositionHelper.gen_imgt_positions_from_length(seq_len, region_type)]
+            [PositionHelper.get_allowed_positions_for_signal(seq_len, region_type, signal.sequence_position_weights)
              for seq_len in sequence_lengths])
     else:
         allowed_positions = None
@@ -187,13 +186,7 @@ def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encod
             matches = match_motif_regexes(motifs, encoding, sequence_array, matches_gene, matches)
 
         if allowed_positions is not None:
-            try:
-                matches = np.logical_and(matches, allowed_positions)
-            except TypeError as e:
-                print(allowed_positions)
-                print(matches)
-                print(signal)
-                raise e
+            matches = np.logical_and(matches, allowed_positions)
 
         signal_pos_col = np.logical_or(signal_pos_col, matches) if signal_pos_col is not None else matches
         signal_matrix[:, signal_index] = np.logical_or(signal_matrix[:, signal_index],

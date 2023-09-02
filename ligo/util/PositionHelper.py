@@ -1,4 +1,5 @@
 import logging
+
 import math
 import numpy as np
 
@@ -44,6 +45,35 @@ class PositionHelper:
             return PositionHelper.gen_imgt_positions_from_junction_length(input_length)
         else:
             raise NotImplementedError(f"PositionHelper: IMGT positions are not implemented for region type {region_type}")
+
+    @staticmethod
+    def compute_pos_weights_from_length(input_length: int, region_type: RegionType, sequence_position_weights: dict,
+                                        limit: int = 0) -> dict:
+        imgt_positions = PositionHelper.gen_imgt_positions_from_length(input_length, region_type)
+
+        position_weights = {}
+        for index, position in enumerate(imgt_positions):
+            if position in sequence_position_weights and index < input_length - limit:
+                position_weights[position] = sequence_position_weights[position]
+            elif index >= input_length - limit:
+                position_weights[position] = 0.
+
+        weights_sum = sum(list(position_weights.values()))
+        remaining_weight_for_position = (1 - weights_sum) / (len(imgt_positions) - len(position_weights))
+        for position in imgt_positions:
+            if position not in position_weights:
+                position_weights[position] = remaining_weight_for_position
+
+        assert np.isclose(sum(list(position_weights.values())), 1), position_weights
+
+        return {position: position_weights[position] for position in imgt_positions}
+
+    @staticmethod
+    def get_allowed_positions_for_signal(sequence_length: int, region_type: RegionType, sequence_position_weights: dict) -> list:
+        weights = PositionHelper.compute_pos_weights_from_length(sequence_length, region_type, sequence_position_weights)
+        return [int(bool(weight)) for weight in weights.values()]
+
+
 
     @staticmethod
     def adjust_position_weights(sequence_position_weights: dict, imgt_positions, limit: int) -> dict:
