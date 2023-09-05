@@ -115,7 +115,7 @@ def get_allowed_positions(signal: Signal, sequence_array: RaggedArray, region_ty
     sequence_lengths = sequence_array.lengths
     if bool(signal.sequence_position_weights):
         allowed_positions = RaggedArray(
-            [PositionHelper.get_allowed_positions_for_signal(seq_len, region_type, signal.sequence_position_weights)
+            [PositionHelper.get_allowed_positions_for_annotation(seq_len, region_type, signal.sequence_position_weights)
              for seq_len in sequence_lengths])
     else:
         allowed_positions = None
@@ -357,7 +357,7 @@ def choose_implant_position(imgt_positions, position_weights):
 def check_iteration_progress(iteration: int, max_iterations: int):
     if iteration == round(max_iterations * 0.75):
         logging.warning(
-            f"Iteration {iteration} out of {max_iterations} max iterations reached during rejection sampling.")
+            f"Iteration {iteration} out of {max_iterations} max iterations reached during simulation.")
 
 
 def check_sequence_count(sim_item, sequences: BackgroundSequences):

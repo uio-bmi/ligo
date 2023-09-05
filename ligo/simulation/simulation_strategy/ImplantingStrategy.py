@@ -5,6 +5,7 @@ from typing import List
 import numpy as np
 from bionumpy.bnpdataclass import BNPDataClass
 
+from ligo.data_model.receptor.RegionType import RegionType
 from ligo.data_model.receptor.receptor_sequence.ReceptorSequence import ReceptorSequence
 from ligo.environment.SequenceType import SequenceType
 from ligo.simulation.SimConfigItem import SimConfigItem
@@ -13,7 +14,8 @@ from ligo.simulation.implants.MotifInstance import MotifInstance
 from ligo.simulation.implants.Signal import Signal, SignalPair
 from ligo.simulation.simulation_strategy.SimulationStrategy import SimulationStrategy
 from ligo.simulation.util.bnp_util import merge_dataclass_objects
-from ligo.simulation.util.util import build_imgt_positions, choose_implant_position, filter_out_illegal_sequences, annotate_sequences
+from ligo.simulation.util.util import choose_implant_position, filter_out_illegal_sequences, \
+    annotate_sequences
 from ligo.util.Logger import print_log
 from ligo.util.PositionHelper import PositionHelper
 
@@ -21,8 +23,10 @@ from ligo.util.PositionHelper import PositionHelper
 class ImplantingStrategy(SimulationStrategy):
     MIN_RANGE_PROBABILITY = 1e-5
 
-    def process_sequences(self, sequences: BNPDataClass, seqs_per_signal_count: dict, use_p_gens: bool, sequence_type: SequenceType,
-                          sim_item: SimConfigItem, all_signals: List[Signal], remove_positives_first: bool) -> BNPDataClass:
+    def process_sequences(self, sequences: BNPDataClass, seqs_per_signal_count: dict, use_p_gens: bool,
+                          sequence_type: SequenceType,
+                          sim_item: SimConfigItem, all_signals: List[Signal],
+                          remove_positives_first: bool) -> BNPDataClass:
 
         assert all(not isinstance(signal, SignalPair) for signal in sim_item.signals), \
             f"{ImplantingStrategy.__name__}: 2 signals per sequence are not supported with implanting strategy."
@@ -31,7 +35,8 @@ class ImplantingStrategy(SimulationStrategy):
                                                           max_signals_per_sequence=0 if remove_positives_first else -1,
                                                           max_motifs_per_sequence=1)
         if len(filtered_sequences) > 0:
-            remaining_seq_mask, implanted_sequences = self._implant_in_sequences(filtered_sequences, sequence_type, sim_item, seqs_per_signal_count,
+            remaining_seq_mask, implanted_sequences = self._implant_in_sequences(filtered_sequences, sequence_type,
+                                                                                 sim_item, seqs_per_signal_count,
                                                                                  all_signals, use_p_gens)
 
             annotated_dc = type(sequences).extend((('original_sequence', str), ('original_p_gen', float)))
@@ -39,24 +44,29 @@ class ImplantingStrategy(SimulationStrategy):
                 added_fields = {'original_sequence': ['' for _ in range(remaining_seq_mask.sum())],
                                 'original_p_gen': [-1. for _ in range(remaining_seq_mask.sum())]}
                 remaining_seqs = filtered_sequences[remaining_seq_mask].add_fields(added_fields,
-                                                                                   field_type_map={'original_sequence': str,
-                                                                                                   'original_p_gen': float})
+                                                                                   field_type_map={
+                                                                                       'original_sequence': str,
+                                                                                       'original_p_gen': float})
                 processed_seqs = merge_dataclass_objects([remaining_seqs, annotated_dc(**implanted_sequences)])
             else:
                 processed_seqs = annotated_dc(**implanted_sequences)
 
             if remove_positives_first and len(processed_seqs) > 0:
-                processed_seqs = self._remove_invalid(processed_seqs, sequence_type, sim_item, all_signals, annotated_dc)
+                processed_seqs = self._remove_invalid(processed_seqs, sequence_type, sim_item, all_signals,
+                                                      annotated_dc)
         else:
             processed_seqs = None
 
         return processed_seqs
 
     def _remove_invalid(self, processed_seqs, sequence_type, sim_item, all_signals, annotated_dc):
-        processed_seqs = annotate_sequences(processed_seqs, sequence_type == SequenceType.AMINO_ACID, all_signals, annotated_dc)
-        return filter_out_illegal_sequences(processed_seqs, sim_item, all_signals, max_signals_per_sequence=1, max_motifs_per_sequence=1)
+        processed_seqs = annotate_sequences(processed_seqs, sequence_type == SequenceType.AMINO_ACID, all_signals,
+                                            annotated_dc)
+        return filter_out_illegal_sequences(processed_seqs, sim_item, all_signals, max_signals_per_sequence=1,
+                                            max_motifs_per_sequence=1)
 
-    def _implant_in_sequences(self, filtered_sequences, sequence_type: SequenceType, sim_item: SimConfigItem, seqs_per_signal_count: dict,
+    def _implant_in_sequences(self, filtered_sequences, sequence_type: SequenceType, sim_item: SimConfigItem,
+                              seqs_per_signal_count: dict,
                               all_signals: list, use_p_gens: bool):
 
         sequence_lengths = getattr(filtered_sequences, sequence_type.value).lengths
@@ -69,11 +79,13 @@ class ImplantingStrategy(SimulationStrategy):
                 motif_instances = self._make_motif_instances(signal, seqs_per_signal_count[signal.id], sequence_type)
 
                 for instance in motif_instances:
-                    suitable_seqs = np.argwhere(np.logical_and(remaining_seq_mask, sequence_lengths >= len(instance))).reshape(-1)
+                    suitable_seqs = np.argwhere(
+                        np.logical_and(remaining_seq_mask, sequence_lengths >= len(instance))).reshape(-1)
                     if suitable_seqs.shape[0] > 0:
                         sequence_index = np.random.choice(suitable_seqs, size=1)[0]
 
-                        sequence_obj = self._implant_in_sequence(filtered_sequences[sequence_index], signal, instance, use_p_gens, sequence_type,
+                        sequence_obj = self._implant_in_sequence(filtered_sequences[sequence_index], signal, instance,
+                                                                 use_p_gens, sequence_type,
                                                                  sim_item, all_signals)
                         for field in implanted_sequences.keys():
                             implanted_sequences[field].append(sequence_obj[field])
@@ -81,46 +93,61 @@ class ImplantingStrategy(SimulationStrategy):
                         remaining_seq_mask[sequence_index] = False
                         seqs_per_signal_count[signal.id] -= 1
                     else:
-                        print_log(f"{ImplantingStrategy.__name__}: could not find a sequence to implant {instance} for signal {signal.id}, "
-                                  f"skipping for now.", True, 'warning')
+                        print_log(
+                            f"{ImplantingStrategy.__name__}: could not find a sequence to implant {instance} for signal {signal.id}, "
+                            f"skipping for now.", True, 'warning')
 
         return remaining_seq_mask, implanted_sequences
 
-    def _implant_in_sequence(self, sequence_row: BackgroundSequences, signal: Signal, motif_instance: MotifInstance, use_p_gens: bool,
+    def _implant_in_sequence(self, sequence_row: BackgroundSequences, signal: Signal, motif_instance: MotifInstance,
+                             use_p_gens: bool,
                              sequence_type: SequenceType, sim_item: SimConfigItem, all_signals: List[Signal]) -> dict:
-        imgt_aa_positions = build_imgt_positions(len(getattr(sequence_row, sequence_type.value)), motif_instance,
-                                                 sequence_row.region_type)
 
         limit = len(motif_instance)
         if sequence_type == SequenceType.NUCLEOTIDE:
             limit = limit * 3
 
-        position_weights = PositionHelper.build_position_weights(signal.sequence_position_weights, imgt_aa_positions, limit)
-        implant_position = choose_implant_position(imgt_aa_positions, position_weights)
+        sequence_length = len(getattr(sequence_row, sequence_type.value))
+        region_type = RegionType[getattr(sequence_row, 'region_type').to_string()]
+        position_weights = PositionHelper.get_imgt_position_weights_for_implanting(sequence_length, region_type,
+                                                                                   signal.sequence_position_weights,
+                                                                                   limit)
+        implant_position = choose_implant_position(list(position_weights.keys()), position_weights)
 
         new_sequence = self._make_new_sequence(sequence_row, motif_instance, implant_position, sequence_type)
+        if len(getattr(sequence_row, sequence_type.value)) != len(new_sequence[sequence_type.value]):
+            raise RuntimeError(
+                f"An error occurred during implanting:\noriginal sequence: {getattr(sequence_row, sequence_type.value).to_string()}\n"
+                f"new sequence: {new_sequence[sequence_type.value]}\npositions: {implant_position}\n"
+                f"position_weights: {position_weights}\nmotif: {motif_instance.instance}")
 
         if use_p_gens:
             new_sequence['p_gen'] = sim_item.generative_model.compute_p_gen(
-                {key: val.to_string() if hasattr(val, "to_string") else val for key, val in new_sequence.items()}, sequence_type)
+                {key: val.to_string() if hasattr(val, "to_string") else val for key, val in new_sequence.items()},
+                sequence_type)
         else:
             new_sequence['p_gen'] = -1.
 
         new_sequence[signal.id] = 1
         new_sequence[f'{signal.id}_positions'] = "m" + "".join("0" for _ in range(implant_position)) + "1" + \
                                                  "".join("0" for _ in
-                                                         range(len(getattr(sequence_row, sequence_type.value)) - implant_position))
+                                                         range(len(getattr(sequence_row,
+                                                                           sequence_type.value)) - implant_position))
 
         zero_mask = "m" + "".join(["0" for _ in range(len(new_sequence[sequence_type.value]))])
-        new_sequence = {**{f"{s.id}_positions": zero_mask for s in all_signals}, **{s.id: 0 for s in all_signals if s.id != signal.id},
-                        **new_sequence, f'observed_{signal.id}': int(random.uniform(0, 1) > sim_item.false_negative_prob_in_receptors),
+        new_sequence = {**{f"{s.id}_positions": zero_mask for s in all_signals},
+                        **{s.id: 0 for s in all_signals if s.id != signal.id},
+                        **new_sequence,
+                        f'observed_{signal.id}': int(random.uniform(0, 1) > sim_item.false_negative_prob_in_receptors),
                         f'from_default_model': 0, 'duplicate_count': -1, 'signals_aggregated': signal.id,
                         f'original_sequence': getattr(sequence_row, sequence_type.value).to_string(),
-                        'original_p_gen': getattr(sequence_row, 'p_gen'), 'chain': getattr(sequence_row, 'chain').to_string()}
+                        'original_p_gen': getattr(sequence_row, 'p_gen'),
+                        'chain': getattr(sequence_row, 'chain').to_string()}
 
         return new_sequence
 
-    def _make_new_sequence(self, sequence_row: BackgroundSequences, motif_instance: MotifInstance, position, sequence_type: SequenceType) -> dict:
+    def _make_new_sequence(self, sequence_row: BackgroundSequences, motif_instance: MotifInstance, position,
+                           sequence_type: SequenceType) -> dict:
         if "/" in motif_instance.instance:
             motif_left, motif_right = motif_instance.instance.split("/")
         else:
@@ -134,14 +161,12 @@ class ImplantingStrategy(SimulationStrategy):
         gap_start = position + len(motif_left)
         gap_end = gap_start + motif_instance.gap
 
-        new_sequence_string = sequence_string[:position] + motif_left + sequence_string[gap_start:gap_end] + motif_right + \
+        new_sequence_string = sequence_string[:position] + motif_left + sequence_string[
+                                                                        gap_start:gap_end] + motif_right + \
                               sequence_string[gap_end + len(motif_right):]
 
-        assert len(new_sequence_string) == len(sequence_string), \
-            (f"An error occurred during implanting:\noriginal sequence: {sequence_string}\n"
-             f"new sequence: {new_sequence_string}\nposition: {position}\nmotif: {motif_instance.instance}")
-
-        sequence_dict = {'region_type': sequence_row.region_type, 'frame_type': '', 'v_call': sequence_row.v_call, 'j_call': sequence_row.j_call,
+        sequence_dict = {'region_type': sequence_row.region_type, 'frame_type': '', 'v_call': sequence_row.v_call,
+                         'j_call': sequence_row.j_call,
                          'sequence': '', 'sequence_aa': new_sequence_string}
 
         if sequence_type == SequenceType.NUCLEOTIDE:
