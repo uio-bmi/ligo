@@ -270,9 +270,9 @@ class LigoSimInstruction(Instruction):
 
         while sum(seqs_per_signal_count.values()) > 0 and iteration < self._max_iterations:
             sequences = self._make_background_sequences(path, iteration, sim_item, seqs_per_signal_count,
-                                                        need_background_seqs=iteration == 0 and self.state.simulation.keep_p_gen_dist)
+                                                        need_background_seqs=iteration == 1 and self.state.simulation.keep_p_gen_dist)
 
-            if self.state.simulation.keep_p_gen_dist and sim_item.generative_model.can_compute_p_gens() and iteration == 0:
+            if self.state.simulation.keep_p_gen_dist and sim_item.generative_model.can_compute_p_gens() and iteration == 1:
                 self._make_p_gen_histogram(sequences, sim_item.name)
                 print_log("Computed a histogram from the first batch of background sequences.", include_datetime=True)
 
