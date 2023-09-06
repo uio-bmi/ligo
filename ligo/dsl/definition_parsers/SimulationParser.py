@@ -152,10 +152,12 @@ def _parse_signals(sim_item: dict, symbol_table: SymbolTable, location: str, key
     assert isinstance(sim_item['signals'], dict) or sim_item['signals'] is None, \
         f"Signals under {key} have to be either null or a dictionary, got: {sim_item['signals']}."
 
-    if sim_item['signals'] is not None:
+    if sim_item['signals'] is not None and bool(sim_item['signals']):
 
         signals = _extract_signals_from_potential_pairs(sim_item["signals"].keys())
         ParameterValidator.assert_keys(signals, symbol_table.get_keys_by_type(SymbolType.SIGNAL), location, key, False)
+        for signal_key, signal_val in sim_item['signals'].items():
+            ParameterValidator.assert_type_and_value(signal_val, (int, float), location, signal_key, 0., 1.)
         assert 0 <= sum(sim_item['signals'].values()) <= 1, sim_item['signals']
 
     else:

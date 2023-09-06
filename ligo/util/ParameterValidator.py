@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pandas as pd
 
 from ligo.environment.SequenceType import SequenceType
@@ -35,8 +36,9 @@ class ParameterValidator:
     def assert_type_and_value(value, parameter_type, location: str, parameter_name: str,
                               min_inclusive=None, max_inclusive=None,
                               min_exclusive=None, max_exclusive=None, exact_value=None):
+        param_type_str = parameter_type.__name__ if not isinstance(parameter_type, tuple) else " or ".join([pt.__name__ for pt in parameter_type])
         assert isinstance(value, parameter_type), f"{location}: {value} is not a valid value for parameter {parameter_name}. " \
-                                                  f"It has to be of type {parameter_type.__name__}, but is now of type {type(value).__name__}."
+                                                  f"It has to be of type {param_type_str}, but is now of type {type(value).__name__}."
 
         if min_inclusive is not None:
             assert value >= min_inclusive, f"{location}: {value} is not a valid value for parameter {parameter_name}. " \
