@@ -22,11 +22,11 @@ class GenerativeModel:
         pass
 
     @abc.abstractmethod
-    def compute_p_gens(self, sequences, sequence_type: SequenceType) -> np.ndarray:
+    def compute_p_gens(self, sequences, sequence_type: SequenceType, sequence_field: str = None) -> np.ndarray:
         pass
 
     @abc.abstractmethod
-    def compute_p_gen(self, sequence: dict, sequence_type: SequenceType) -> float:
+    def compute_p_gen(self, sequence: dict, sequence_type: SequenceType, sequence_field: str = None) -> float:
         pass
 
     @abc.abstractmethod

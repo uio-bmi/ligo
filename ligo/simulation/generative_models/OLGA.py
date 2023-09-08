@@ -149,20 +149,25 @@ class OLGA(GenerativeModel):
         sequences.to_csv(path, index=False, sep='\t')
         return path
 
-    def compute_p_gen(self, sequence: dict, sequence_type: SequenceType) -> float:
+    def compute_p_gen(self, sequence: dict, sequence_type: SequenceType, sequence_field: str = None) -> float:
         cls = GenerationProbabilityVDJ if self.is_vdj else GenerationProbabilityVJ
         p_gen_model = cls(generative_model=self._olga_model.olga_gen_model, genomic_data=self._olga_model.genomic_data)
         if sequence_type == SequenceType.NUCLEOTIDE:
-            return p_gen_model.compute_nt_CDR3_pgen(sequence['sequence'], sequence['v_call'], sequence['j_call'])
+            seq_field_name = 'sequence' if sequence_field is None else sequence_field
+            return p_gen_model.compute_nt_CDR3_pgen(sequence[seq_field_name], sequence['v_call'], sequence['j_call'])
         else:
-            return p_gen_model.compute_aa_CDR3_pgen(sequence['sequence_aa'], sequence['v_call'], sequence['j_call'])
+            seq_field_name = 'sequence_aa' if sequence_field is None else sequence_field
+            return p_gen_model.compute_aa_CDR3_pgen(sequence[seq_field_name], sequence['v_call'], sequence['j_call'])
 
-    def compute_p_gens(self, sequences: BNPDataClass, sequence_type: SequenceType) -> list:
+    def compute_p_gens(self, sequences: BNPDataClass, sequence_type: SequenceType, sequence_field: str = None) -> list:
 
         cls = GenerationProbabilityVDJ if self.is_vdj else GenerationProbabilityVJ
         p_gen_model = cls(generative_model=self._olga_model.olga_gen_model, genomic_data=self._olga_model.genomic_data)
         p_gen_func = p_gen_model.compute_nt_CDR3_pgen if sequence_type == SequenceType.NUCLEOTIDE else p_gen_model.compute_aa_CDR3_pgen
-        seq_field = 'sequence' if sequence_type == SequenceType.NUCLEOTIDE else 'sequence_aa'
+        if sequence_field is None:
+            seq_field = 'sequence' if sequence_type == SequenceType.NUCLEOTIDE else 'sequence_aa'
+        else:
+            seq_field = sequence_field
 
         return [p_gen_func(getattr(seq, seq_field).to_string(), seq.v_call.to_string(), seq.j_call.to_string(), False) for seq in sequences]
 
