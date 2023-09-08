@@ -87,11 +87,13 @@ class ImplantingStrategy(SimulationStrategy):
                         sequence_obj = self._implant_in_sequence(filtered_sequences[sequence_index], signal, instance,
                                                                  use_p_gens, sequence_type,
                                                                  sim_item, all_signals)
-                        for field in implanted_sequences.keys():
-                            implanted_sequences[field].append(sequence_obj[field])
 
-                        remaining_seq_mask[sequence_index] = False
-                        seqs_per_signal_count[signal.id] -= 1
+                        if sequence_obj is not None:
+                            for field in implanted_sequences.keys():
+                                implanted_sequences[field].append(sequence_obj[field])
+
+                            remaining_seq_mask[sequence_index] = False
+                            seqs_per_signal_count[signal.id] -= 1
                     else:
                         print_log(
                             f"{ImplantingStrategy.__name__}: could not find a sequence to implant {instance} for signal {signal.id}, "
@@ -112,6 +114,9 @@ class ImplantingStrategy(SimulationStrategy):
         position_weights = PositionHelper.get_imgt_position_weights_for_implanting(sequence_length, region_type,
                                                                                    signal.sequence_position_weights,
                                                                                    limit)
+        if sum(list(position_weights)) == 0:
+            return None
+
         implant_position = choose_implant_position(list(position_weights.keys()), position_weights)
 
         new_sequence = self._make_new_sequence(sequence_row, motif_instance, implant_position, sequence_type)

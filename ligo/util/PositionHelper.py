@@ -1,3 +1,5 @@
+import logging
+
 import math
 import numpy as np
 
@@ -18,13 +20,16 @@ class PositionHelper:
             if position in sequence_position_weights:
                 position_weights[position] = sequence_position_weights[position]
 
-        weights_sum = sum(list(position_weights.values()))
-        remaining_weight_for_position = (1 - weights_sum) / (len(imgt_positions) - len(position_weights))
-        for position in imgt_positions:
-            if position not in position_weights:
-                position_weights[position] = remaining_weight_for_position
+        if len(imgt_positions) > len(position_weights):
+            weights_sum = sum(list(position_weights.values()))
+            remaining_weight_for_position = (1 - weights_sum) / (len(imgt_positions) - len(position_weights))
+            for position in imgt_positions:
+                if position not in position_weights:
+                    position_weights[position] = remaining_weight_for_position
 
-        assert np.isclose(sum(list(position_weights.values())), 1), position_weights
+        if not np.isclose(sum(list(position_weights.values())), 1):
+            weights_sum = sum(list(position_weights.values()))
+            position_weights = {position: weight / weights_sum for position, weight in position_weights.items()}
 
         return {position: position_weights[position] for position in imgt_positions}
 
@@ -44,26 +49,36 @@ class PositionHelper:
                 position_weights[position] = 0.
 
         weights_sum = sum(list(position_weights.values()))
+        if weights_sum == 0:
+            logging.warning(f"Sequence of length {input_length} has no allowed positions for signal with sequence "
+                            f"position weights {sequence_position_weights} and motif length {limit}, it will be discarded.")
+            return position_weights
         return {position: weight / weights_sum for position, weight in position_weights.items()}
 
     @staticmethod
-    def gen_imgt_positions_from_cdr3_length(input_length: int):
-        start = 105
-        end = 117
-        imgt_range = list(range(start, end + 1))
-        length = input_length if input_length < 14 else 13
-        imgt_positions = imgt_range[:math.ceil(length / 2)] + imgt_range[-math.floor(length / 2):]
-        if input_length > 13:
-            len_insert = input_length - 13
-            insert_left = [111 + 0.1 * i for i in range(1, math.floor(len_insert / 2) + 1)]
-            insert_right = [112 + 0.1 * i for i in range(1, math.ceil(len_insert / 2) + 1)]
-            insert = insert_left + list(reversed(insert_right))
-            imgt_positions[math.ceil(len(imgt_range) / 2):math.ceil(len(imgt_range) / 2)] = insert
-        return imgt_positions
+    def gen_imgt_positions_from_cdr3_length(input_length: int) -> list:
+        if input_length >= 2:
+            start = 105
+            end = 117
+            imgt_range = list(range(start, end + 1))
+            length = input_length if input_length < 14 else 13
+            imgt_positions = imgt_range[:math.ceil(length / 2)] + imgt_range[-math.floor(length / 2):]
+            if input_length > 13:
+                len_insert = input_length - 13
+                insert_left = [111 + 0.1 * i for i in range(1, math.floor(len_insert / 2) + 1)]
+                insert_right = [112 + 0.1 * i for i in range(1, math.ceil(len_insert / 2) + 1)]
+                insert = insert_left + list(reversed(insert_right))
+                imgt_positions[math.ceil(len(imgt_range) / 2):math.ceil(len(imgt_range) / 2)] = insert
+            return imgt_positions
+        else:
+            raise RuntimeError(f"IMGT positions could not be generated for CDR3 sequence of length {input_length}.")
 
     @staticmethod
     def gen_imgt_positions_from_junction_length(input_length: int):
-        return [104] + PositionHelper.gen_imgt_positions_from_cdr3_length(input_length - 2) + [118]
+        if input_length >= 2:
+            return [104] + PositionHelper.gen_imgt_positions_from_cdr3_length(input_length - 2) + [118]
+        else:
+            return []
 
     @staticmethod
     def gen_imgt_positions_from_sequence(sequence: ReceptorSequence,

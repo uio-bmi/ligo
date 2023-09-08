@@ -1,11 +1,8 @@
-import sys
 from pathlib import Path
-from pprint import pprint
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 from ligo.environment.SequenceType import SequenceType
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
