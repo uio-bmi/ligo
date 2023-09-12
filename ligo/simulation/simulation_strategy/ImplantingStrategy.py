@@ -61,7 +61,7 @@ class ImplantingStrategy(SimulationStrategy):
 
     def _remove_invalid(self, processed_seqs, sequence_type, sim_item, all_signals, annotated_dc):
         processed_seqs = annotate_sequences(processed_seqs, sequence_type == SequenceType.AMINO_ACID, all_signals,
-                                            annotated_dc)
+                                            annotated_dc, sim_item.name)
         return filter_out_illegal_sequences(processed_seqs, sim_item, all_signals, max_signals_per_sequence=1,
                                             max_motifs_per_sequence=1)
 

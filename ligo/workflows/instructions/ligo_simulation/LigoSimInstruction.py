@@ -320,7 +320,7 @@ class LigoSimInstruction(Instruction):
             sequences = filter_sequences_by_length(sequences, sim_item, self.sequence_type)
 
             sequences = annotate_sequences(sequences, self.sequence_type == SequenceType.AMINO_ACID, self.state.signals,
-                                           self._annotated_dataclass)
+                                           self._annotated_dataclass, sim_item.name)
 
             sequences = self.state.simulation.simulation_strategy.process_sequences(sequences, copy.deepcopy(
                 seqs_per_signal_count), self._use_p_gens,

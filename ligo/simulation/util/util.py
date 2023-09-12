@@ -9,6 +9,7 @@ from typing import List, Dict, Union
 import bionumpy as bnp
 import dill
 import numpy as np
+import yaml
 from bionumpy import AminoAcidEncoding, DNAEncoding, EncodedRaggedArray, get_motif_scores
 from bionumpy.bnpdataclass import bnpdataclass, BNPDataClass
 from bionumpy.encodings import BaseEncoding
@@ -132,7 +133,7 @@ def get_region_type(sequences) -> RegionType:
         raise RuntimeError(f"The region types could not be obtained.")
 
 
-def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annotated_dc):
+def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annotated_dc, sim_item_name: str = None):
     encoding = AminoAcidEncoding if is_amino_acid else DNAEncoding
     sequence_array = sequences.sequence_aa if is_amino_acid else sequences.sequence
 
@@ -141,7 +142,7 @@ def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annota
 
     for index, signal in enumerate(all_signals):
         _annotate_with_signal(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal, index,
-                              signal_positions)
+                              signal_positions, sim_item_name)
 
     signal_matrix = make_bnp_annotated_sequences(sequences, annotated_dc, all_signals, signal_matrix, signal_positions)
 
@@ -151,10 +152,10 @@ def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annota
 
 
 def _annotate_with_signal(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal, signal_index,
-                          signal_positions):
+                          signal_positions, sim_item_name: str = None):
     if signal.motifs is not None:
         return _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal,
-                                            signal_index, signal_positions)
+                                            signal_index, signal_positions, sim_item_name)
     else:
         return _annotate_with_signal_func(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal,
                                           signal_index, signal_positions)
@@ -172,7 +173,7 @@ def _annotate_with_signal_func(sequences, sequence_array, is_amino_acid, encodin
 
 
 def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal,
-                                 signal_index, signal_positions):
+                                 signal_index, signal_positions, sim_item_name = None):
     signal_pos_col = None
     allowed_positions = get_allowed_positions(signal, sequence_array, get_region_type(sequences))
     matches_gene = match_genes(signal.v_call, sequences.v_call, signal.j_call, sequences.j_call)
@@ -186,7 +187,19 @@ def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encod
             matches = match_motif_regexes(motifs, encoding, sequence_array, matches_gene, matches)
 
         if allowed_positions is not None:
-            matches = np.logical_and(matches, allowed_positions)
+            try:
+                matches = np.logical_and(matches, allowed_positions)
+            except TypeError as te:
+                print(f"Matches: {matches}\nMatches shape: {matches.shape}\nPositions: {allowed_positions}\n"
+                      f"Positions shape: {allowed_positions.shape}")
+                with (Path.cwd() / f'allowed_positions_{sim_item_name}.csv').open('w') as file:
+                    yaml.dump(allowed_positions.tolist(), file, default_flow_style=True)
+                with (Path.cwd() / f'matches_{sim_item_name}.csv').open('w') as file:
+                    yaml.dump(matches.tolist(), file, default_flow_style=True)
+                write_bnp_data(Path.cwd() / f'sequences_{sim_item_name}.tsv', sequences)
+                print(f"Temporary values that raised the exception are stored in {Path.cwd()}")
+
+                raise te
 
         signal_pos_col = np.logical_or(signal_pos_col, matches) if signal_pos_col is not None else matches
         signal_matrix[:, signal_index] = np.logical_or(signal_matrix[:, signal_index],

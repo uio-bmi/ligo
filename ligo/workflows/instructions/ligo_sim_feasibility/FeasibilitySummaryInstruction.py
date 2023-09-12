@@ -162,7 +162,7 @@ class FeasibilitySummaryInstruction(Instruction):
 
         default_seqs = get_bnp_data(seq_path, BackgroundSequences)
         default_seqs = annotate_sequences(default_seqs, self.state.simulation.sequence_type == SequenceType.AMINO_ACID, self.state.signals,
-                                          self._annotated_dc)
+                                          self._annotated_dc, model_name)
 
         print_log(f"Generated and annotated {self.state.sequence_count} sequences for model {model_name}", include_datetime=True)
 
