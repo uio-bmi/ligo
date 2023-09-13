@@ -1,6 +1,5 @@
 import logging
 
-import math
 import numpy as np
 
 from ligo.data_model.receptor.RegionType import RegionType
@@ -9,6 +8,9 @@ from ligo.environment.SequenceType import SequenceType
 
 
 class PositionHelper:
+    MAX_CDR3_LEN = 91
+    MIN_CDR3_LEN = 5
+    MIDPOINT_CDR3_LEN = 13
 
     @staticmethod
     def get_imgt_position_weights_for_annotation(input_length: int, region_type: RegionType,
@@ -34,7 +36,8 @@ class PositionHelper:
         return {position: position_weights[position] for position in imgt_positions}
 
     @staticmethod
-    def get_allowed_positions_for_annotation(input_length: int, region_type: RegionType, sequence_position_weights: dict):
+    def get_allowed_positions_for_annotation(input_length: int, region_type: RegionType,
+                                             sequence_position_weights: dict):
         position_weights = PositionHelper.get_imgt_position_weights_for_annotation(input_length, region_type,
                                                                                    sequence_position_weights)
         return [int(bool(weight)) for weight in position_weights.values()]
@@ -42,7 +45,8 @@ class PositionHelper:
     @staticmethod
     def get_imgt_position_weights_for_implanting(input_length: int, region_type: RegionType,
                                                  sequence_position_weights: dict, limit: int):
-        position_weights = PositionHelper.get_imgt_position_weights_for_annotation(input_length, region_type, sequence_position_weights)
+        position_weights = PositionHelper.get_imgt_position_weights_for_annotation(input_length, region_type,
+                                                                                   sequence_position_weights)
 
         for index, position in enumerate(position_weights.keys()):
             if index > input_length - limit:
@@ -53,31 +57,49 @@ class PositionHelper:
             logging.warning(f"Sequence of length {input_length} has no allowed positions for signal with sequence "
                             f"position weights {sequence_position_weights} and motif length {limit}, it will be discarded.")
             return position_weights
-        return {position: weight / weights_sum for position, weight in position_weights.items()}
+
+        position_weights = {position: np.array([weight]).astype(np.float64)[0] / weights_sum
+                            for position, weight in position_weights.items()}
+
+        assert np.isclose(sum(list(position_weights.values())), 1.), \
+            (input_length, region_type.name, position_weights, sum(list(position_weights.values())), limit)
+
+        return position_weights
 
     @staticmethod
     def gen_imgt_positions_from_cdr3_length(input_length: int) -> list:
-        if input_length >= 2:
-            start = 105
-            end = 117
-            imgt_range = list(range(start, end + 1))
-            length = input_length if input_length < 14 else 13
-            imgt_positions = imgt_range[:math.ceil(length / 2)] + imgt_range[-math.floor(length / 2):]
-            if input_length > 13:
-                len_insert = input_length - 13
-                insert_left = [111 + 0.1 * i for i in range(1, math.floor(len_insert / 2) + 1)]
-                insert_right = [112 + 0.1 * i for i in range(1, math.ceil(len_insert / 2) + 1)]
-                insert = insert_left + list(reversed(insert_right))
-                imgt_positions[math.ceil(len(imgt_range) / 2):math.ceil(len(imgt_range) / 2)] = insert
-            return imgt_positions
+        if PositionHelper.MIN_CDR3_LEN <= input_length <= PositionHelper.MIDPOINT_CDR3_LEN:
+            positions = [105, 106, 107, 116, 117]
+            pos_left_count = (input_length - PositionHelper.MIN_CDR3_LEN) // 2
+            pos_right_count = input_length - PositionHelper.MIN_CDR3_LEN - pos_left_count
+
+            positions = ([str(pos) for pos in positions if pos <= 107] +
+                         [str(i) for i in range(108, 107 + pos_left_count + 1)]
+                         + [str(i) for i in range(116 - pos_right_count, 116)] + ['116', '117'])
+            return positions
+
+        elif PositionHelper.MIDPOINT_CDR3_LEN < input_length <= PositionHelper.MAX_CDR3_LEN:
+            positions = list(range(105, 118))
+            pos111_count = (input_length - PositionHelper.MIDPOINT_CDR3_LEN) // 2
+            pos112_count = input_length - PositionHelper.MIDPOINT_CDR3_LEN - pos111_count
+
+            positions = ([str(pos) for pos in positions if pos <= 111] +
+                         [f'111.{i}' for i in range(1, pos111_count + 1)]
+                         + [f'112.{i}' for i in range(pos112_count, 0, -1)] +
+                         [str(pos) for pos in positions if pos >= 112])
+
+            return positions
         else:
-            raise RuntimeError(f"IMGT positions could not be generated for CDR3 sequence of length {input_length}.")
+            logging.warning(f"IMGT positions could not be generated for CDR3 sequence of length {input_length}.")
+            return []
 
     @staticmethod
     def gen_imgt_positions_from_junction_length(input_length: int):
-        if input_length >= 2:
-            return [104] + PositionHelper.gen_imgt_positions_from_cdr3_length(input_length - 2) + [118]
+        if PositionHelper.MIN_CDR3_LEN + 2 <= input_length <= PositionHelper.MAX_CDR3_LEN + 2:
+            return ['104'] + PositionHelper.gen_imgt_positions_from_cdr3_length(input_length - 2) + ['118']
         else:
+            logging.warning(
+                f"IMGT positions could not be generated for IMGT junction sequence of length {input_length}.")
             return []
 
     @staticmethod

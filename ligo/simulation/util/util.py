@@ -491,7 +491,13 @@ def needs_seqs_with_signal(sequence_per_signal_count: dict) -> bool:
     return (sum(sequence_per_signal_count.values()) - sequence_per_signal_count['no_signal']) > 0
 
 
-def filter_sequences_by_length(sequences, sim_item: SimConfigItem, sequence_type):
+def filter_sequences_by_length(sequences, sim_item: SimConfigItem, sequence_type, remove_short_seqs: bool):
+    if remove_short_seqs:
+        sim_item.sequence_len_limits['min'] = max(PositionHelper.MIN_CDR3_LEN, sim_item.sequence_len_limits['min'])
+        logging.info(f"Simulation item {sim_item.name}: setting min sequence length to "
+                     f"{sim_item.sequence_len_limits['min']} since IMGT numbering will be used downstream for signal "
+                     f"annotation or implanting.")
+
     if sim_item.sequence_len_limits:
         if sim_item.sequence_len_limits.get('max', -1) > -1:
             sequences = sequences[
