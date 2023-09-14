@@ -58,9 +58,10 @@ class OLGA(GenerativeModel):
             default_model_name: humanTRB
 
     """
-    model_path: Path
-    default_model_name: str
+    model_path: Path = None
+    default_model_name: str = None
     chain: Chain = None
+    region_type: RegionType = RegionType.IMGT_JUNCTION
     _olga_model: InternalOlgaModel = None
 
     DEFAULT_MODEL_FOLDER_MAP = {

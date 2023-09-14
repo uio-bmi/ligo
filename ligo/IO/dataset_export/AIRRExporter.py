@@ -1,11 +1,11 @@
 import logging
-import math
 from enum import Enum
 from multiprocessing import Pool
 from pathlib import Path
 from typing import List
 
 import airr
+import math
 import pandas as pd
 from olga.utils import nt2aa
 
@@ -236,6 +236,6 @@ def stitch_wrapper(row, st, fxn, species, tcr_dat, functionality, partial, codon
                   tcr_dat[row['locus']], functionality[row['locus']], partial[row['locus']], codons, 3, '')[1]
 
     except Exception as e:
-        logging.warning(f"An error occurred while constructing full sequence from {row}. Error log: {e}")
+        logging.warning(f"An error occurred while constructing full sequence from row: \n{row}. Error log: \n{e}")
 
     return full_sequence

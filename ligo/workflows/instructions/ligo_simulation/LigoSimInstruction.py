@@ -120,10 +120,6 @@ class LigoSimInstruction(Instruction):
     def _annotated_dataclass(self):
         return make_annotated_dataclass(self._annotation_fields, self.state.signals)
 
-    @property
-    def _remove_short_seqs(self):
-        return any(bool(signal.sequence_position_weights) for signal in self.state.signals)
-
     MIN_RANGE_PROBABILITY = 1e-5
 
     def run(self, result_path: Path):
@@ -321,8 +317,7 @@ class LigoSimInstruction(Instruction):
                     f"Computed a histogram from the first batch of background sequences for {sim_item.name}, available at: {str(path)}",
                     include_datetime=True)
 
-            sequences = filter_sequences_by_length(sequences, sim_item, self.sequence_type,
-                                                   remove_short_seqs=self._remove_short_seqs)
+            sequences = filter_sequences_by_length(sequences, sim_item, self.sequence_type)
 
             sequences = annotate_sequences(sequences, self.sequence_type == SequenceType.AMINO_ACID, self.state.signals,
                                            self._annotated_dataclass, sim_item.name)

@@ -491,19 +491,51 @@ def needs_seqs_with_signal(sequence_per_signal_count: dict) -> bool:
     return (sum(sequence_per_signal_count.values()) - sequence_per_signal_count['no_signal']) > 0
 
 
-def filter_sequences_by_length(sequences, sim_item: SimConfigItem, sequence_type, remove_short_seqs: bool):
-    if remove_short_seqs:
-        sim_item.sequence_len_limits['min'] = max(PositionHelper.MIN_CDR3_LEN, sim_item.sequence_len_limits['min'])
-        logging.info(f"Simulation item {sim_item.name}: setting min sequence length to "
-                     f"{sim_item.sequence_len_limits['min']} since IMGT numbering will be used downstream for signal "
-                     f"annotation or implanting.")
+def filter_sequences_by_length(sequences, sim_item: SimConfigItem, sequence_type):
+    sim_item.sequence_len_limits = {} if sim_item.sequence_len_limits is None else sim_item.sequence_len_limits
+    region_type = sim_item.generative_model.region_type
 
-    if sim_item.sequence_len_limits:
-        if sim_item.sequence_len_limits.get('max', -1) > -1:
-            sequences = sequences[
-                getattr(sequences, sequence_type.value).lengths <= sim_item.sequence_len_limits['max']]
-        if sim_item.sequence_len_limits.get('min', -1) > -1:
-            sequences = sequences[
-                getattr(sequences, sequence_type.value).lengths >= sim_item.sequence_len_limits['min']]
+    sim_item.sequence_len_limits['min'] = get_min_seq_length(sim_item, sequence_type, region_type)
+    sim_item.sequence_len_limits['max'] = get_max_seq_length(sim_item, sequence_type, region_type)
+    logging.info(f"Simulation item {sim_item.name}: setting min and max sequence length to "
+                 f"{sim_item.sequence_len_limits['min']} and {sim_item.sequence_len_limits['max']} since IMGT "
+                 f"numbering will be used downstream for signal annotation or implanting.")
+
+    sequences = sequences[getattr(sequences, sequence_type.value).lengths <= sim_item.sequence_len_limits['max']]
+    sequences = sequences[getattr(sequences, sequence_type.value).lengths >= sim_item.sequence_len_limits['min']]
+
+    assert np.all(getattr(sequences, sequence_type.value).lengths <= sim_item.sequence_len_limits['max']), \
+        f'An error occurred while filtering sequences by length: some sequences are longer than {sim_item.sequence_len_limits["max"]}'
+    assert np.all(getattr(sequences, sequence_type.value).lengths >= sim_item.sequence_len_limits['min']), \
+        f'An error occurred while filtering sequences by length: some sequences are shorter than {sim_item.sequence_len_limits["min"]}'
 
     return sequences
+
+
+def get_min_seq_length(sim_item: SimConfigItem, sequence_type: SequenceType, region_type: RegionType) -> int:
+    conversion_constant = 1 if sequence_type == SequenceType.AMINO_ACID else 3
+    if region_type == RegionType.IMGT_JUNCTION:
+        return max((PositionHelper.MIN_CDR3_LEN + 2) * conversion_constant, sim_item.sequence_len_limits['min'])
+    elif region_type == RegionType.IMGT_CDR3:
+        return max(PositionHelper.MIN_CDR3_LEN * conversion_constant, sim_item.sequence_len_limits['min'])
+    else:
+        raise RuntimeError(f"Unsupported region type for IMGT numbering encountered during simulation: {region_type}.")
+
+
+def get_max_seq_length(sim_item: SimConfigItem, sequence_type: SequenceType, region_type: RegionType) -> int:
+
+    conversion_constant = 1 if sequence_type == SequenceType.AMINO_ACID else 3
+
+    if region_type == RegionType.IMGT_JUNCTION:
+        max_allowed = (PositionHelper.MAX_CDR3_LEN + 2) * conversion_constant
+    elif region_type == RegionType.IMGT_CDR3:
+        max_allowed = PositionHelper.MAX_CDR3_LEN * conversion_constant
+    else:
+        raise RuntimeError(f"Unsupported region type for IMGT numbering encountered during simulation: {region_type}.")
+
+    if ('max' not in sim_item.sequence_len_limits or sim_item.sequence_len_limits['max'] == -1 or
+            sim_item.sequence_len_limits['max'] > max_allowed):
+        return max_allowed
+    else:
+        return sim_item.sequence_len_limits['max']
+

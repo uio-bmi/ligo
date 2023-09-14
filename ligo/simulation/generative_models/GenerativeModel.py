@@ -12,6 +12,7 @@ class GenerativeModel:
 
     def __init__(self, chain):
         self.chain = chain
+        self.region_type = None
 
     @abc.abstractmethod
     def is_same(self, model) -> bool:

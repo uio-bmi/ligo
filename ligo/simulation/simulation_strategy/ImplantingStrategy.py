@@ -1,3 +1,4 @@
+import logging
 import random
 from dataclasses import fields as get_fields
 from typing import List
@@ -114,7 +115,8 @@ class ImplantingStrategy(SimulationStrategy):
         position_weights = PositionHelper.get_imgt_position_weights_for_implanting(sequence_length, region_type,
                                                                                    signal.sequence_position_weights,
                                                                                    limit)
-        if sum(list(position_weights)) == 0:
+        if sum(list(position_weights.values())) == 0:
+            logging.info(f"Sequence {sequence_row} has no valid positions where the signal could be implanted, skipping the sequence.")
             return None
 
         implant_position = choose_implant_position(list(position_weights.keys()), position_weights)
