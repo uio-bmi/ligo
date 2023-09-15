@@ -3,10 +3,9 @@ import os
 import shutil
 from enum import Enum
 from pathlib import Path
-import numpy as np
 
-from ligo.util.Reports import ReportOutput, ReportResult
 from ligo.util.PathBuilder import PathBuilder
+from ligo.util.Reports import ReportOutput, ReportResult
 
 
 class Util:
@@ -30,7 +29,7 @@ class Util:
         else:
             vars_obj = vars(obj)
             result = {
-                attribute_name: Util.to_dict_recursive(vars_obj[attribute_name], base_path) for attribute_name in vars_obj.keys()
+                attribute_name: Util.to_dict_recursive(vars_obj[attribute_name], base_path) for attribute_name in vars_obj.keys() if not attribute_name.startswith("_")
             }
             if isinstance(obj, ReportOutput):
                 path = getattr(obj, "path")

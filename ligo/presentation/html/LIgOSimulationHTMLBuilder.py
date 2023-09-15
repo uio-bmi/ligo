@@ -57,7 +57,7 @@ class LIgOSimulationHTMLBuilder:
                         start=base_path)
                 } for format_name in state.formats
             ],
-            "simulation_items": [Util.to_dict_recursive(implanting, base_path) for implanting in state.simulation.sim_items]
+            "simulation_items": [Util.to_dict_recursive(sim_item, base_path) for sim_item in state.simulation.sim_items]
         }
 
         return html_map
