@@ -18,9 +18,10 @@ class PositionHelper:
         imgt_positions = PositionHelper.gen_imgt_positions_from_length(input_length, region_type)
 
         position_weights = {}
-        for index, position in enumerate(imgt_positions):
-            if position in sequence_position_weights:
-                position_weights[position] = sequence_position_weights[position]
+        if sequence_position_weights:
+            for index, position in enumerate(imgt_positions):
+                if position in sequence_position_weights:
+                    position_weights[position] = sequence_position_weights[position]
 
         if len(imgt_positions) > len(position_weights):
             weights_sum = sum(list(position_weights.values()))

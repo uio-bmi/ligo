@@ -323,10 +323,9 @@ class LigoSimInstruction(Instruction):
                                            self._annotated_dataclass, sim_item.name)
 
             sequences = self.state.simulation.simulation_strategy.process_sequences(sequences, copy.deepcopy(
-                seqs_per_signal_count), self._use_p_gens,
-                                                                                    self.sequence_type, sim_item,
-                                                                                    self.state.signals,
-                                                                                    self.state.simulation.remove_seqs_with_signals)
+                seqs_per_signal_count), self._use_p_gens,  self.sequence_type, sim_item, self.state.signals,
+                self.state.simulation.remove_seqs_with_signals,
+                implanting_scaling_factor=self.state.simulation.implanting_scaling_factor)
 
             if sequences is not None and len(sequences) > 0:
 
@@ -421,7 +420,8 @@ class LigoSimInstruction(Instruction):
     def _filter_using_p_gens(self, sequences: BackgroundSequences, sim_item: SimConfigItem) -> Tuple[
         BNPDataClass, dict]:
         sequences = self._update_sequences_with_missing_p_gens(sequences, sim_item)
-        p_gens = np.log10(sequences.p_gen)
+        with np.errstate(divide='ignore'):
+            p_gens = np.log10(sequences.p_gen)
 
         p_gen_bins = self.state.p_gen_bins[sim_item.name]
         hist = np.concatenate(

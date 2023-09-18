@@ -78,9 +78,10 @@ class OLGA(GenerativeModel):
 
         location = OLGA.__name__
 
-        ParameterValidator.assert_keys_present(list(kwargs.keys()), ['model_path', 'default_model_name'], location, 'OLGA generative model')
+        ParameterValidator.assert_keys(list(kwargs.keys()), ['model_path', 'default_model_name', 'chain'], location,
+                                       'OLGA generative model', exclusive=False)
 
-        if kwargs['model_path']:
+        if 'model_path' in kwargs and kwargs['model_path']:
             assert 'chain' in kwargs, f"{OLGA.__name__}: chain not defined."
             assert Path(kwargs['model_path']).is_dir(), \
                 f"{OLGA.__name__}: the model path is not a directory. It has to be a directory and contain files with the exact names as " \

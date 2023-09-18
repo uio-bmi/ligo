@@ -17,7 +17,6 @@ from ligo.simulation.simulation_strategy.SimulationStrategy import SimulationStr
 from ligo.simulation.util.bnp_util import merge_dataclass_objects
 from ligo.simulation.util.util import choose_implant_position, filter_out_illegal_sequences, \
     annotate_sequences
-from ligo.util.Logger import print_log
 from ligo.util.PositionHelper import PositionHelper
 
 
@@ -25,9 +24,8 @@ class ImplantingStrategy(SimulationStrategy):
     MIN_RANGE_PROBABILITY = 1e-5
 
     def process_sequences(self, sequences: BNPDataClass, seqs_per_signal_count: dict, use_p_gens: bool,
-                          sequence_type: SequenceType,
-                          sim_item: SimConfigItem, all_signals: List[Signal],
-                          remove_positives_first: bool) -> BNPDataClass:
+                          sequence_type: SequenceType, sim_item: SimConfigItem, all_signals: List[Signal],
+                          remove_positives_first: bool, **kwargs) -> BNPDataClass:
 
         assert all(not isinstance(signal, SignalPair) for signal in sim_item.signals), \
             f"{ImplantingStrategy.__name__}: 2 signals per sequence are not supported with implanting strategy."
@@ -35,10 +33,14 @@ class ImplantingStrategy(SimulationStrategy):
         filtered_sequences = filter_out_illegal_sequences(sequences, sim_item, all_signals,
                                                           max_signals_per_sequence=0 if remove_positives_first else -1,
                                                           max_motifs_per_sequence=1)
+
+        implanting_scaling_factor = kwargs['implanting_scaling_factor'] if 'implanting_scaling_factor' in kwargs else 1
+
         if len(filtered_sequences) > 0:
             remaining_seq_mask, implanted_sequences = self._implant_in_sequences(filtered_sequences, sequence_type,
                                                                                  sim_item, seqs_per_signal_count,
-                                                                                 all_signals, use_p_gens)
+                                                                                 all_signals, use_p_gens,
+                                                                                 implanting_scaling_factor)
 
             annotated_dc = type(sequences).extend((('original_sequence', str), ('original_p_gen', float)))
             if remaining_seq_mask.sum() > 0:
@@ -67,8 +69,8 @@ class ImplantingStrategy(SimulationStrategy):
                                             max_motifs_per_sequence=1)
 
     def _implant_in_sequences(self, filtered_sequences, sequence_type: SequenceType, sim_item: SimConfigItem,
-                              seqs_per_signal_count: dict,
-                              all_signals: list, use_p_gens: bool):
+                              seqs_per_signal_count: dict, all_signals: list, use_p_gens: bool,
+                              implanting_scaling_factor: int):
 
         sequence_lengths = getattr(filtered_sequences, sequence_type.value).lengths
         remaining_seq_mask = np.ones(len(filtered_sequences), dtype=bool)
@@ -77,7 +79,8 @@ class ImplantingStrategy(SimulationStrategy):
 
         for signal in sim_item.signals:
             if seqs_per_signal_count[signal.id] > 0 and remaining_seq_mask.sum() > 0:
-                motif_instances = self._make_motif_instances(signal, seqs_per_signal_count[signal.id], sequence_type)
+                motif_instance_count = seqs_per_signal_count[signal.id] * implanting_scaling_factor
+                motif_instances = self._make_motif_instances(signal, motif_instance_count, sequence_type)
 
                 for instance in motif_instances:
                     suitable_seqs = np.argwhere(
@@ -95,16 +98,13 @@ class ImplantingStrategy(SimulationStrategy):
 
                             remaining_seq_mask[sequence_index] = False
                             seqs_per_signal_count[signal.id] -= 1
-                    else:
-                        print_log(
-                            f"{ImplantingStrategy.__name__}: could not find a sequence to implant {instance} for signal {signal.id}, "
-                            f"skipping for now.", True, 'warning')
 
         return remaining_seq_mask, implanted_sequences
 
     def _implant_in_sequence(self, sequence_row: BackgroundSequences, signal: Signal, motif_instance: MotifInstance,
                              use_p_gens: bool,
-                             sequence_type: SequenceType, sim_item: SimConfigItem, all_signals: List[Signal]) -> dict:
+                             sequence_type: SequenceType, sim_item: SimConfigItem, all_signals: List[Signal]) \
+            -> dict | None:
 
         limit = len(motif_instance)
         if sequence_type == SequenceType.NUCLEOTIDE:
@@ -116,7 +116,8 @@ class ImplantingStrategy(SimulationStrategy):
                                                                                    signal.sequence_position_weights,
                                                                                    limit)
         if sum(list(position_weights.values())) == 0:
-            logging.info(f"Sequence {sequence_row} has no valid positions where the signal could be implanted, skipping the sequence.")
+            logging.info( f"Sequence {sequence_row} has no valid positions where the signal could be implanted, "
+                          f"skipping the sequence.")
             return None
 
         implant_position = choose_implant_position(list(position_weights.keys()), position_weights)

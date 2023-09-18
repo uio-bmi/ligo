@@ -4,7 +4,7 @@ import os
 import warnings
 from pathlib import Path
 
-from ligo.dsl.ImmuneMLParser import ImmuneMLParser
+from ligo.dsl.LigoParser import LigoParser
 from ligo.dsl.semantic_model.SemanticModel import SemanticModel
 from ligo.dsl.symbol_table.SymbolType import SymbolType
 from ligo.util.Logger import print_log
@@ -27,8 +27,8 @@ class LigoApp:
         try:
             print_log(f"LIgO: parsing the specification...\n", include_datetime=True)
 
-            symbol_table, self._specification_path = ImmuneMLParser.parse_yaml_file(self._specification_path,
-                                                                                    self._result_path)
+            symbol_table, self._specification_path = LigoParser.parse_yaml_file(self._specification_path,
+                                                                                self._result_path)
 
             print_log(f"LIgO: starting the simulation...\n", include_datetime=True)
 
