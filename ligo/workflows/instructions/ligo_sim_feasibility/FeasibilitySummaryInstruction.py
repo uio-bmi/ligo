@@ -57,7 +57,7 @@ class FeasibilitySummaryInstruction(Instruction):
 
     - sequence_count (int): how many sequences to generate to estimate feasibility (default value: 100 000)
 
-    - number_of_processes (int): for the parts of analysis that are possible to parallelize, how many processes to use
+    - number_of_processes (int): for the parts of the analysis that are possible to parallelize, how many processes to use
 
     YAML specification:
 
@@ -71,8 +71,8 @@ class FeasibilitySummaryInstruction(Instruction):
 
     """
 
-    MIN_SIG_FREQ = 0.001
-    MAX_SIG_FREQ = 0.8
+    MIN_SIG_FREQ = 1e-5
+    MAX_SIG_FREQ = 0.1
 
     def __init__(self, simulation, sequence_count: int, number_of_processes: int, signals: List[Signal], name: str = None):
         self.state = FeasibilitySummaryState(simulation=simulation, sequence_count=sequence_count, signals=signals, name=name)
