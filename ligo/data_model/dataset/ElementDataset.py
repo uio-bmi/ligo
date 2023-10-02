@@ -30,6 +30,9 @@ class ElementDataset(Dataset):
         self.element_generator.file_list = self.filenames
         return self.element_generator.build_element_generator()
 
+    def get_attribute(self, attribute: str):
+        return list(el.get_attribute(attribute) for el in self.get_data())
+
     def get_batch(self, batch_size: int = 10000):
         self.element_generator.file_list = self.filenames
         return self.element_generator.build_batch_generator()
@@ -42,6 +45,14 @@ class ElementDataset(Dataset):
 
     def get_example_count(self):
         return len(self.get_example_ids())
+
+    def get_region_type(self):
+        unique_region_types = list(set(self.get_attribute('region_type')))
+        if len(unique_region_types) == 1:
+            return unique_region_types[0]
+        else:
+            raise RuntimeError(f'Multiple region types are defined for dataset {self.name} (id={self.identifier}): '
+                               f'{unique_region_types}.')
 
     def get_example_ids(self):
         if self.element_ids is None or (isinstance(self.element_ids, list) and len(self.element_ids) == 0):
@@ -72,7 +83,7 @@ class ElementDataset(Dataset):
 
     def get_label_names(self):
         """Returns the list of metadata fields which can be used as labels"""
-        return [label for label in list(self.labels.keys()) if label not in ['region_type', 'receptor_chains', 'organism']]
+        return [label for label in list(self.labels.keys()) if label not in ['region_type', 'receptor_chains', 'organism', 'species']]
 
     def clone(self, keep_identifier: bool = False):
         raise NotImplementedError

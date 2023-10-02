@@ -31,6 +31,8 @@ class SimConfig:
 
     - species (str): species that the sequences come from; used to select correct genes to export full length sequences; default is 'human'
 
+    - implanting_scaling_factor (int): determines in how many receptors to implant the signal in reach iteration; this is computed as number_of_receptors_needed_for_signal * implanting_scaling_factor; useful when using Implanting simulation strategy in combination with importance sampling, since the generation probability of some receptors with implanted signals might be very rare and those receptors might end up not being kept often with importance sampling; this parameter is only used when keep_p_gen_dist is set to True
+
     YAML specification:
 
     .. code-block:: yaml
@@ -64,6 +66,7 @@ class SimConfig:
     keep_p_gen_dist: bool = None
     remove_seqs_with_signals: bool = None
     species: str = None
+    implanting_scaling_factor: int = None
 
     def __str__(self):
         return ",\n".join(str(simulation_item) for simulation_item in self.sim_items)

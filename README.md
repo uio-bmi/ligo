@@ -18,6 +18,10 @@ To install LIgO from the repository, run the following:
 ```
 pip install git+https://github.com/uio-bmi/ligo.git
 ```
+To be able to use Stitcher to export full-length sequences, download the database after installing LIgO:
+```
+stitchrdl -s human
+```
 
 ## Usage
 

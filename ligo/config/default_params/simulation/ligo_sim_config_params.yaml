@@ -5,3 +5,4 @@ p_gen_bin_count: -1 # if used, could be 30
 keep_p_gen_dist: False
 remove_seqs_with_signals: True
 species: human
+implanting_scaling_factor: 1

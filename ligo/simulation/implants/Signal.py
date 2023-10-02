@@ -19,11 +19,15 @@ class Signal:
     A signal is associated with a metadata label, which is assigned to a receptor or repertoire.
     For example antigen-specific/disease-associated (receptor) or diseased (repertoire).
 
+    .. note:: IMGT positions
+
+        To use sequence position weights, IMGT positions should be explicitly specified as strings, under quotation marks, to allow for all positions to be properly distinguished.
+
     Arguments:
 
     - motifs (list): A list of the motifs associated with this signal, either defined by seed or by position weight matrix. Alternatively, it can be a list of a list of motifs, in which case the motifs in the same sublist (max 2 motifs) have to co-occur in the same sequence
 
-    - sequence_position_weights (dict): a dictionary specifying for each IMGT position in the sequence how likely it is for the signal to be there. For positions not specified, the probability of having the signal there is 0.
+    - sequence_position_weights (dict): a dictionary specifying for each IMGT position in the sequence how likely it is for the signal to be there. If the position is not present in the sequence, the probability of the signal occurring at that position will be redistributed to other positions with probabilities that are not explicitly set to 0 by the user.
 
     - v_call (str): V gene with allele if available that has to co-occur with one of the motifs for the signal to exist; can be used in combination with rejection sampling, or full sequence implanting, otherwise ignored; to match in a sequence for rejection sampling, it is checked if this value is contained in the same field of generated sequence;
 
@@ -57,8 +61,8 @@ class Signal:
                     - my_simple_motif
                     - my_gapped_motif
                 sequence_position_weights:
-                    109: 0.5
-                    110: 0.5
+                    '109': 0.5
+                    '110': 0.5
                 v_call: TRBV1
                 j_call: TRBJ1
                 clonal_frequency:

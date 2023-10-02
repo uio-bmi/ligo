@@ -1,11 +1,11 @@
 import logging
-import math
 from enum import Enum
 from multiprocessing import Pool
 from pathlib import Path
 from typing import List
 
 import airr
+import math
 import pandas as pd
 from olga.utils import nt2aa
 
@@ -37,7 +37,7 @@ class AIRRExporter(DataExporter):
     """
 
     @staticmethod
-    def export(dataset: Dataset, path: Path, number_of_processes: int = 1):
+    def export(dataset: Dataset, path: Path, number_of_processes: int = 1, omit_columns: list = None):
         PathBuilder.build(path)
 
         if isinstance(dataset, RepertoireDataset):
@@ -45,7 +45,9 @@ class AIRRExporter(DataExporter):
             repertoire_path = PathBuilder.build(path / repertoire_folder)
 
             with Pool(processes=number_of_processes) as pool:
-                pool.starmap(AIRRExporter.export_repertoire, [(repertoire, repertoire_path, dataset.labels) for repertoire in dataset.repertoires])
+                arguments = [(repertoire, repertoire_path, dataset.labels, omit_columns)
+                             for repertoire in dataset.repertoires]
+                pool.starmap(AIRRExporter.export_repertoire, arguments)
 
             AIRRExporter.export_updated_metadata(dataset, path, repertoire_folder)
         else:
@@ -61,15 +63,15 @@ class AIRRExporter(DataExporter):
                 else:
                     df = AIRRExporter._sequences_to_dataframe(batch)
 
-                df = AIRRExporter._postprocess_dataframe(df, dataset.labels)
+                df = AIRRExporter._postprocess_dataframe(df, dataset.labels, omit_columns)
                 airr.dump_rearrangement(df, str(filename))
 
                 index += 1
 
     @staticmethod
-    def export_repertoire(repertoire: Repertoire, repertoire_path: Path, dataset_labels: dict):
+    def export_repertoire(repertoire: Repertoire, repertoire_path: Path, dataset_labels: dict, omit_columns: list = None):
         df = AIRRExporter._repertoire_to_dataframe(repertoire)
-        df = AIRRExporter._postprocess_dataframe(df, dataset_labels)
+        df = AIRRExporter._postprocess_dataframe(df, dataset_labels, omit_columns)
         output_file = repertoire_path / f"{repertoire.data_filename.stem if 'subject_id' not in repertoire.metadata else repertoire.metadata['subject_id']}.tsv"
         airr.dump_rearrangement(df, str(output_file))
 
@@ -193,7 +195,7 @@ class AIRRExporter(DataExporter):
                     df.at[index, f"{gene}_{allele_name}"] = row[f"{gene}_{gene_name}"]
 
     @staticmethod
-    def _postprocess_dataframe(df, dataset_labels: dict):
+    def _postprocess_dataframe(df, dataset_labels: dict, omit_columns: list = None):
         if "locus" in df.columns:
             df["locus"] = [Chain.get_chain(chain).value if chain and Chain.get_chain(chain) else '' for chain in df["locus"]]
         else:
@@ -214,6 +216,9 @@ class AIRRExporter(DataExporter):
 
         if "region_type" in df.columns:
             df.drop(columns=["region_type"], inplace=True)
+
+        if omit_columns is not None:
+            df.drop(columns=omit_columns, inplace=True)
 
         AIRRExporter.add_full_length_seq(df, dataset_labels.get('species', None) if dataset_labels else None, list(set(df['locus'].values.tolist())))
 
@@ -236,6 +241,6 @@ def stitch_wrapper(row, st, fxn, species, tcr_dat, functionality, partial, codon
                   tcr_dat[row['locus']], functionality[row['locus']], partial[row['locus']], codons, 3, '')[1]
 
     except Exception as e:
-        logging.warning(f"An error occurred while constructing full sequence from {row}. Error log: {e}")
+        logging.warning(f"An error occurred while constructing full sequence from row: \n{row}. Error log: \n{e}")
 
     return full_sequence

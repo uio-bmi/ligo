@@ -1,5 +1,4 @@
 # quality: peripheral
-import datetime
 import re
 from pathlib import Path
 
@@ -14,7 +13,7 @@ from ligo.util.Logger import print_log
 from ligo.util.PathBuilder import PathBuilder
 
 
-class ImmuneMLParser:
+class LigoParser:
     """
     Simple DSL parser from python dictionary or equivalent YAML for configuring repertoire / receptor_sequence
     classification in the (simulated) settings
@@ -120,7 +119,7 @@ class ImmuneMLParser:
 
             with file_path.open("r") as file:
                 workflow_specification = yaml.load(file, Loader=loader)
-                ImmuneMLParser.check_keys(workflow_specification)
+                LigoParser.check_keys(workflow_specification)
         except yaml.YAMLError as exc:
             problem_description = "\n--------------------------------------------------------------------------------\n" \
                                   "There was a YAML formatting error in the supplied specification file. Please validate specification " \
@@ -129,11 +128,11 @@ class ImmuneMLParser:
 
         try:
             if parse_func is None:
-                symbol_table, path = ImmuneMLParser.parse(workflow_specification, file_path, result_path)
+                symbol_table, path = LigoParser.parse(workflow_specification, file_path, result_path)
             else:
                 symbol_table, path = parse_func(workflow_specification, file_path, result_path)
         except KeyError as key_error:
-            raise Exception(f"ImmuneMLParser: an error occurred during parsing the YAML specification. Missing key was '{key_error.args[0]}'. "
+            raise Exception(f"LigoParser: an error occurred during parsing the YAML specification. Missing key was '{key_error.args[0]}'. "
                             f"For more details, refer to the log above and check the documentation.") from key_error
         return symbol_table, path
 
@@ -142,9 +141,9 @@ class ImmuneMLParser:
         for key in specs.keys():
             key_to_check = str(key)
             assert re.match(r'^[A-Za-z0-9_]+$', key_to_check), \
-                f"ImmuneMLParser: the keys in the specification can contain only letters, numbers and underscore. Error with key: {key}"
+                f"LigoParser: the keys in the specification can contain only letters, numbers and underscore. Error with key: {key}"
             if isinstance(specs[key], dict) and key not in ["column_mapping", "metadata_column_mapping"]:
-                ImmuneMLParser.check_keys(specs[key])
+                LigoParser.check_keys(specs[key])
 
     @staticmethod
     def parse(workflow_specification: dict, file_path, result_path):
@@ -155,8 +154,8 @@ class ImmuneMLParser:
         symbol_table, specs_instructions = InstructionParser.parse(def_parser_output, result_path)
         app_output = OutputParser.parse(workflow_specification, symbol_table)
 
-        path = ImmuneMLParser._output_specs(file_path=file_path, result_path=result_path, definitions=specs_defs,
-                                            instructions=specs_instructions, output=app_output)
+        path = LigoParser._output_specs(file_path=file_path, result_path=result_path, definitions=specs_defs,
+                                        instructions=specs_instructions, output=app_output)
 
         return symbol_table, path
 
@@ -171,10 +170,10 @@ class ImmuneMLParser:
 
     @staticmethod
     def _output_specs(file_path=None, result_path=None, definitions: dict = None, instructions: dict = None, output: dict = None) -> Path:
-        filepath = ImmuneMLParser._get_full_specs_filepath(file_path, result_path)
+        filepath = LigoParser._get_full_specs_filepath(file_path, result_path)
 
         result = {"definitions": definitions, "instructions": instructions, "output": output}
-        result = ImmuneMLParser._paths_to_strings_recursive(result)
+        result = LigoParser._paths_to_strings_recursive(result)
 
         PathBuilder.build(filepath.parent)
         with filepath.open("w") as file:
@@ -188,9 +187,9 @@ class ImmuneMLParser:
         if isinstance(specs, Path):
             return specs.as_posix()
         elif isinstance(specs, dict):
-            return {key: ImmuneMLParser._paths_to_strings_recursive(value) for key, value in specs.items()}
+            return {key: LigoParser._paths_to_strings_recursive(value) for key, value in specs.items()}
         elif isinstance(specs, list):
-            return [ImmuneMLParser._paths_to_strings_recursive(item) for item in specs]
+            return [LigoParser._paths_to_strings_recursive(item) for item in specs]
         else:
             return specs
 
