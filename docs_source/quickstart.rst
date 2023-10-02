@@ -12,7 +12,7 @@ You can run LIgO in command line using the following command:
 
 Where
 
-* **specs.yaml** — simulation parameters described by the user in a yaml file. Please see XXX for more information about LIgO parameters.
+* **specs.yaml** — simulation parameters described by the user in a yaml file. Please see :doc:`specification` for more information about LIgO parameters.
 * **output_folder** — output folder name defined by the user (should not exist before the run). 
 
 
