@@ -12,7 +12,7 @@ You can run LIgO in command line using the following command:
 
 Where
 
-* **specs.yaml** — simulation parameters described by the user in a yaml file. Please see XXX for more information about LIgO parameters.
+* **specs.yaml** — simulation parameters described by the user in a yaml file. Please see :doc:`specification` for more information about LIgO parameters.
 * **output_folder** — output folder name defined by the user (should not exist before the run). 
 
 
@@ -74,7 +74,6 @@ Here is the complete YAML specification for the simulation:
               model_path: null
               type: OLGA
             number_of_examples: 100
-            seed: 1002
             signals:
              signal1: 1
           sim_item2: # group of sequences with same sim params
@@ -84,7 +83,6 @@ Here is the complete YAML specification for the simulation:
               model_path: null
               type: OLGA
             number_of_examples: 100
-            seed: 2
             signals:
               signal2: 1 # all receptors will have the signal
           sim_item3: # group of sequences with same sim params
@@ -94,7 +92,6 @@ Here is the complete YAML specification for the simulation:
               model_path: null
               type: OLGA
             number_of_examples: 100
-            seed: 5231
             signals: {} # no signal -> background sequences
   instructions:
     my_sim_inst:
