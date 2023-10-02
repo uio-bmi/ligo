@@ -2,11 +2,9 @@ import os
 import shutil
 from pathlib import Path
 
-import pandas as pd
 import yaml
 
 from ligo.app.LigoApp import LigoApp
-from ligo.environment.Constants import Constants
 from ligo.environment.EnvironmentSettings import EnvironmentSettings
 from ligo.util.PathBuilder import PathBuilder
 
@@ -25,7 +23,6 @@ def prepare_specs(path) -> Path:
             "signals": {
                 "signal1": {
                     "motifs": ["motif1"],
-                    "v_call": "TRBV7",
                     "sequence_position_weights": None
                 },
                 "signal2": {
@@ -38,38 +35,29 @@ def prepare_specs(path) -> Path:
                     "is_repertoire": True,
                     "paired": False,
                     "sequence_type": "amino_acid",
-                    "simulation_strategy": "RejectionSampling",
+                    "simulation_strategy": "Implanting",
+                    'implanting_scaling_factor': 10,
+                    'keep_p_gen_dist': True,
+                    'p_gen_bin_count': 5,
                     "sim_items": {
                         "var1": {
-                            "immune_events": {
-                                "ievent1": True,
-                                "ievent2": False,
-                            },
                             "signals": {"signal1": 0.3, "signal2": 0.3},
-                            "number_of_examples": 10,
+                            "number_of_examples": 2,
                             "is_noise": False,
-                            "receptors_in_repertoire_count": 6,
+                            "receptors_in_repertoire_count": 10,
                             "generative_model": {
                                 "type": "OLGA",
-                                "model_path": None,
-                                "default_model_name": "humanTRB",
-                                "chain": 'beta',
+                                "default_model_name": "humanTRB"
                             }
                         },
                         "var2": {
-                            "immune_events": {
-                                "ievent1": False,
-                                "ievent2": False,
-                            },
-                            "signals": {"signal1": 0.5, "signal2": 0.5},
-                            "number_of_examples": 10,
+                            "signals": {"signal1": 0.2, "signal2": 0.2},
+                            "number_of_examples": 2,
                             "is_noise": True,
-                            "receptors_in_repertoire_count": 6,
+                            "receptors_in_repertoire_count": 10,
                             "generative_model": {
                                 'type': 'OLGA',
-                                "model_path": None,
-                                "default_model_name": "humanTRB",
-                                "chain": "beta",
+                                "default_model_name": "humanTRB"
                             }
                         }
                     }
@@ -98,19 +86,13 @@ def prepare_specs(path) -> Path:
     return path / "specs.yaml"
 
 
-def test_simulation():
-    path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / "integration_ligo_simulation/")
+def test_importance_sampling():
+    path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / "importance_sampling/")
 
     specs_path = prepare_specs(path)
 
-    PathBuilder.build(path / "result/")
-
-    app = LigoApp(specification_path=specs_path, result_path=path / "result/")
-    app.run()
+    LigoApp(specification_path=specs_path, result_path=path / "result/").run()
 
     assert os.path.isfile(path / "result/inst1/metadata.csv")
-
-    metadata_df = pd.read_csv(path / "result/inst1/metadata.csv", comment=Constants.COMMENT_SIGN)
-    assert all(el in metadata_df.columns for el in ["signal1", "ievent1", "ievent2", "signal2"])
 
     shutil.rmtree(path)

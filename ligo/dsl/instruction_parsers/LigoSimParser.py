@@ -29,6 +29,7 @@ class LigoSimParser:
 
 
 def get_simulation_from_symbol_table(sim_key, symbol_table, location):
+    ParameterValidator.assert_type_and_value(sim_key, str, location, 'simulation')
     ParameterValidator.assert_in_valid_list(sim_key,
                                             [sim.item.identifier for sim in symbol_table.get_by_type(SymbolType.SIMULATION)],
                                             location, 'simulation')

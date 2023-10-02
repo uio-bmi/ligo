@@ -112,7 +112,7 @@ class RepertoireDataset(Dataset):
     def get_label_names(self, refresh=False):
         """Returns the list of metadata fields which can be used as labels; if refresh=True, it reloads the fields from disk"""
         all_metadata_fields = set(self.get_metadata_fields(refresh))
-        for non_label in ["subject_id", "filename", "repertoire_id", "identifier"]:
+        for non_label in ["subject_id", "filename", "repertoire_id", "identifier", 'species', 'organism']:
             if non_label in all_metadata_fields:
                 all_metadata_fields.remove(non_label)
 

@@ -20,7 +20,7 @@ class SimConfigItem:
 
     - generative_model: parameters of the generative model, including its type, path to the model; currently supported models are OLGA and ExperimentalImport
 
-    - seed (int): starting random seed for the generative model (ideally should differ across simulation items)
+    - seed (int): starting random seed for the generative model (it should differ across simulation items, or it can be set to null when not used)
 
     - false_positives_prob_in_receptors (float): when performing repertoire level simulation, what percentage of sequences should be false positives
 
@@ -56,6 +56,7 @@ class SimConfigItem:
             my_simulation:
                 sim_item1:
                     number_of_examples: 10
+                    seed: null # don't use seed
                     receptors_in_repertoire_count: 100
                     generative_model:
                         chain: beta
@@ -69,6 +70,7 @@ class SimConfigItem:
                 sim_item2:
                     number_of_examples: 5
                     receptors_in_repertoire_count: 150
+                    seed: 10 #
                     generative_model:
                         chain: beta
                         default_model_name: humanTRB

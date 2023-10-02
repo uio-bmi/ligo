@@ -9,6 +9,7 @@ from typing import List, Dict, Union
 import bionumpy as bnp
 import dill
 import numpy as np
+import yaml
 from bionumpy import AminoAcidEncoding, DNAEncoding, EncodedRaggedArray, get_motif_scores
 from bionumpy.bnpdataclass import bnpdataclass, BNPDataClass
 from bionumpy.encodings import BaseEncoding
@@ -114,9 +115,8 @@ def make_sequence_paths(path: Path, signals: List[Signal]) -> Dict[str, Path]:
 def get_allowed_positions(signal: Signal, sequence_array: RaggedArray, region_type: RegionType):
     sequence_lengths = sequence_array.lengths
     if bool(signal.sequence_position_weights):
-        signal_positions = [key for key, val in signal.sequence_position_weights.items() if val > 0]
         allowed_positions = RaggedArray(
-            [[pos in signal_positions for pos in PositionHelper.gen_imgt_positions_from_length(seq_len, region_type)]
+            [PositionHelper.get_allowed_positions_for_annotation(seq_len, region_type, signal.sequence_position_weights)
              for seq_len in sequence_lengths])
     else:
         allowed_positions = None
@@ -133,7 +133,7 @@ def get_region_type(sequences) -> RegionType:
         raise RuntimeError(f"The region types could not be obtained.")
 
 
-def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annotated_dc):
+def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annotated_dc, sim_item_name: str = None):
     encoding = AminoAcidEncoding if is_amino_acid else DNAEncoding
     sequence_array = sequences.sequence_aa if is_amino_acid else sequences.sequence
 
@@ -142,7 +142,7 @@ def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annota
 
     for index, signal in enumerate(all_signals):
         _annotate_with_signal(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal, index,
-                              signal_positions)
+                              signal_positions, sim_item_name)
 
     signal_matrix = make_bnp_annotated_sequences(sequences, annotated_dc, all_signals, signal_matrix, signal_positions)
 
@@ -152,10 +152,10 @@ def annotate_sequences(sequences, is_amino_acid: bool, all_signals: list, annota
 
 
 def _annotate_with_signal(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal, signal_index,
-                          signal_positions):
+                          signal_positions, sim_item_name: str = None):
     if signal.motifs is not None:
         return _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal,
-                                            signal_index, signal_positions)
+                                            signal_index, signal_positions, sim_item_name)
     else:
         return _annotate_with_signal_func(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal,
                                           signal_index, signal_positions)
@@ -173,7 +173,7 @@ def _annotate_with_signal_func(sequences, sequence_array, is_amino_acid, encodin
 
 
 def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal,
-                                 signal_index, signal_positions):
+                                 signal_index, signal_positions, sim_item_name = None):
     signal_pos_col = None
     allowed_positions = get_allowed_positions(signal, sequence_array, get_region_type(sequences))
     matches_gene = match_genes(signal.v_call, sequences.v_call, signal.j_call, sequences.j_call)
@@ -187,7 +187,19 @@ def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encod
             matches = match_motif_regexes(motifs, encoding, sequence_array, matches_gene, matches)
 
         if allowed_positions is not None:
-            matches = np.logical_and(matches, allowed_positions)
+            try:
+                matches = np.logical_and(matches, allowed_positions)
+            except TypeError as te:
+                print(f"Matches: {matches}\nMatches shape: {matches.shape}\nPositions: {allowed_positions}\n"
+                      f"Positions shape: {allowed_positions.shape}")
+                with (Path.cwd() / f'allowed_positions_{sim_item_name}.csv').open('w') as file:
+                    yaml.dump(allowed_positions.tolist(), file, default_flow_style=True)
+                with (Path.cwd() / f'matches_{sim_item_name}.csv').open('w') as file:
+                    yaml.dump(matches.tolist(), file, default_flow_style=True)
+                write_bnp_data(Path.cwd() / f'sequences_{sim_item_name}.tsv', sequences)
+                print(f"Temporary values that raised the exception are stored in {Path.cwd()}")
+
+                raise te
 
         signal_pos_col = np.logical_or(signal_pos_col, matches) if signal_pos_col is not None else matches
         signal_matrix[:, signal_index] = np.logical_or(signal_matrix[:, signal_index],
@@ -358,7 +370,7 @@ def choose_implant_position(imgt_positions, position_weights):
 def check_iteration_progress(iteration: int, max_iterations: int):
     if iteration == round(max_iterations * 0.75):
         logging.warning(
-            f"Iteration {iteration} out of {max_iterations} max iterations reached during rejection sampling.")
+            f"Iteration {iteration} out of {max_iterations} max iterations reached during simulation.")
 
 
 def check_sequence_count(sim_item, sequences: BackgroundSequences):
@@ -480,12 +492,50 @@ def needs_seqs_with_signal(sequence_per_signal_count: dict) -> bool:
 
 
 def filter_sequences_by_length(sequences, sim_item: SimConfigItem, sequence_type):
-    if sim_item.sequence_len_limits:
-        if sim_item.sequence_len_limits.get('max', -1) > -1:
-            sequences = sequences[
-                getattr(sequences, sequence_type.value).lengths <= sim_item.sequence_len_limits['max']]
-        if sim_item.sequence_len_limits.get('min', -1) > -1:
-            sequences = sequences[
-                getattr(sequences, sequence_type.value).lengths >= sim_item.sequence_len_limits['min']]
+    sim_item.sequence_len_limits = {} if sim_item.sequence_len_limits is None else sim_item.sequence_len_limits
+    region_type = sim_item.generative_model.region_type
+
+    sim_item.sequence_len_limits['min'] = get_min_seq_length(sim_item, sequence_type, region_type)
+    sim_item.sequence_len_limits['max'] = get_max_seq_length(sim_item, sequence_type, region_type)
+    logging.info(f"Simulation item {sim_item.name}: setting min and max sequence length to "
+                 f"{sim_item.sequence_len_limits['min']} and {sim_item.sequence_len_limits['max']} since IMGT "
+                 f"numbering will be used downstream for signal annotation or implanting.")
+
+    sequences = sequences[getattr(sequences, sequence_type.value).lengths <= sim_item.sequence_len_limits['max']]
+    sequences = sequences[getattr(sequences, sequence_type.value).lengths >= sim_item.sequence_len_limits['min']]
+
+    assert np.all(getattr(sequences, sequence_type.value).lengths <= sim_item.sequence_len_limits['max']), \
+        f'An error occurred while filtering sequences by length: some sequences are longer than {sim_item.sequence_len_limits["max"]}'
+    assert np.all(getattr(sequences, sequence_type.value).lengths >= sim_item.sequence_len_limits['min']), \
+        f'An error occurred while filtering sequences by length: some sequences are shorter than {sim_item.sequence_len_limits["min"]}'
 
     return sequences
+
+
+def get_min_seq_length(sim_item: SimConfigItem, sequence_type: SequenceType, region_type: RegionType) -> int:
+    conversion_constant = 1 if sequence_type == SequenceType.AMINO_ACID else 3
+    if region_type == RegionType.IMGT_JUNCTION:
+        return max((PositionHelper.MIN_CDR3_LEN + 2) * conversion_constant, sim_item.sequence_len_limits['min'])
+    elif region_type == RegionType.IMGT_CDR3:
+        return max(PositionHelper.MIN_CDR3_LEN * conversion_constant, sim_item.sequence_len_limits['min'])
+    else:
+        raise RuntimeError(f"Unsupported region type for IMGT numbering encountered during simulation: {region_type}.")
+
+
+def get_max_seq_length(sim_item: SimConfigItem, sequence_type: SequenceType, region_type: RegionType) -> int:
+
+    conversion_constant = 1 if sequence_type == SequenceType.AMINO_ACID else 3
+
+    if region_type == RegionType.IMGT_JUNCTION:
+        max_allowed = (PositionHelper.MAX_CDR3_LEN + 2) * conversion_constant
+    elif region_type == RegionType.IMGT_CDR3:
+        max_allowed = PositionHelper.MAX_CDR3_LEN * conversion_constant
+    else:
+        raise RuntimeError(f"Unsupported region type for IMGT numbering encountered during simulation: {region_type}.")
+
+    if ('max' not in sim_item.sequence_len_limits or sim_item.sequence_len_limits['max'] == -1 or
+            sim_item.sequence_len_limits['max'] > max_allowed):
+        return max_allowed
+    else:
+        return sim_item.sequence_len_limits['max']
+
