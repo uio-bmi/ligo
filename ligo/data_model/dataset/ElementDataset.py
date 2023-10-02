@@ -83,7 +83,7 @@ class ElementDataset(Dataset):
 
     def get_label_names(self):
         """Returns the list of metadata fields which can be used as labels"""
-        return [label for label in list(self.labels.keys()) if label not in ['region_type', 'receptor_chains', 'organism']]
+        return [label for label in list(self.labels.keys()) if label not in ['region_type', 'receptor_chains', 'organism', 'species']]
 
     def clone(self, keep_identifier: bool = False):
         raise NotImplementedError

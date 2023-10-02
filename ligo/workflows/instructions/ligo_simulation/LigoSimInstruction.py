@@ -133,7 +133,7 @@ class LigoSimInstruction(Instruction):
     def _export_dataset(self):
 
         exporter_output = ExporterHelper.export_dataset(self.state.resulting_dataset, [AIRRExporter],
-                                                        self.state.result_path)
+                                                        self.state.result_path, omit_columns=['from_default_model'])
 
         self.state.formats = exporter_output['formats']
         self.state.paths = exporter_output['paths']
@@ -302,6 +302,10 @@ class LigoSimInstruction(Instruction):
         return repertoires
 
     def _gen_necessary_sequences(self, base_path: Path, sim_item: SimConfigItem) -> Dict[str, Path]:
+
+        if sim_item.seed is not None:
+            np.random.seed(sim_item.seed)
+
         path = PathBuilder.build(base_path / sim_item.name)
         seqs_per_signal_count = get_sequence_per_signal_count(sim_item)
         seq_paths = make_sequence_paths(path, sim_item.signals)
