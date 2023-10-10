@@ -135,7 +135,6 @@ The simulated dataset is located under `simulation_output_receptor/inst1/exporte
 of the columns are shown in the table below:
 
 .. list-table:: Simulated receptors in AIRR format
-    :widths:
     :header-rows: 1
 
     * - junction_aa
