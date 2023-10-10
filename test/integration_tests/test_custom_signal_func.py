@@ -33,11 +33,7 @@ class TestLIgOSimulation(TestCase):
                         "sequence_type": "amino_acid",
                         "simulation_strategy": "RejectionSampling",
                         "sim_items": {
-                            "var1": {
-                                "immune_events": {
-                                  "ievent1": True,
-                                  "ievent2": False,
-                                },
+                            "sim_item1": {
                                 "signals": {"signal1": 0.5},
                                 "number_of_examples": 10,
                                 "is_noise": False,
@@ -45,9 +41,7 @@ class TestLIgOSimulation(TestCase):
                                 "receptors_in_repertoire_count": 6,
                                 "generative_model": {
                                     "type": "OLGA",
-                                    "model_path": None,
-                                    "default_model_name": "humanTRB",
-                                    "chain": 'beta',
+                                    "default_model_name": "humanTRB"
                                 }
                             }
                         }
@@ -58,7 +52,6 @@ class TestLIgOSimulation(TestCase):
                 "inst1": {
                     "type": "LigoSim",
                     "simulation": "sim1",
-                    "store_signal_in_receptors": True,
                     "sequence_batch_size": 100,
                     'max_iterations': 100,
                     "export_p_gens": False,
