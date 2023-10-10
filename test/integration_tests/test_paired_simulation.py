@@ -33,15 +33,15 @@ def prepare_specs(path, is_receptor_sim: bool = True) -> Path:
                 "sim1": {
                     "is_repertoire": not is_receptor_sim,
                     "paired": [
-                        ['var1', 'var2']
+                        ['sim_alpha', 'sim_beta']
                     ],
                     "sequence_type": "amino_acid",
                     "simulation_strategy": "RejectionSampling",
                     "sim_items": {
-                        "var1": {
+                        "sim_alpha": {
                             "immune_events": {
-                              "ievent1": True,
-                              "ievent2": False,
+                                "ievent1": True,
+                                "ievent2": False,
                             },
                             "signals": {"signal2": 1} if is_receptor_sim else {"signal2": 0.2, "signal1": 0.1},
                             "number_of_examples": 10,
@@ -50,26 +50,22 @@ def prepare_specs(path, is_receptor_sim: bool = True) -> Path:
                             "seed": 100,
                             "generative_model": {
                                 "type": "OLGA",
-                                "model_path": None,
                                 "default_model_name": "humanTRA",
-                                "chain": 'beta',
                             }
                         },
-                        "var2": {
+                        "sim_beta": {
                             "immune_events": {
-                              "ievent1": False,
-                              "ievent2": False,
+                                "ievent1": False,
+                                "ievent2": False,
                             },
                             "signals": {"signal1": 1} if is_receptor_sim else {"signal2": 0.1, "signal1": 0.2},
                             "number_of_examples": 10,
                             "receptors_in_repertoire_count": 10 if not is_receptor_sim else 0,
-                            "is_noise": True,
+                            "is_noise": False,
                             "seed": 2,
                             "generative_model": {
                                 'type': 'OLGA',
-                                "model_path": None,
                                 "default_model_name": "humanTRB",
-                                "chain": "beta",
                             }
                         }
                     }
@@ -80,7 +76,6 @@ def prepare_specs(path, is_receptor_sim: bool = True) -> Path:
             "inst1": {
                 "type": "LigoSim",
                 "simulation": "sim1",
-                "store_signal_in_receptors": True,
                 "sequence_batch_size": 100,
                 'max_iterations': 100,
                 "export_p_gens": False,
@@ -97,10 +92,11 @@ def prepare_specs(path, is_receptor_sim: bool = True) -> Path:
 
     return path / "specs.yaml"
 
-def test_paired_simulation():
 
+def test_paired_simulation():
     for receptor_sim in [False, True]:
-        path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / f"integration_ligo_paired_simulation_{receptor_sim}/")
+        path = PathBuilder.remove_old_and_build(
+            EnvironmentSettings.tmp_test_path / f"integration_ligo_paired_simulation_{receptor_sim}/")
 
         specs_path = prepare_specs(path, receptor_sim)
 
