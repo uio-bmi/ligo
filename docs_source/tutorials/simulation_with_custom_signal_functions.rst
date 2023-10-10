@@ -104,18 +104,3 @@ The output folder structure is the same for all LIgO runs. `simulation_output` s
 - inst1 folder: this folder name is the same as the name given to the instruction by the user, all results are located here; the simulated dataset is located under `inst1/exported_dataset/airr/`.
 - HTML_output folder: with the presentation of all the results, but in this case not relevant
 
-Next steps
--------------
-
-To explore LIgO further, see these tutorials:
-
-- :ref:`How to define immune signals and immune events`
-- :ref: `How to check feasibility of the simulation parameters`
-
-Or check the full list of tutorials:
-
-.. toctree::
-    :maxdepth: 1
-    :caption: Tutorials
-
-    tutorials/
