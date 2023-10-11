@@ -15,6 +15,16 @@ Where
 * **specs.yaml** — simulation parameters described by the user in a yaml file. Please see :doc:`specification` for more information about LIgO parameters.
 * **output_folder** — output folder name defined by the user (should not exist before the run). 
 
+How to explore LIgO results
+---------------------------------
+
+The output folder structure is the same for all LIgO runs. The output folder should include:
+
+- **index.html** - main output file which gives an overview of the simulation: link to the full specification, the used LIgO version, some general information on the dataset and the link to the dataset exported in the standard AIRR format,
+- **full_specs.yaml** file - includes the specification and default parameters if any of the parameters where left unfilled
+- **inst1** folder - this folder name is the same as the name given to the instruction by the user, all results are located here; the simulated dataset is located under `inst1/exported_dataset/airr/`.
+- **HTML_output** folder - presentation of all results
+
 
 How to use LIgO for receptor-level simulation
 ---------------------------------
@@ -118,13 +128,50 @@ After saving the yaml specification to a file (e.g., quickstart.yaml), you can p
 
 .. code-block:: console
 
-  ligo quickstart.yaml quickstart_output
+  ligo quickstart.yaml qickstart_output_receptor
   
-Note that the output folder (quickstart_output) should not exist prior to the run.
+All results will be located in qickstart_output_receptor. Note that the output folder (qickstart_output_receptor) should not exist prior to the run.
 
 
 Step 3: Understanding the output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The simulated dataset is located under qickstart_output_receptor/inst1/exported_dataset/airr/batch1.tsv. In the output, each row represent one AIR.
+
+Some of the columns are shown in the table below:
+
+.. list-table:: Simulated receptors in AIRR format
+    :header-rows: 1
+
+    * - v_call
+      - j_call
+      - junction_aa
+      - signal1
+      - signal2
+      - signal1_position
+      - signal2_position
+  
+    * - TRBV10-1*01
+      - TRBJ2-5*01
+      - CARPDRGGGYTF
+      - 0
+      - 1
+      - m000000000000
+      - m000000100000
+    * - TRBV7-2*02
+      - TRBJ2-5*01
+      - CASSRGHFQETQYF
+      - 1
+      - 0
+      - m01000000000000
+      - m00000000000000
+    * - TRBV7-8*01
+      - TRBJ2-3*01
+      - CASSSPGGVRIYSTDTQYF
+      - 1
+      - 0
+      - m0100000000000000000
+      - m0000000000000000000
+
 
 Next steps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
