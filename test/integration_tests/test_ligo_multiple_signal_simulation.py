@@ -85,7 +85,6 @@ class TestSignalPairLigoSimulation(TestCase):
                 "inst1": {
                     "type": "LigoSim",
                     "simulation": "sim1",
-                    "store_signal_in_receptors": True,
                     "sequence_batch_size": 1000,
                     'max_iterations': 100,
                     "export_p_gens": False,

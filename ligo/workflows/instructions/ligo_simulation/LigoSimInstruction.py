@@ -50,8 +50,6 @@ class LigoSimInstruction(Instruction):
 
     - simulation (str): a name of a simulation object containing a list of SimConfigItem as specified under definitions key; defines how to combine signals with simulated data; specified under definitions
 
-    - store_signal_in_receptors (bool): for repertoire-level simulation, whether to store the information on what exact motif is implanted in each receptor
-
     - sequence_batch_size (bool): how many sequences to generate at once using the generative model before checking for signals and filtering
 
     - max_iterations (int): how many iterations are allowed when creating sequences
@@ -76,11 +74,10 @@ class LigoSimInstruction(Instruction):
 
     """
 
-    def __init__(self, simulation: SimConfig, signals: List[Signal], name: str, store_signal_in_receptors: bool,
+    def __init__(self, simulation: SimConfig, signals: List[Signal], name: str,
                  sequence_batch_size: int, max_iterations: int, number_of_processes: int, export_p_gens: bool = None):
 
-        self.state = LigoSimState(simulation=simulation, signals=signals, name=name,
-                                  store_signal_in_receptors=store_signal_in_receptors)
+        self.state = LigoSimState(simulation=simulation, signals=signals, name=name)
         self._number_of_processes = number_of_processes
         self._sequence_batch_size = sequence_batch_size
         self._max_iterations = max_iterations

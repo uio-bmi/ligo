@@ -12,7 +12,6 @@ from ligo.simulation.SimConfig import SimConfig
 class LigoSimState:
     signals: list
     simulation: SimConfig
-    store_signal_in_receptors: bool
     paths: dict = None
     name: str = None
     formats = None

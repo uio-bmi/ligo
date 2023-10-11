@@ -80,7 +80,6 @@ def prepare_specs(path) -> Path:
             "inst1": {
                 "type": "LigoSim",
                 "simulation": "sim1",
-                "store_signal_in_receptors": True,
                 "sequence_batch_size": 100,
                 'max_iterations': 100,
                 "export_p_gens": False,
