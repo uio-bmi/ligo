@@ -65,7 +65,7 @@ class FeasibilitySummaryInstruction(Instruction):
     .. code-block:: yaml
 
         my_feasibility_summary: # user-defined name of the instruction
-            type: FeasibilitySummaryInstruction # which instruction to execute
+            type: FeasibilitySummary # which instruction to execute
             simulation: sim1
             sequence_count: 10000
 
@@ -158,7 +158,7 @@ class FeasibilitySummaryInstruction(Instruction):
 
     def _make_sequences(self, model, path: Path, model_name: str) -> BackgroundSequences:
         seq_path = model.generate_sequences(self.state.sequence_count, seed=0, path=path, sequence_type=self.state.simulation.sequence_type,
-                                            compute_p_gen=model.can_compute_p_gens())
+                                            compute_p_gen=model.can_compute_p_gens() and self.state.simulation.keep_p_gen_dist and self.state.simulation.p_gen_bin_count > 0)
 
         default_seqs = get_bnp_data(seq_path, BackgroundSequences)
         default_seqs = annotate_sequences(default_seqs, self.state.simulation.sequence_type == SequenceType.AMINO_ACID, self.state.signals,
