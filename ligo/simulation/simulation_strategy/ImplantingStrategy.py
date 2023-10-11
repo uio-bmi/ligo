@@ -5,9 +5,9 @@ from typing import List
 
 import numpy as np
 from bionumpy.bnpdataclass import BNPDataClass
+from olga.utils import nt2aa
 
 from ligo.data_model.receptor.RegionType import RegionType
-from ligo.data_model.receptor.receptor_sequence.ReceptorSequence import ReceptorSequence
 from ligo.environment.SequenceType import SequenceType
 from ligo.simulation.SimConfigItem import SimConfigItem
 from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequences
@@ -123,6 +123,10 @@ class ImplantingStrategy(SimulationStrategy):
         implant_position = choose_implant_position(list(position_weights.keys()), position_weights)
 
         new_sequence = self._make_new_sequence(sequence_row, motif_instance, implant_position, sequence_type)
+
+        if new_sequence is None:
+            return None
+
         if len(getattr(sequence_row, sequence_type.value)) != len(new_sequence[sequence_type.value]):
             raise RuntimeError(
                 f"An error occurred during implanting:\noriginal sequence: {getattr(sequence_row, sequence_type.value).to_string()}\n"
@@ -179,7 +183,9 @@ class ImplantingStrategy(SimulationStrategy):
 
         if sequence_type == SequenceType.NUCLEOTIDE:
             sequence_dict['sequence'] = new_sequence_string
-            sequence_dict['sequence_aa'] = ReceptorSequence.nt_to_aa(new_sequence_string)
+            sequence_dict['sequence_aa'] = nt2aa(new_sequence_string)
+            if "*" in sequence_dict['sequence_aa']:
+                sequence_dict = None
 
         return sequence_dict
 
