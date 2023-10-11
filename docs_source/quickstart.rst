@@ -91,14 +91,14 @@ Here is the complete YAML specification for the simulation:
             type: OLGA
           number_of_examples: 100
           signals: {} # no signal
-instructions:
-  my_sim_inst:
-    export_p_gens: false
-    max_iterations: 100
-    number_of_processes: 4
-    sequence_batch_size: 1000
-    simulation: sim1
-    type: LigoSim
+  instructions:
+    my_sim_inst:
+      export_p_gens: false
+      max_iterations: 100
+      number_of_processes: 4
+      sequence_batch_size: 1000
+      simulation: sim1
+      type: LigoSim
 
 
 Step 2: Running LIgO
