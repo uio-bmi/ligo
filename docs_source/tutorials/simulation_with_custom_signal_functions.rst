@@ -94,13 +94,5 @@ When the two files mentioned above are saved, run the following:
 The simulation for this specification should only take a few seconds and all results will be stored in the
 `simulation_output` folder.
 
-Step 4: Exploring the results
------------------------------------
 
-The output folder structure is the same for all LIgO runs. `simulation_output` should include:
-
-- index.html: main output file which gives an overview of the simulation: link to the full specification, the used LIgO version, some general information on the dataset and the link to the dataset exported in the standard AIRR format,
-- full_specs.yaml file: includes the specification and default parameters if any of the parameters where left unfilled
-- inst1 folder: this folder name is the same as the name given to the instruction by the user, all results are located here; the simulated dataset is located under `inst1/exported_dataset/airr/`.
-- HTML_output folder: with the presentation of all the results, but in this case not relevant
 

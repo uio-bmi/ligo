@@ -34,70 +34,65 @@ with the gap denoted by '\' sign and the gap size between 1 and 2 inclusive), an
 will not contain any of these signals.
 
 ```yaml
-definitions:
+
+  definitions:
   motifs:
     motif1:
-      instantiation: GappedKmer
-      seed: AS # any k-mer
+      seed: AS
     motif2:
-      instantiation:
-        GappedKmer:
-          max_gap: 2
-          min_gap: 1
       seed: G/G
+      max_gap: 2
+      min_gap: 1
   signals:
     signal1:
       v_call: TRBV7
       motifs:
-      - motif1
+        - motif1
     signal2:
       motifs:
-      - motif2
+        - motif2
   simulations:
     sim1:
       is_repertoire: false
       paired: false
       sequence_type: amino_acid
       simulation_strategy: RejectionSampling
+      remove_seqs_with_signals: true 
       sim_items:
-        sim_item1: # group of sequences with same simulation params
+        sim_item1: # group of AIRs with the same parameters
           generative_model:
             chain: beta
             default_model_name: humanTRB
             model_path: null
             type: OLGA
           number_of_examples: 100
-          seed: 1002
           signals:
-           signal1: 1
-        sim_item2: # second group of sequences with same simulation params
+            signal1: 1
+        sim_item2:
           generative_model:
             chain: beta
             default_model_name: humanTRB
             model_path: null
             type: OLGA
           number_of_examples: 100
-          seed: 2
           signals:
-            signal2: 1 # all receptors will have the signal
-        sim_item3: # third group of sequences with same simulation params
+            signal2: 1
+        sim_item3:
           generative_model:
             chain: beta
             default_model_name: humanTRB
             model_path: null
             type: OLGA
           number_of_examples: 100
-          seed: 5231
-          signals: {} # no signal -> background sequences
-instructions:
-  my_sim_inst:
-    export_p_gens: false # could take some time to compute
-    max_iterations: 100
-    number_of_processes: 4
-    sequence_batch_size: 1000
-    simulation: sim1
-    store_signal_in_receptors: true
-    type: LigoSim
+          signals: {} # no signal
+  instructions:
+    my_sim_inst:
+      export_p_gens: false
+      max_iterations: 100
+      number_of_processes: 4
+      sequence_batch_size: 1000
+      simulation: sim1
+      type: LigoSim
 ```
 
 To run this simulations, save the YAML file above as specs.yaml and run the following:

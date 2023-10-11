@@ -15,6 +15,16 @@ Where
 * **specs.yaml** — simulation parameters described by the user in a yaml file. Please see :doc:`specification` for more information about LIgO parameters.
 * **output_folder** — output folder name defined by the user (should not exist before the run). 
 
+How to explore LIgO results
+---------------------------------
+
+The output folder structure is the same for all LIgO runs. The output folder should include:
+
+- **index.html**: main output file which gives an overview of the simulation: link to the full specification, the used LIgO version, some general information on the dataset and the link to the dataset exported in the standard AIRR format
+- **full_specs.yaml** file: includes the specification and default parameters if any of the parameters where left unfilled
+- **inst1** folder: this folder name is the same as the name given to the instruction by the user, all results are located here; the simulated dataset is located under `inst1/exported_dataset/airr/`
+- **HTML_output** folder: presentation of figures and reports if specified
+
 
 How to use LIgO for receptor-level simulation
 ---------------------------------
@@ -42,65 +52,62 @@ Here is the complete YAML specification for the simulation:
 .. code-block:: yaml
 
   definitions:
-    motifs:
-      motif1:
-        instantiation: GappedKmer
-        seed: AS 
-      motif2:
-        instantiation:
-          GappedKmer:
-            max_gap: 2
-            min_gap: 1
-        seed: G/G
-    signals:
-      signal1:
-        v_call: TRBV7
-        motifs:
+  motifs:
+    motif1:
+      seed: AS
+    motif2:
+      seed: G/G
+      max_gap: 2
+      min_gap: 1
+  signals:
+    signal1:
+      v_call: TRBV7
+      motifs:
         - motif1
-      signal2:
-        motifs:
+    signal2:
+      motifs:
         - motif2
-    simulations:
-      sim1:
-        is_repertoire: false
-        paired: false
-        sequence_type: amino_acid
-        simulation_strategy: RejectionSampling
-        sim_items:
-          sim_item1: # group of sequences with same sim params
-            generative_model:
-              chain: beta
-              default_model_name: humanTRB
-              model_path: null
-              type: OLGA
-            number_of_examples: 100
-            signals:
-             signal1: 1
-          sim_item2: # group of sequences with same sim params
-            generative_model:
-              chain: beta
-              default_model_name: humanTRB
-              model_path: null
-              type: OLGA
-            number_of_examples: 100
-            signals:
-              signal2: 1 # all receptors will have the signal
-          sim_item3: # group of sequences with same sim params
-            generative_model:
-              chain: beta
-              default_model_name: humanTRB
-              model_path: null
-              type: OLGA
-            number_of_examples: 100
-            signals: {} # no signal -> background sequences
+  simulations:
+    sim1:
+      is_repertoire: false
+      paired: false
+      sequence_type: amino_acid
+      simulation_strategy: RejectionSampling
+      remove_seqs_with_signals: true # remove signal-specific AIRs from the background
+      sim_items:
+        sim_item1: # group of AIRs with the same parameters
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals:
+            signal1: 1
+        sim_item2:
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals:
+            signal2: 1
+        sim_item3:
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals: {} # no signal
   instructions:
     my_sim_inst:
-      export_p_gens: false # could take some time to compute
+      export_p_gens: false
       max_iterations: 100
       number_of_processes: 4
       sequence_batch_size: 1000
       simulation: sim1
-      store_signal_in_receptors: true
       type: LigoSim
 
 
@@ -121,18 +128,55 @@ After saving the yaml specification to a file (e.g., quickstart.yaml), you can p
 
 .. code-block:: console
 
-  ligo quickstart.yaml quickstart_output
+  ligo quickstart.yaml qickstart_output_receptor
   
-Note that the output folder (quickstart_output) should not exist prior to the run.
+All results will be located in qickstart_output_receptor. Note that the output folder (qickstart_output_receptor) should not exist prior to the run.
 
 
 Step 3: Understanding the output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The simulated dataset is located under qickstart_output_receptor/inst1/exported_dataset/airr/batch1.tsv. In the output, each row represent one AIR.
+
+Some of the columns are shown in the table below:
+
+.. list-table:: Simulated receptors in AIRR format
+    :header-rows: 1
+
+    * - v_call
+      - j_call
+      - junction_aa
+      - signal1
+      - signal2
+      - signal1_position
+      - signal2_position
+  
+    * - TRBV10-1*01
+      - TRBJ2-5*01
+      - CARPDRGGGYTF
+      - 0
+      - 1
+      - m000000000000
+      - m000000100000
+    * - TRBV7-2*02
+      - TRBJ2-5*01
+      - CASSRGHFQETQYF
+      - 1
+      - 0
+      - m01000000000000
+      - m00000000000000
+    * - TRBV7-8*01
+      - TRBJ2-3*01
+      - CASSSPGGVRIYSTDTQYF
+      - 1
+      - 0
+      - m0100000000000000000
+      - m0000000000000000000
+
 
 Next steps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
+You can find more information about yaml parameters in :doc:`specification`. Other tutorials for how to use LIgO can be found under :doc:`tutorials`.   
 
 How to use LIgO for repertoire-level simulation
 -------------------------------------------------
