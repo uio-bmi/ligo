@@ -42,66 +42,63 @@ Here is the complete YAML specification for the simulation:
 .. code-block:: yaml
 
   definitions:
-    motifs:
-      motif1:
-        instantiation: GappedKmer
-        seed: AS 
-      motif2:
-        instantiation:
-          GappedKmer:
-            max_gap: 2
-            min_gap: 1
-        seed: G/G
-    signals:
-      signal1:
-        v_call: TRBV7
-        motifs:
+  motifs:
+    motif1:
+      seed: AS
+    motif2:
+      seed: G/G
+      max_gap: 2
+      min_gap: 1
+  signals:
+    signal1:
+      v_call: TRBV7
+      motifs:
         - motif1
-      signal2:
-        motifs:
+    signal2:
+      motifs:
         - motif2
-    simulations:
-      sim1:
-        is_repertoire: false
-        paired: false
-        sequence_type: amino_acid
-        simulation_strategy: RejectionSampling
-        sim_items:
-          sim_item1: # group of sequences with same sim params
-            generative_model:
-              chain: beta
-              default_model_name: humanTRB
-              model_path: null
-              type: OLGA
-            number_of_examples: 100
-            signals:
-             signal1: 1
-          sim_item2: # group of sequences with same sim params
-            generative_model:
-              chain: beta
-              default_model_name: humanTRB
-              model_path: null
-              type: OLGA
-            number_of_examples: 100
-            signals:
-              signal2: 1 # all receptors will have the signal
-          sim_item3: # group of sequences with same sim params
-            generative_model:
-              chain: beta
-              default_model_name: humanTRB
-              model_path: null
-              type: OLGA
-            number_of_examples: 100
-            signals: {} # no signal -> background sequences
-  instructions:
-    my_sim_inst:
-      export_p_gens: false # could take some time to compute
-      max_iterations: 100
-      number_of_processes: 4
-      sequence_batch_size: 1000
-      simulation: sim1
-      store_signal_in_receptors: true
-      type: LigoSim
+  simulations:
+    sim1:
+      is_repertoire: false
+      paired: false
+      sequence_type: amino_acid
+      simulation_strategy: RejectionSampling
+      remove_seqs_with_signals: true # remove signal-specific AIRs from the background
+      sim_items:
+        sim_item1: # group of AIRs with the same parameters
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals:
+            signal1: 1
+        sim_item2:
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals:
+            signal2: 1
+        sim_item3:
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals: {} # no signal
+instructions:
+  my_sim_inst:
+    export_p_gens: false
+    max_iterations: 100
+    number_of_processes: 4
+    sequence_batch_size: 1000
+    simulation: sim1
+    type: LigoSim
 
 
 Step 2: Running LIgO
