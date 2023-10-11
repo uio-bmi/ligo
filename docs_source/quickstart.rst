@@ -23,7 +23,7 @@ The output folder structure is the same for all LIgO runs. The output folder sho
 - **index.html** - main output file which gives an overview of the simulation: link to the full specification, the used LIgO version, some general information on the dataset and the link to the dataset exported in the standard AIRR format,
 - **full_specs.yaml** file - includes the specification and default parameters if any of the parameters where left unfilled
 - **inst1** folder - this folder name is the same as the name given to the instruction by the user, all results are located here; the simulated dataset is located under `inst1/exported_dataset/airr/`.
-- **HTML_output** folder - presentation of all results
+- **HTML_output** folder - presentation of figures and reports if specified
 
 
 How to use LIgO for receptor-level simulation
