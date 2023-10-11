@@ -176,7 +176,7 @@ Some of the columns are shown in the table below:
 Next steps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
+You can find more information about yaml parameters in :doc:`specification`. Other tutorials for how to use LIgO can be found under :doc:`tutorials`.   
 
 How to use LIgO for repertoire-level simulation
 -------------------------------------------------
