@@ -50,7 +50,7 @@ class LigoSimInstruction(Instruction):
 
     - simulation (str): a name of a simulation object containing a list of SimConfigItem as specified under definitions key; defines how to combine signals with simulated data; specified under definitions
 
-    - sequence_batch_size (bool): how many sequences to generate at once using the generative model before checking for signals and filtering
+    - sequence_batch_size (int): how many sequences to generate at once using the generative model before checking for signals and filtering
 
     - max_iterations (int): how many iterations are allowed when creating sequences
 
@@ -64,9 +64,8 @@ class LigoSimInstruction(Instruction):
     .. code-block:: yaml
 
         my_simulation_instruction: # user-defined name of the instruction
-            type: LIgOSimulation # which instruction to execute
+            type: LIgOSim # which instruction to execute
             simulation: sim1
-            store_signal_in_receptors: True
             sequence_batch_size: 1000
             max_iterations: 1000
             export_p_gens: False
