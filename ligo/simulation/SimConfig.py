@@ -70,3 +70,28 @@ class SimConfig:
 
     def __str__(self):
         return ",\n".join(str(simulation_item) for simulation_item in self.sim_items)
+
+    def get_total_seq_count_for_signal(self, signal_id: str, model_name: str) -> int:
+        sim_item_names = model_name.split("__")
+        total_count = 0
+        for sim_item_name in sim_item_names:
+            total_count += self._get_seq_count_for_sim_item(signal_id, sim_item_name)
+        return round(total_count)
+
+    def get_total_seq_count(self, model_name: str) -> int:
+        sim_item_names = model_name.split("__")
+        sim_items = [sim_item for sim_item in self.sim_items if sim_item.name in sim_item_names]
+        return round(
+            sum([sim_item.number_of_examples * (sim_item.receptors_in_repertoire_count if self.is_repertoire else 1)
+                 for sim_item in sim_items]))
+
+    def _get_seq_count_for_sim_item(self, signal_id: str, sim_item_name: str) -> int:
+        count = 0
+        sim_item = [sim_item for sim_item in self.sim_items if sim_item.name == sim_item_name][0]
+        signal_with_proportions = {k: v for k, v in sim_item.signal_proportions.items()
+                                   if k.id == signal_id or (signal_id in k.id and "__" in k.id)}
+        if signal_with_proportions:
+            count = sim_item.number_of_examples * sum(signal_with_proportions.values())
+            if self.is_repertoire:
+                count *= sim_item.receptors_in_repertoire_count
+        return count

@@ -9,7 +9,7 @@ from ligo.util.PathBuilder import PathBuilder
 
 
 def test_feasibility_summary():
-    path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / 'feasibilty_summary')
+    path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / 'feasibility_summary')
     specs_path = prepare_specs(path)
 
     app = LigoApp(specs_path, path / 'result')
@@ -30,6 +30,9 @@ def prepare_specs(path) -> Path:
                 },
                 "motif3": {
                     "seed": "C"
+                },
+                "motif4": {
+                    "seed": "SLVTY"
                 }
             },
             "signals": {
@@ -41,6 +44,9 @@ def prepare_specs(path) -> Path:
                 },
                 "signal3": {
                     "motifs": ["motif3"]
+                },
+                "signal4": {
+                    "motifs": ["motif4"]
                 }
             },
             "simulations": {
@@ -52,11 +58,12 @@ def prepare_specs(path) -> Path:
                     "sim_items": {
                         "var1": {
                             "immune_events": {
-                              "ievent1": True,
-                              "ievent2": False,
+                                "ievent1": True,
+                                "ievent2": False,
                             },
                             "signals": {
-                                "signal1": 0.5
+                                "signal1": 0.5,
+                                'signal4': 0.2
                             },
                             "number_of_examples": 1,
                             "is_noise": False,
@@ -70,8 +77,8 @@ def prepare_specs(path) -> Path:
                         },
                         "var2": {
                             "immune_events": {
-                              "ievent1": False,
-                              "ievent2": False,
+                                "ievent1": False,
+                                "ievent2": False,
                             },
                             "signals": {
                                 "signal1": 0.1,
@@ -95,7 +102,7 @@ def prepare_specs(path) -> Path:
             "inst1": {
                 "type": "FeasibilitySummary",
                 "simulation": "sim1",
-                "sequence_count": 10
+                "sequence_count": 100
             }
         },
         "output": {

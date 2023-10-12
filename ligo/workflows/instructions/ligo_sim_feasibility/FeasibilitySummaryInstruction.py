@@ -126,14 +126,40 @@ class FeasibilitySummaryInstruction(Instruction):
     def _add_high_freq_warning(self, frequencies: pd.DataFrame, model_name: str):
         high_frequencies = frequencies[frequencies['frequency'] >= FeasibilitySummaryInstruction.MAX_SIG_FREQ]
         for _, row in high_frequencies.iterrows():
-            self.state.reports[model_name].warnings.append(
-                f"Signal {row['signal']} has very high frequency. It is found in {round(row['frequency'] * self.state.sequence_count)} out of {self.state.sequence_count} sequences. It might take many iterations to simulate sequences that do not contain this signal.")
+            seqs_without_signal = self.state.simulation.get_total_seq_count(model_name) - self.state.simulation.get_total_seq_count_for_signal(row['signal'], model_name)
+            if row['frequency'] == 1:
+                self.state.reports[model_name].warnings.append(
+                    f"Signal {row['signal']} occurs in all simulated sequences, but the simulation requires "
+                    f"{seqs_without_signal} sequence(s) without the signal. Try feasibility analysis on larger batch "
+                    f"size (currently {self.state.sequence_count}) or try updating the signal.")
+            else:
+                seqs_to_simulate = round(seqs_without_signal / (1 - row['frequency']))
+                self.state.reports[model_name].warnings.append(
+                    f"Signal {row['signal']} has very high frequency. It is found in "
+                    f"{round(row['frequency'] * self.state.sequence_count)} out of {self.state.sequence_count} sequences. "
+                    f"To simulate {seqs_without_signal} that do not contain the signal, it will require roughly "
+                    f"{seqs_to_simulate} to be generated for rejection sampling. With the current batch size "
+                    f"({self.state.sequence_count}), it will require roughly "
+                    f"{round(seqs_to_simulate / self.state.sequence_count)} batch(es).")
 
     def _add_low_freq_warning(self, frequencies: pd.DataFrame, model_name: str):
         low_frequencies = frequencies[frequencies['frequency'] <= FeasibilitySummaryInstruction.MIN_SIG_FREQ]
         for _, row in low_frequencies.iterrows():
-            self.state.reports[model_name].warnings.append(
-                f"Signal {row['signal']} has very low frequency. It is found in {round(row['frequency'] * self.state.sequence_count)} out of {self.state.sequence_count} sequences, and it might take many iterations to simulate the desired number of signal-containing sequences if using rejection sampling.")
+            seq_count_for_signal = self.state.simulation.get_total_seq_count_for_signal(row['signal'], model_name)
+            if row['frequency'] == 0:
+                self.state.reports[model_name].warnings.append(
+                    f"Signal {row['signal']} does not occur in any of the simulated sequences, but the simulation "
+                    f"requires {seq_count_for_signal} sequence(s) with the signal. Try feasibility analysis on larger "
+                    f"batch size (currently {self.state.sequence_count}) or try updating the signal.")
+            else:
+                seqs_to_simulate = round(seq_count_for_signal / row['frequency'])
+                self.state.reports[model_name].warnings.append(
+                    f"Signal {row['signal']} has very low frequency. It is found in "
+                    f"{round(row['frequency'] * self.state.sequence_count)} out of {self.state.sequence_count} sequences. "
+                    f"To simulate {seq_count_for_signal} such sequence(s), it will require roughly {seqs_to_simulate} "
+                    f"sequence(s) to be generated for rejection sampling. With the current batch size "
+                    f"({self.state.sequence_count}), it will require roughly "
+                    f"{round(seqs_to_simulate / self.state.sequence_count)} batch(es).")
 
     def _report_signal_co_occurrence(self, sequences: BackgroundSequences, path: Path, model_name: str):
         if len(self.state.signals) > 0:
@@ -183,7 +209,7 @@ class FeasibilitySummaryInstruction(Instruction):
                     model_name = list(unique_models.keys())[i]
                     model = unique_models[model_name]
                     if sim_item.generative_model.is_same(model):
-                        new_model_name = "_".join([model_name, sim_item.name])
+                        new_model_name = "__".join([model_name, sim_item.name])
                         old_model_name = model_name
                     i += 1
 
