@@ -44,8 +44,76 @@ Please keep in mind that pgen evaluation may take time.
 Step 1: YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-First, we need to define the YAML file describing the simulation parameters. We define the immune signals 1 and 2 and the number of TRBs per each
-signal in the **definitions** section and technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.
+We need to define the YAML file describing the simulation parameters. First, we define the immune signals 1 and 2 in the **definitions** section.. You can read more about the yaml file parameters in :doc:`specification`.
+
+.. code-block:: yaml
+
+  definitions:
+  motifs:
+    motif1:
+      seed: AS
+    motif2:
+      seed: G/G
+      max_gap: 2
+      min_gap: 1
+  signals:
+    signal1:
+      v_call: TRBV7
+      motifs: [motif1]
+    signal2:
+      motifs: [motif2]
+
+Second, we define the number of TRBs per each signal in the **simulations** section. You can read more about the yaml file parameters in :doc:`specification`.
+
+.. code-block:: yaml
+
+  simulations:
+    sim1:
+      is_repertoire: false
+      paired: false
+      sequence_type: amino_acid
+      simulation_strategy: RejectionSampling
+      remove_seqs_with_signals: true # remove signal-specific AIRs from the background
+      sim_items:
+        sim_item1: # group of AIRs with the same parameters
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals:
+            signal1: 1
+        sim_item2:
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals:
+            signal2: 1
+        sim_item3:
+          generative_model:
+            chain: beta
+            default_model_name: humanTRB
+            model_path: null
+            type: OLGA
+          number_of_examples: 100
+          signals: {} # no signal
+
+Finally, we define technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.
+
+.. code-block:: yaml
+
+  instructions:
+    my_sim_inst:
+      export_p_gens: false
+      max_iterations: 100
+      number_of_processes: 4
+      sequence_batch_size: 1000
+      simulation: sim1
+      type: LigoSim
 
 Here is the complete YAML specification for the simulation:
 
@@ -62,11 +130,9 @@ Here is the complete YAML specification for the simulation:
   signals:
     signal1:
       v_call: TRBV7
-      motifs:
-        - motif1
+      motifs: [motif1]
     signal2:
-      motifs:
-        - motif2
+      motifs: [motif2]
   simulations:
     sim1:
       is_repertoire: false
@@ -110,11 +176,10 @@ Here is the complete YAML specification for the simulation:
       simulation: sim1
       type: LigoSim
 
-
 Step 2: Running LIgO
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-After saving the yaml specification to a file (e.g., quickstart.yaml), you can proceed with the analysis by following these steps:
+After saving the yaml specification to a file (e.g., quickstart_receptor.yaml), you can proceed with the analysis by following these steps:
 
 #. Activate the virtual environment where you have installed LIgO, for example
 
@@ -122,13 +187,13 @@ After saving the yaml specification to a file (e.g., quickstart.yaml), you can p
 
   source ligo_env/bin/activate
   
-#. Navigate to the directory where the yaml specification (quickstart.yaml) was saved.
+#. Navigate to the directory where the yaml specification (quickstart_receptor.yaml) was saved.
 
 #. Execute the following command:
 
 .. code-block:: console
 
-  ligo quickstart.yaml qickstart_output_receptor
+  ligo quickstart_receptor.yaml qickstart_output_receptor
   
 All results will be located in qickstart_output_receptor. Note that the output folder (qickstart_output_receptor) should not exist prior to the run.
 
@@ -180,15 +245,167 @@ You can find more information about yaml parameters in :doc:`specification`. Oth
 
 How to use LIgO for repertoire-level simulation
 -------------------------------------------------
+Simulation of BCR repertoires labeled with two immune events
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this quickstart tutorial, we will generate a dataset of 20 BCR repertoires, with each repertoire containing 6 BCRs. Out of these, 10 repertoires will be labeled as immune event 1 and will consist of 30% BCRs with signal 1 and 30% BCRs with signal 2. The remaining 10 repertoires will be labeled as immune event 2 and will consist of 50% BCRs with signal 1 and 50% BCRs with signal 2. Signal 1 is composed of a 2-mer {AA}, while signal 2 is composed of a 2-mer {GG}. Signal-specific ИСКыs will be generated using the signal implantation strategy, where any implanting position is allowed, and the default OLGA model (humanIGH).
+
 
 Step 1: YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+LIgO simulation starts with defining the YAML file with the simulation parameters. First, we define the immune signals 1 and 2 in the **definitions** section. You can read more about the yaml file parameters in :doc:`specification`.
+
+.. code-block:: yaml
+
+  definitions:
+  motifs:
+    motif1:
+      seed: AA
+    motif2:
+      seed: GG
+  signals:
+    signal1:
+      motifs: [motif1]
+    signal2:
+      motifs: [motif2]
+
+Second, we define the immune events and the repertoire parameters, such as the number of repertoires and the number of BCRs in therepertoire, in the **simulations** section. You can read more about the yaml file parameters in :doc:`specification`.
+
+.. code-block:: yaml
+
+  simulations:
+    sim1:
+      is_repertoire: true
+      paired: false
+      sequence_type: amino_acid
+      simulation_strategy: Implanting
+      remove_seqs_with_signals: true # remove signal-specific AIRs from the background
+      sim_items:
+        sim_item: # group of AIRs with the same parameters
+          AIRR1:
+            immune_events:
+              ievent1: True
+              ievent1: False
+            signals: [signal1: 0.3, signal2: 0.3]
+            number_of_examples: 10
+            is_noise: False
+            receptors_in_repertoire_count: 6,
+            generative_model: 
+              chain: heavy
+              default_model_name: humanIGH
+              model_path: null
+              type: OLGA
+          AIRR2:
+            immune_events:
+              ievent1: False
+              ievent1: True
+            signals: [signal1: 0.5, signal2: 0.5]
+            number_of_examples: 10
+            is_noise: False
+            receptors_in_repertoire_count: 6,
+            generative_model: 
+              chain: heavy
+              default_model_name: humanIGH
+              model_path: null
+              type: OLGA
+
+Finally, we define technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.
+
+.. code-block:: yaml
+
+  instructions:
+    my_sim_inst:
+      export_p_gens: false
+      max_iterations: 100
+      number_of_processes: 4
+      sequence_batch_size: 1000
+      simulation: sim1
+      type: LigoSim
+
+Here is the complete YAML specification for the simulation:
+
+.. code-block:: yaml
+
+  definitions:
+  motifs:
+    motif1:
+      seed: AA
+    motif2:
+      seed: GG
+  signals:
+    signal1:
+      motifs: [motif1]
+    signal2:
+      motifs: [motif2]
+  simulations:
+    sim1:
+      is_repertoire: true
+      paired: false
+      sequence_type: amino_acid
+      simulation_strategy: Implanting
+      remove_seqs_with_signals: true # remove signal-specific AIRs from the background
+      sim_items:
+        sim_item: # group of AIRs with the same parameters
+          AIRR1:
+            immune_events:
+              ievent1: True
+              ievent1: False
+            signals: [signal1: 0.3, signal2: 0.3]
+            number_of_examples: 10
+            is_noise: False
+            receptors_in_repertoire_count: 6,
+            generative_model: 
+              chain: heavy
+              default_model_name: humanIGH
+              model_path: null
+              type: OLGA
+          AIRR2:
+            immune_events:
+              ievent1: False
+              ievent1: True
+            signals: [signal1: 0.5, signal2: 0.5]
+            number_of_examples: 10
+            is_noise: False
+            receptors_in_repertoire_count: 6,
+            generative_model: 
+              chain: heavy
+              default_model_name: humanIGH
+              model_path: null
+              type: OLGA
+  instructions:
+    my_sim_inst:
+      export_p_gens: false
+      max_iterations: 100
+      number_of_processes: 4
+      sequence_batch_size: 1000
+      simulation: sim1
+      type: LigoSim
+
 Step 2: Running LIgO
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+After saving the yaml specification to a file (e.g., quickstart_repertoire.yaml), you can proceed with the analysis by following these steps:
+
+#. Activate the virtual environment where you have installed LIgO, for example
+
+.. code-block:: console
+
+  source ligo_env/bin/activate
+  
+#. Navigate to the directory where the yaml specification (quickstart_repertoire.yaml) was saved.
+
+#. Execute the following command:
+
+.. code-block:: console
+
+  ligo quickstart_repertoire.yaml qickstart_output_repertoire
+  
+All results will be located in qickstart_output_repertoire. Note that the output folder (qickstart_output_repertoire) should not exist prior to the run.
 
 Step 3: Understanding the output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Next steps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can find more information about yaml parameters in :doc:`specification`. Other tutorials for how to use LIgO can be found under :doc:`tutorials`.  
