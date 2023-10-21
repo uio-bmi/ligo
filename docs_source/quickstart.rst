@@ -27,7 +27,7 @@ The output folder structure is the same for all LIgO runs. The output folder sho
 
 
 How to use LIgO for receptor-level simulation
----------------------------------
+-------------------------------------------------
 
 Simulation of a TCR dataset containing two immune signals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -193,14 +193,14 @@ After saving the yaml specification to a file (e.g., quickstart_receptor.yaml), 
 
 .. code-block:: console
 
-  ligo quickstart_receptor.yaml qickstart_output_receptor
+  ligo quickstart_receptor.yaml quickstart_output_receptor
   
-All results will be located in qickstart_output_receptor. Note that the output folder (qickstart_output_receptor) should not exist prior to the run.
+All results will be located in quickstart_output_receptor. Note that the output folder (quickstart_output_receptor) should not exist prior to the run.
 
 
 Step 3: Understanding the output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The simulated dataset is located under qickstart_output_receptor/inst1/exported_dataset/airr/batch1.tsv. In the output, each row represent one AIR.
+The simulated dataset is located under quickstart_output_receptor/inst1/exported_dataset/airr/batch1.tsv. In the output, each row represent one AIR.
 
 Some of the columns are shown in the table below:
 
@@ -398,9 +398,9 @@ After saving the yaml specification to a file (e.g., quickstart_repertoire.yaml)
 
 .. code-block:: console
 
-  ligo quickstart_repertoire.yaml qickstart_output_repertoire
+  ligo quickstart_repertoire.yaml quickstart_output_repertoire
   
-All results will be located in qickstart_output_repertoire. Note that the output folder (qickstart_output_repertoire) should not exist prior to the run.
+All results will be located in quickstart_output_repertoire. Note that the output folder (quickstart_output_repertoire) should not exist prior to the run.
 
 Step 3: Understanding the output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

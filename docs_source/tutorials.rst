@@ -13,3 +13,4 @@ For details on how to do that, see :ref:`Installing LIgO`.
   tutorials/how_to_check_feasibility_of_sim_params
   tutorials/simulation_with_custom_signal_functions
   tutorials/how_to_simulate_paired_chain_data
+  tutorials/how_to_simulate_co-occuring_signals
