@@ -281,34 +281,33 @@ Second, we define the immune events and the repertoire parameters, such as the n
       sequence_type: amino_acid
       simulation_strategy: Implanting
       remove_seqs_with_signals: true # remove signal-specific AIRs from the background
-      sim_items:
-        sim_item: # group of AIRs with the same parameters
-          AIRR1:
-            immune_events:
-              ievent1: True
-              ievent1: False
-            signals: {signal1: 0.3, signal2: 0.3}
-            number_of_examples: 10
-            is_noise: False
-            receptors_in_repertoire_count: 6,
-            generative_model: 
-              chain: heavy
-              default_model_name: humanIGH
-              model_path: null
-              type: OLGA
-          AIRR2:
-            immune_events:
-              ievent1: False
-              ievent1: True
-            signals: {signal1: 0.5, signal2: 0.5}
-            number_of_examples: 10
-            is_noise: False
-            receptors_in_repertoire_count: 6,
-            generative_model: 
-              chain: heavy
-              default_model_name: humanIGH
-              model_path: null
-              type: OLGA
+      sim_items: # group of AIRs with the same parameters
+      AIRR1:
+        immune_events:
+          ievent1: True
+          ievent1: False
+        signals: {signal1: 0.3, signal2: 0.3}
+        number_of_examples: 10
+        is_noise: False
+        receptors_in_repertoire_count: 6
+        generative_model:
+          chain: heavy
+          default_model_name: humanIGH
+          model_path: null
+          type: OLGA
+      AIRR2:
+        immune_events:
+          ievent1: False
+          ievent1: True
+        signals: {signal1: 0.5, signal2: 0.5}
+        number_of_examples: 10
+        is_noise: False
+        receptors_in_repertoire_count: 6
+        generative_model:
+          chain: heavy
+          default_model_name: humanIGH
+          model_path: null
+          type: OLGA
 
 Finally, we define the technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.
 
@@ -345,34 +344,33 @@ Here is the complete YAML specification for the simulation:
         sequence_type: amino_acid
         simulation_strategy: Implanting
         remove_seqs_with_signals: true # remove signal-specific AIRs from the background
-        sim_items:
-          sim_item: # group of AIRs with the same parameters
-            AIRR1:
-              immune_events:
-                ievent1: True
-                ievent1: False
-              signals: {signal1: 0.3, signal2: 0.3}
-              number_of_examples: 10
-              is_noise: False
-              receptors_in_repertoire_count: 6,
-              generative_model: 
-                chain: heavy
-                default_model_name: humanIGH
-                model_path: null
-                type: OLGA
-            AIRR2:
-              immune_events:
-                ievent1: False
-                ievent1: True
-              signals: {signal1: 0.5, signal2: 0.5}
-              number_of_examples: 10
-              is_noise: False
-              receptors_in_repertoire_count: 6,
-              generative_model: 
-                chain: heavy
-                default_model_name: humanIGH
-                model_path: null
-                type: OLGA
+        sim_items: # groups of AIRs with the same parameters
+          AIRR1:
+            immune_events:
+              ievent1: True
+              ievent1: False
+            signals: {signal1: 0.3, signal2: 0.3}
+            number_of_examples: 10
+            is_noise: False
+            receptors_in_repertoire_count: 6
+            generative_model:
+              chain: heavy
+              default_model_name: humanIGH
+              model_path: null
+              type: OLGA
+          AIRR2:
+            immune_events:
+              ievent1: False
+              ievent1: True
+            signals: {signal1: 0.5, signal2: 0.5}
+            number_of_examples: 10
+            is_noise: False
+            receptors_in_repertoire_count: 6
+            generative_model:
+              chain: heavy
+              default_model_name: humanIGH
+              model_path: null
+              type: OLGA
   instructions:
     my_sim_inst:
       export_p_gens: false
