@@ -1,5 +1,5 @@
 pandas
-bionumpy
+bionumpy==0.2.26
 numpy
 olga
 pyyaml
