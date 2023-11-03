@@ -36,55 +36,55 @@ will not contain any of these signals.
 ```yaml
 
   definitions:
-  motifs:
-    motif1:
-      seed: AS
-    motif2:
-      seed: G/G
-      max_gap: 2
-      min_gap: 1
-  signals:
-    signal1:
-      v_call: TRBV7
-      motifs:
-        - motif1
-    signal2:
-      motifs:
-        - motif2
-  simulations:
-    sim1:
-      is_repertoire: false
-      paired: false
-      sequence_type: amino_acid
-      simulation_strategy: RejectionSampling
-      remove_seqs_with_signals: true 
-      sim_items:
-        sim_item1: # group of AIRs with the same parameters
-          generative_model:
-            chain: beta
-            default_model_name: humanTRB
-            model_path: null
-            type: OLGA
-          number_of_examples: 100
-          signals:
-            signal1: 1
-        sim_item2:
-          generative_model:
-            chain: beta
-            default_model_name: humanTRB
-            model_path: null
-            type: OLGA
-          number_of_examples: 100
-          signals:
-            signal2: 1
-        sim_item3:
-          generative_model:
-            chain: beta
-            default_model_name: humanTRB
-            model_path: null
-            type: OLGA
-          number_of_examples: 100
-          signals: {} # no signal
+    motifs:
+      motif1:
+        seed: AS
+      motif2:
+        seed: G/G
+        max_gap: 2
+        min_gap: 1
+    signals:
+      signal1:
+        v_call: TRBV7
+        motifs:
+          - motif1
+      signal2:
+        motifs:
+          - motif2
+    simulations:
+      sim1:
+        is_repertoire: false
+        paired: false
+        sequence_type: amino_acid
+        simulation_strategy: RejectionSampling
+        remove_seqs_with_signals: true 
+        sim_items:
+          sim_item1: # group of AIRs with the same parameters
+            generative_model:
+              chain: beta
+              default_model_name: humanTRB
+              model_path: null
+              type: OLGA
+            number_of_examples: 100
+            signals:
+              signal1: 1
+          sim_item2:
+            generative_model:
+              chain: beta
+              default_model_name: humanTRB
+              model_path: null
+              type: OLGA
+            number_of_examples: 100
+            signals:
+              signal2: 1
+          sim_item3:
+            generative_model:
+              chain: beta
+              default_model_name: humanTRB
+              model_path: null
+              type: OLGA
+            number_of_examples: 100
+            signals: {} # no signal
   instructions:
     my_sim_inst:
       export_p_gens: false
@@ -95,7 +95,7 @@ will not contain any of these signals.
       type: LigoSim
 ```
 
-To run this simulations, save the YAML file above as specs.yaml and run the following:
+To run this simulation, save the YAML file above as specs.yaml and run the following:
 
 ```commandline
 ligo specs.yaml output_folder
