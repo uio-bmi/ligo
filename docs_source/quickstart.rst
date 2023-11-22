@@ -285,7 +285,7 @@ Second, we define the immune events and the repertoire parameters, such as the n
       AIRR1:
         immune_events:
           ievent1: True
-          ievent1: False
+          ievent2: False
         signals: {signal1: 0.3, signal2: 0.3}
         number_of_examples: 10
         is_noise: False
@@ -298,7 +298,7 @@ Second, we define the immune events and the repertoire parameters, such as the n
       AIRR2:
         immune_events:
           ievent1: False
-          ievent1: True
+          ievent2: True
         signals: {signal1: 0.5, signal2: 0.5}
         number_of_examples: 10
         is_noise: False
@@ -348,7 +348,7 @@ Here is the complete YAML specification for the simulation:
           AIRR1:
             immune_events:
               ievent1: True
-              ievent1: False
+              ievent2: False
             signals: {signal1: 0.3, signal2: 0.3}
             number_of_examples: 10
             is_noise: False
@@ -361,7 +361,7 @@ Here is the complete YAML specification for the simulation:
           AIRR2:
             immune_events:
               ievent1: False
-              ievent1: True
+              ievent2: True
             signals: {signal1: 0.5, signal2: 0.5}
             number_of_examples: 10
             is_noise: False
