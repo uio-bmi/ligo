@@ -14,10 +14,11 @@ Why should you use LIgO?
 
 Please **check out LIgO manuscript** `(biorxiv link) <https://www.biorxiv.org/content/10.1101/2023.10.20.562936v2>`_ for more information!
 
+Contents
+---------------------------------
 
 .. toctree::
   :maxdepth: 1
-  :caption: Contents
 
   quickstart
   installation
@@ -25,9 +26,3 @@ Please **check out LIgO manuscript** `(biorxiv link) <https://www.biorxiv.org/co
   specification
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
