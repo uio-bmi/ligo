@@ -7,7 +7,7 @@ Simulation of a TCR dataset containing two immune signals
 In this quickstart tutorial, we will simulate a dataset of 300 productive TRB receptors — 100 TRBs containing signal 1, 100 TRBs containing signal 2,
 and 100 TRBs containing no immune signal (background receptors). See the illustration below. Signal 1 consists of a 2-mer {AS} and TRBV7, i.e., only TRBs containing both TRBV7 and 2-mer {AS} contain Signal 1. Signal 2 consists of two gapped k-mers {G.G} and {G..G}.  Signal-specific TRBs will be generated using the rejection sampling strategy and the default OLGA model (humanTRB).
 
-.. image:: ./_static/figures/quickstart_receptor-level.png
+.. image:: ../_static/figures/quickstart_receptor-level.png
 
 LIgO reports the simulated TRBs as a triple of the TRBV gene name, CDR3 AA sequence, and TRBJ gene name. If you also want to report the generation
 probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the *export_p_gens* parameter to true.
@@ -172,9 +172,27 @@ All results will be located in quickstart_output_receptor. Note that the output 
 
 Step 3: Understanding the output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The simulated dataset is located under quickstart_output_receptor/inst1/exported_dataset/airr/batch1.tsv. In the output, each row represents one AIR.
+The simulated dataset is located under 
 
-Some of the columns are shown in the table below:
+.. code-block:: console
+
+  quickstart_output_receptor/inst1/exported_dataset/airr/batch1.tsv. 
+
+In the output, each row represents one AIR. Some of the output columns are shown in the table below. 
+
+- v_call: V gene of a simulated AIR
+
+- j_call: J gene of a simulated AIR
+
+- junction_aa: junction of a simulated AIR
+
+- signal1: 1 if a simulated AIR contains :code:`signal1`; 0 otherwise  
+
+- signal2: 1 if a simulated AIR contains :code:`signal2`; 0 otherwise 
+
+- signal1_position: binary mask representing position of :code:`signal1` in a simulated AIR  
+
+- signal2_position: binary mask representing position of :code:`signal2` in a simulated AIR   
 
 .. list-table:: Simulated receptors in AIRR format
     :header-rows: 1
