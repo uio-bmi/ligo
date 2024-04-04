@@ -4,14 +4,27 @@ How to use LIgO for receptor-level simulation
 Simulation of a TCR dataset containing two immune signals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this quickstart tutorial, we will simulate a dataset of 300 productive TRB receptors — 100 TRBs containing signal 1, 100 TRBs containing signal 2,
-and 100 TRBs containing no immune signal (background receptors). See the illustration below. Signal 1 consists of a 2-mer {AS} and TRBV7, i.e., only TRBs containing both TRBV7 and 2-mer {AS} contain Signal 1. Signal 2 consists of two gapped k-mers {G.G} and {G..G}.  Signal-specific TRBs will be generated using the rejection sampling strategy and the default OLGA model (humanTRB).
+In this quickstart tutorial, we will simulate a dataset of 300 productive TRB receptors such that (see the illustration below):
+
+- 100 TRBs containing signal 1; 
+
+- 100 TRBs containing signal 2;
+
+- 100 TRBs containing no immune signal (background receptors). 
+
+We define signal 1 and signal 2 as the following (see the illustration below):
+
+- Signal 1 consists of a 2-mer {AS} and TRBV7, i.e., only TRBs containing both TRBV7 and 2-mer {AS} contain Signal 1; 
+
+- Signal 2 consists of two gapped k-mers {G.G} and {G..G}, i.e., only TRBs containing {G.G} or {G..G} contain Signal 2. 
+
+Signal-specific TRBs will be generated using the rejection sampling strategy and the default OLGA model (humanTRB).
 
 .. image:: ../_static/figures/quickstart_receptor-level.png
 
-LIgO reports the simulated TRBs as a triple of the TRBV gene name, CDR3 AA sequence, and TRBJ gene name. If you also want to report the generation
-probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the *export_p_gens* parameter to true.
-Please keep in mind that pgen evaluation may take time.
+By default, LIgO reports the simulated TRBs as a triple of the TRBV gene name, CDR3 AA sequence, and TRBJ gene name. To be able to export full-length AIRs, it is necessary to also download the reference data using Stitchr .
+
+If you also want to report the generation probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the :code:`export_p_gens`  parameter to true. Please keep in mind that pgen evaluation may take time.
 
 Step 1: YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
