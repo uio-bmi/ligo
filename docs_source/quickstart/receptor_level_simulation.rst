@@ -16,7 +16,7 @@ Please keep in mind that pgen evaluation may take time.
 Step 1: YAML specification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We need to define the YAML file describing the simulation parameters. First, we define the immune signals 1 and 2 in the **definitions** section. You can read more about the yaml file parameters in :doc:`specification`.
+We need to define the YAML file describing the simulation parameters. First, we define the immune signals 1 and 2 in the **definitions** section. You can read more about the yaml file parameters in :ref:`YAML specification`.
 
 .. code-block:: yaml
 
@@ -35,7 +35,7 @@ We need to define the YAML file describing the simulation parameters. First, we 
       signal2:
         motifs: [motif2]
 
-Second, we define the number of TRBs per signal in the **simulations** section. You can read more about the yaml file parameters in :doc:`specification`.
+Second, we define the number of TRBs per signal in the **simulations** section. You can read more about the yaml file parameters in :ref:`YAML specification`.
 
 .. code-block:: yaml
 
@@ -231,5 +231,5 @@ In the output, each row represents one AIR. Some of the output columns are shown
 Next steps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can find more information about yaml parameters in :doc:`specification`. Other tutorials for how to use LIgO can be found under :doc:`tutorials`.   
+You can find more information about yaml parameters in :ref:`YAML specification`. Other tutorials for how to use LIgO can be found under :ref:`Tutorials`.   
 
