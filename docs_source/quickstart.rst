@@ -26,13 +26,12 @@ The output folder structure is the same for all LIgO runs. The output folder sho
 - **HTML_output** folder: presentation of figures and reports if specified
 
 
-How to use LIgO for receptor- and repertoire-level simulations
+Quickstart tutorials
 ---------------------------------
 
 
 .. toctree::
   :maxdepth: 1
-  :caption: Quickstart examples:
 
   quickstart/receptor_level_simulation
   quickstart/repertoire_level_simulation
