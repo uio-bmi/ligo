@@ -174,6 +174,114 @@ All results will be located in quickstart_output_repertoire. Note that the outpu
 Step 3: Understanding the output
 ==============================================================
 
+The folder :code:`quickstart_output_repertoire/my_sim_inst/exported_dataset/airr/` contains the simulation output as the :code:`metadata.csv` file and the :code:`repertoires` folder. 
+
+Metadata file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:code:`metadata.csv` is a table where each row describes one repertore, see below a metadata file example for the quickstart repertoire-level simulation
+
+.. list-table:: metadata.csv
+    :header-rows: 1
+
+    * - subject_id
+      - filename
+      - repertoire_id
+      - ievent1
+      - ievent2
+      - signal1
+      - signal2
+      - sim_item
+      - identifier
+  
+    * - subject_0
+      - e5af5d574fc84140bb54bf0fa81245ea.tsv
+      - e5af5d574fc84140bb54bf0fa81245ea
+      - TRUE
+      - FALSE
+      - TRUE
+      - TRUE
+      - AIRR1
+      - e5af5d574fc84140bb54bf0fa81245ea
+
+    * - subject_1
+      - 47799dfcb42d4c1ba3e01d3ff2943cdb.tsv
+      - 47799dfcb42d4c1ba3e01d3ff2943cdb
+      - FALSE
+      - TRUE
+      - TRUE
+      - TRUE
+      - AIRR2
+      - 47799dfcb42d4c1ba3e01d3ff2943cdb
+
+    * - ...
+      - ...
+      - ...
+      - ...
+      - ...
+      - ...
+      - ...
+      - ...
+      - ...
+   
+Repertoires folder
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+:code:`repertoires` folder contains tsv files, where one file corresponds to one repertoire. The repertoire filenames are listed in the :code:`metadata.csv` file. In the repertoire tsv file, each row represents one AIR. Some of the output columns are shown in the table below.
+
+Since the AIRRs were simulated using signal implantation, the output repertoire file contains several additional columns:
+
+- original_sequence: AIR before signal implantation
+
+- original_p_gen: p_gen of an AIR before signal implantation
+
+.. list-table:: Simulated receptors in AIRR format
+    :header-rows: 1
+
+    * - productive
+      - v_call
+      - j_call
+      - junction_aa
+      - signal1
+      - signal2
+      - signal1_position
+      - signal2_position
+  
+    * - F
+      - IGHV1-2*02
+      - IGHJ4*01
+      - CARGWQHSSGWTPPGSDAA
+      - 1
+      - 0
+      - m00000000000000000100
+      - m00000000000000000000
+
+    * - F
+      - IGHV3-23*01
+      - IGHJ4*01
+      - CAAAANVDYW
+      - 1
+      - 0
+      - m00100000000
+      - m00000000000
+
+    * - F
+      - IGHV1-18*01
+      - IGHJ6*01
+      - CAKGTHGGFTIFGVVIFPEVINVSGTYYYYMDVW
+      - 0
+      - 1
+      - m00000000000000000000000000000000000
+      - m00000010000000000000000000000000000
+
+    * - ...
+      - ...
+      - ...
+      - ...
+      - ...
+      - ...
+      - ...
+      - ...
+
 
 
 Next steps
