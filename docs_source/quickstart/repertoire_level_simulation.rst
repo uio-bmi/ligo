@@ -4,27 +4,28 @@ How to use LIgO for repertoire-level simulation
 Simulation of BCR repertoires labeled with two immune events
 ==============================================================
 
-In this quickstart tutorial, we will generate a dataset of 20 BCR repertoires, with each repertoire containing 6 BCRs, as follows:
+In this quickstart tutorial, we will generate a dataset of 20 BCR repertoires, with each repertoire containing 6 BCRs, as follows (see the illustration below):
 
 - 10 repertoires labeled as immune event 1 and consist of 30% BCRs with signal 1 and 30% BCRs with signal 2;
 
 - 10 repertoires labeled as immune event 2 and consist of 50% BCRs with signal 1 and 50% BCRs with signal 2. 
 
-We define signal 1 and signal 2 as follows:
+We define signal 1 and signal 2 as follows (see the illustration below):
 
 - Signal 1 is composed of a 2-mer {AA};
 
 - Signal 2 is composed of a 2-mer {GG}. 
 
-Signal-specific BCRs will be generated using the signal implantation strategy, where any implanting position is allowed, and the default OLGA model (humanIGH). 
+Signal-specific BCRs will be generated using the signal implantation strategy, where any implanting position is allowed, and the default OLGA model (humanIGH). If you also want to report the generation probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the :code:`export_p_gens` parameter to true. Please keep in mind that pgen evaluation may take time. 
 
+.. image:: ../_static/figures/quickstart_repertoire-level.png
 
 
 
 Step 1: YAML specification
 ==============================================================
 
-LIgO simulation starts with defining the YAML file with the simulation parameters. First, we define the immune signals 1 and 2 in the **definitions** section. You can read more about the yaml file parameters in :doc:`specification`.
+LIgO simulation starts with defining the YAML file with the simulation parameters. First, we define the immune signals 1 and 2 in the **definitions** section. You can read more about the yaml file parameters in :ref:`YAML specification`.
 
 .. code-block:: yaml
 
@@ -40,7 +41,7 @@ LIgO simulation starts with defining the YAML file with the simulation parameter
       signal2:
         motifs: [motif2]
 
-Second, we define the immune events and the repertoire parameters, such as the number of repertoires and the number of BCRs in the repertoire, in the **simulations** section. You can read more about the yaml file parameters in :doc:`specification`.
+Second, we define the immune events and the repertoire parameters, such as the number of repertoires and the number of BCRs in the repertoire, in the **simulations** section. You can read more about the yaml file parameters in :ref:`YAML specification`.
 
 .. code-block:: yaml
 
@@ -79,7 +80,7 @@ Second, we define the immune events and the repertoire parameters, such as the n
           model_path: null
           type: OLGA
 
-Finally, we define the technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :doc:`specification`.
+Finally, we define the technical parameters of the simulation in the **instructions** section. You can read more about the yaml file parameters in :ref:`YAML specification`.
 
 .. code-block:: yaml
 
@@ -173,8 +174,13 @@ All results will be located in quickstart_output_repertoire. Note that the outpu
 Step 3: Understanding the output
 ==============================================================
 
+
+
 Next steps
 ==============================================================
 
-You can find more information about yaml parameters in :doc:`specification`. Other tutorials for how to use LIgO can be found under :doc:`tutorials`.  
+- For a quickstart guide on receptor-level simulation see :ref:`How to use LIgO for receptor-level simulation`. 
 
+- Other tutorials for how to use LIgO can be found under :ref:`Tutorials`.
+
+- You can find more information about yaml parameters in :ref:`YAML specification`. 
