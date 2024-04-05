@@ -48,7 +48,7 @@ Alternatively, to install LIgO from GitHub run the following:
 
   stitchrdl -s human
 
-For more information on downloading data using Stitchr, see `Stitcher documentation <https://jamieheather.github.io/stitchr/installation.html>`_.
+For more information on downloading data using Stitchr, see `Stitcher documentation <https://jamieheather.github.io/stitchr/installation.html>`_. Once the Stitchr reference data has been downloaded, LigO will automatically include full-length TCR sequences in the output.
 
 
 Use LIgO with Docker
