@@ -42,7 +42,7 @@ Alternatively, to install LIgO from GitHub run the following:
 
   pip install git+https://github.com/uio-bmi/ligo.git
 
-4. To be able to export full-length sequences, it is necessary to also download the reference data using Stitchr:
+4. To be able to export full-length TCR sequences, it is necessary to also download the reference data using Stitchr:
 
 .. code-block:: console
 
