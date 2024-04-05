@@ -244,5 +244,9 @@ In the output, each row represents one AIR. Some of the output columns are shown
 Next steps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can find more information about yaml parameters in :ref:`YAML specification`. Other tutorials for how to use LIgO can be found under :ref:`Tutorials`.   
+- For a quickstart guide on repertoire-level simulation see :ref:`How to use LIgO for repertoire-level simulation`. 
+
+- Other tutorials for how to use LIgO can be found under :ref:`Tutorials`.
+
+- You can find more information about yaml parameters in :ref:`YAML specification`.    
 
