@@ -22,7 +22,7 @@ Signal-specific TRBs will be generated using the rejection sampling strategy and
 
 .. image:: ../_static/figures/quickstart_receptor-level.png
 
-By default, LIgO reports the simulated TRBs as a triple of the TRBV gene name, CDR3 AA sequence, and TRBJ gene name. To be able to export full-length AIRs, it is necessary to also download the reference data using Stitchr .
+By default, LIgO reports the simulated TRBs as a triple of the TRBV gene name, CDR3 AA sequence, and TRBJ gene name. To add full-length TCRs to the output, it is necessary to download the Stitchr reference data using :code:`stitchrdl -s human`, see `Stitcher documentation <https://jamieheather.github.io/stitchr/installation.html>`_ for more information. Once the Stitchr reference data is downloaded, LigO will automatically add full-length TCR sequences to the output. 
 
 If you also want to report the generation probabilities (pgen) of the simulated receptors according to the default OLGA humanTRB model, set the :code:`export_p_gens`  parameter to true. Please keep in mind that pgen evaluation may take time.
 
@@ -189,7 +189,7 @@ The simulated dataset is located under
 
 .. code-block:: console
 
-  quickstart_output_receptor/inst1/exported_dataset/airr/batch1.tsv. 
+  quickstart_output_receptor/my_sim_inst/exported_dataset/airr/batch1.tsv. 
 
 In the output, each row represents one AIR. Some of the output columns are shown in the table below. 
 
