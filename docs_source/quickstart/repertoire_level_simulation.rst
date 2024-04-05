@@ -4,7 +4,21 @@ How to use LIgO for repertoire-level simulation
 Simulation of BCR repertoires labeled with two immune events
 ==============================================================
 
-In this quickstart tutorial, we will generate a dataset of 20 BCR repertoires, with each repertoire containing 6 BCRs. Out of these, 10 repertoires will be labeled as immune event 1 and will consist of 30% BCRs with signal 1 and 30% BCRs with signal 2. The remaining 10 repertoires will be labeled as immune event 2 and will consist of 50% BCRs with signal 1 and 50% BCRs with signal 2. Signal 1 is composed of a 2-mer {AA}, while signal 2 is composed of a 2-mer {GG}. Signal-specific BCRs will be generated using the signal implantation strategy, where any implanting position is allowed, and the default OLGA model (humanIGH).
+In this quickstart tutorial, we will generate a dataset of 20 BCR repertoires, with each repertoire containing 6 BCRs, as follows:
+
+- 10 repertoires labeled as immune event 1 and consist of 30% BCRs with signal 1 and 30% BCRs with signal 2;
+
+- 10 repertoires labeled as immune event 2 and consist of 50% BCRs with signal 1 and 50% BCRs with signal 2. 
+
+We define signal 1 and signal 2 as follows:
+
+- Signal 1 is composed of a 2-mer {AA};
+
+- Signal 2 is composed of a 2-mer {GG}. 
+
+Signal-specific BCRs will be generated using the signal implantation strategy, where any implanting position is allowed, and the default OLGA model (humanIGH). 
+
+
 
 
 Step 1: YAML specification
