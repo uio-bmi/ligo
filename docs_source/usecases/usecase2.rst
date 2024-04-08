@@ -1,4 +1,4 @@
-Use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR
+Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR
 ============================================================
 
 Previous studies indicate k-mer encoding captures information necessary for classifying immune repertoires. However, since immune signals can include multiple motifs within a receptor, isolated k-mer treatment might in some cases be inadequate for representing different immune states. Using LIgO, we simulated datasets with such complex co-occurring immune signals. Machine Learning (ML) on these datasets highlighted the limitations of ML methods that overlooked motif co-occurrence. Particularly, the traditional k-mer encoding failed to distinguish between different immune states.
