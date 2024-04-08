@@ -25,6 +25,7 @@ Contents
   quickstart
   installation
   tutorials
+  usecases
   specification
 
 
