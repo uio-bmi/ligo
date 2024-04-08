@@ -11,3 +11,12 @@ The LIgO manuscript showcases LIgO on two use cases. The following sections prov
 2. :ref:`Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR`
 
 
+
+List of all usecases
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. toctree::
+  :maxdepth: 1
+
+  usecases/usecase2
+
