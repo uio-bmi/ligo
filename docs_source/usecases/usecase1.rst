@@ -10,5 +10,11 @@ In this tutorial, we give an example of a simulation configuration for a single 
 Simulation configuration
 ------------------------
 
+.. image:: ../_static/figures/usecase1_signals.png
+  :width: 500
+
 ML configuration
 -----------------
+
+.. image:: ../_static/figures/usecase1_splits.png
+  :width: 800
