@@ -12,6 +12,8 @@ Simulation configuration
 
 In the configuration below, the motif1 (GDT) occurs at 1% frequency on average in the repertoires of both positive (AIRR1) and negative (AIRR2) classes. Similarly motif2 (SGL) also occurs at 1% frequency on average in the repertoires of both positive (AIRR1) and negative (AIRR2) classes. However, the positive class repertoires have a higher co-occurrence rate of motif1 and motif2 (`signal1__signal2`) compared to the negative class repertoires. The positive class repertoires have a co-occurrence rate of 0.1%, while the negative class repertoires have a co-occurrence rate of 0.01%.
 
+.. image:: ./_static/figures/usecase2_signals.png
+
 .. code-block:: yaml
 
  definitions:
@@ -81,6 +83,8 @@ ML configuration
 
 The L1-penalized logistic regression model on k-mer encoded data is trained used ImmuneML. The configuration for the ML model is shown below (as an example for one dataset). The parameters specification of ImmuneML are extensively documented in the `ImmuneML documentation <https://docs.immuneml.uio.no/latest/>`_.
 
+.. image:: ./_static/figures/usecase2_LR.png
+
 .. code-block:: yaml
 
  definitions:
@@ -147,6 +151,8 @@ The L1-penalized logistic regression model on k-mer encoded data is trained used
     refit_optimal_model: False
 
 The custom multiple instance learning (MIL) model `implemented here <https://github.com/KanduriC/ligo_usecase_3>`_ as a command-line tool is trained with the following configuration:
+
+.. image:: ./_static/figures/usecase2_MIL.png
 
 .. code-block:: yaml
 
