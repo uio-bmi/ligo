@@ -10,8 +10,24 @@ In this tutorial, we give an example of a simulation configuration for a single 
 Simulation configuration
 ------------------------
 
+In this use case, we considered the immune signal as a motif AA-A with four variations — AAAA, AANA, AACA, and AAGA reflecting AIRs from four different individuals. 
+
+Specifically, the configuration below describes the simulation of a dataset consisting of:
+
+- 5000 IGH sequences containing AAGA;
+
+- 5000 IGH sequences containing AACA;
+
+- 5000 IGH sequences containing AANA;
+
+- 5000 IGH sequences containing AAAA;
+
+- 20000 IGHs without any of the four signal 4-mers.
+
 .. image:: ../_static/figures/usecase1_signals.png
   :width: 500
+
+
 
 ML configuration
 -----------------
