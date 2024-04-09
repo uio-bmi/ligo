@@ -3,14 +3,14 @@ Manuscript use case 2: Limitations of conventional encoding schemes for repertoi
 
 Previous studies indicate k-mer encoding captures information necessary for classifying immune repertoires. However, since immune signals can include multiple motifs within a receptor, isolated k-mer treatment might in some cases be inadequate for representing different immune states. Using LIgO, we simulated datasets with such complex co-occurring immune signals. Machine Learning (ML) on these datasets highlighted the limitations of ML methods that overlooked motif co-occurrence. Particularly, the traditional k-mer encoding failed to distinguish between different immune states.
 
-In this use case, we demonstrate how LIgO can be used to encode complex immune signals and how such simulations can aid the development of suited ML models in classifying immune repertoires. The configuration specification for LIgO is shown below.
+In this use case, we demonstrate how LIgO can be used to encode complex immune signals and how such simulations can aid the development of suited ML models in classifying immune repertoires. The configuration specification for LIgO is shown below. More detailed use case 2 description can be found in the LIgO manuscript. 
 
 Although we generated many datasets for gauging the uncertainty in the performance of ML models, we show the configuration only for one dataset for demonstration purposes. The comments in the configuration provide a detailed explanation of the parameters when needed.
 
-In the configuration below, the motif1 occurs at 1% frequency on average in the repertoires of both positive and negative classes (`signal1__signal2` + `signal`). Similarly motif2 also occurs at 1% frequency on average in the repertoires of both positive and negative classes (`signal1__signal2` + `signal`). However, the positive class repertoires have a higher co-occurrence rate of motif1 and motif2 (`signal1__signal2`) compared to the negative class repertoires. The positive class repertoires have a co-occurrence rate of 0.001, while the negative class repertoires have a co-occurrence rate of 0.0001.
-
 Simulation configuration
 ------------------------
+
+In the configuration below, the motif1 (GDT) occurs at 1% frequency on average in the repertoires of both positive (AIRR1) and negative (AIRR2) classes. Similarly motif2 (SGL) also occurs at 1% frequency on average in the repertoires of both positive (AIRR1) and negative (AIRR2) classes. However, the positive class repertoires have a higher co-occurrence rate of motif1 and motif2 (`signal1__signal2`) compared to the negative class repertoires. The positive class repertoires have a co-occurrence rate of 0.1%, while the negative class repertoires have a co-occurrence rate of 0.01%.
 
 .. code-block:: yaml
 
