@@ -18,5 +18,6 @@ List of all usecases
 .. toctree::
   :maxdepth: 1
 
+  usecases/usecase1
   usecases/usecase2
 
