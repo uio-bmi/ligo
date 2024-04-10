@@ -112,8 +112,175 @@ Specifically, the configuration below describes the simulation of a dataset cons
   
   
 
-ML configuration
+Data preprocessing
 -----------------
+
+Before applying Logistic regression we additionally preprocessed the LIgO-simulated data the following way:
+
+- We merged AIRR1, AIRR2, AIRR3, and AIRR4 into one dataset (merged.tsv)
+
+- We added two additional columns -- **individual** and **signal_label**. The **individual** column indicates the corresponding individual for each AIR. The **individual** column contains values 0 and 1, where 1 represents that an AIR contains any of the signal motifs and 0 otherwise.
+
+Here is an example of a python script which can do the preprocessing described above
+
+.. code-block:: python
+
+  import pandas as pd
+  import os
+  
+  data_path = "path_to_simulated_dataset/inst1/exported_dataset/airr" # path to the LIgO output   
+  metadata = pd.read_csv(os.path.join(data_path, "metadata.csv"))  
+  merged = pd.DataFrame()
+  
+  for i in range(4):
+      filename = metadata.loc[i, "filename"]
+      df = pd.read_csv(os.path.join(data_path, "repertoires", filename), sep='\t')
+      df['individual'] = metadata.loc[i, "sim_item"]
+      df['signal_label'] = df['signal1'] + df['signal2'] + df['signal3'] + df['signal4']
+      merged = pd.concat([merged, df], ignore_index=True)
+
+  # write the result in the merged_airrs.tsv
+  merged.to_csv(os.path.join(data_path, "merged_airrs.tsv"), sep='\t', index=False)
+
+
+ML configuration
+--------------------------
+
+We used a logistic regression (LR) model to classify AIRs into signal-specific or non-specific. The LR was trained and tested using two train-test split approaches — (i) random train-test split and (ii) leave-one individual out train-test split, see the illustration below. You can find more details about our usage of LR in the LIgO manuscript.  
+
 
 .. image:: ../_static/figures/usecase1_splits.png
   :width: 800
+
+The L1-regularized logistic regression on k-mer encoded data is trained used ImmuneML. The configuration for the ML model is shown below (as an example for one dataset). The parameters specification of ImmuneML are extensively documented in the `ImmuneML documentation <https://docs.immuneml.uio.no/latest/>`_.
+
+**Random train-test split strategy**
+
+.. code-block:: yaml
+
+  definitions:
+  datasets:
+    d1:
+      format: AIRR
+      params:
+        path: merged_airrs.tsv
+        is_repertoire: false
+        import_out_of_frame: True
+        metadata_column_mapping:
+          class: signal_label
+  encodings:
+    4mer:
+      KmerFrequency:
+        k: 4
+        sequence_type: AMINO_ACID
+        sequence_encoding: continuous_kmer  # split sequence into overlapping k-mers
+        scale_to_unit_variance: True # scale the normalized examples to have unit variance
+        scale_to_zero_mean: False
+  ml_methods:
+    LR: 
+      LogisticRegression:
+        penalty: l1 
+        C: [0.1,0.05,0.01,0.001]
+  reports:
+    coefs:
+      Coefficients:
+        coefs_to_plot:
+        - n_largest
+        n_largest:
+        - 25
+        name: coefs
+  instructions:
+    inst1:
+      dataset: d1
+      labels:
+      - signal_label
+      assessment:
+        reports:
+          models:
+          - coefs
+        split_count: 4
+        split_strategy: stratified_k_fold
+      selection:
+        split_count: 4
+        split_strategy: stratified_k_fold
+      metrics: [balanced_accuracy, precision, recall]
+      optimization_metric: balanced_accuracy
+      settings:
+      - encoding: 4mer
+        ml_method: LR
+      refit_optimal_model: false
+      number_of_processes: 32
+      strategy: GridSearch
+      type: TrainMLModel
+  output:
+    format: HTML
+
+**Leave-one individual out train-test split strategy**
+
+.. code-block:: yaml
+
+  definitions:
+  datasets:
+    d1:
+      format: AIRR
+      params:
+        path: merged_airrs.tsv
+        is_repertoire: false
+        import_out_of_frame: True
+        metadata_column_mapping:
+          signal_label: signal_label
+          individual: individual
+  encodings:
+    4mer:
+      KmerFrequency:
+        k: 4
+        sequence_type: AMINO_ACID
+        sequence_encoding: continuous_kmer  # split sequence into overlapping k-mers
+        scale_to_unit_variance: True # scale the normalized examples to have unit variance
+        scale_to_zero_mean: False
+  ml_methods:
+    LR: 
+      LogisticRegression:
+        penalty: l1 
+        C: [0.1,0.05,0.01,0.001]
+  reports:
+    coefs:
+      Coefficients:
+        coefs_to_plot:
+        - n_largest
+        n_largest:
+        - 25
+        name: coefs
+  instructions:
+    inst1:
+      dataset: d1
+      labels:
+      - signal_label
+      assessment:
+        reports:
+          models:
+          - coefs
+        split_count: 4
+        split_strategy: leave_one_out_stratification
+        leave_one_out_config: # perform leave-(subject)-out CV
+          parameter: individual
+          min_count: 1
+      selection:
+        split_count: 3
+        split_strategy: leave_one_out_stratification
+        leave_one_out_config: # perform leave-(subject)-out CV
+          parameter: individual
+          min_count: 1
+      metrics: [balanced_accuracy, precision, recall]
+      optimization_metric: balanced_accuracy
+      settings:
+      - encoding: 4mer
+        ml_method: LR
+      refit_optimal_model: false
+      number_of_processes: 32
+      strategy: GridSearch
+      type: TrainMLModel
+  output:
+    format: HTML
+
+
