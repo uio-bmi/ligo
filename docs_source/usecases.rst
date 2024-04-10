@@ -11,6 +11,10 @@ The LIgO manuscript showcases LIgO on two use cases. The following sections prov
 2. :ref:`Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR`
 
 
+Additional use cases:
+
+3. :ref:`Simulating epitope-specific TCR repertoires in 5 steps`
+
 
 List of all usecases
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -20,4 +24,5 @@ List of all usecases
 
   usecases/usecase1
   usecases/usecase2
+  usecases/epitope-specific_TCR_AIRRs.rst
 
