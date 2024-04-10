@@ -20,10 +20,8 @@ In the configuration below, the motif1 (GDT) occurs at 1% frequency on average i
  definitions:
   motifs:
     motif1:
-      instantiation: GappedKmer
       seed: GDT # motif-1
     motif2:
-      instantiation: GappedKmer
       seed: SGL # motif-2
   signals:
     signal1:
@@ -48,7 +46,6 @@ In the configuration below, the motif1 (GDT) occurs at 1% frequency on average i
           is_noise: false
           number_of_examples: 100 # number of repertoires to be generated
           receptors_in_repertoire_count: 100000 # number of receptors in each repertoire
-          seed: 1002 # seed for reproducibility
           signals:
             signal1__signal2: 0.001 # signal1 and signal2 co-occur in the same receptor at this witness rate
             signal1: 0.009 # signal1 occurs in isolation in the repertoires at this witness rate
@@ -62,7 +59,6 @@ In the configuration below, the motif1 (GDT) occurs at 1% frequency on average i
           is_noise: true # indicating that these repertoires receive signal at some lower witness rate and thus are not representative of the positive class
           number_of_examples: 100 # number of repertoires to be generated
           receptors_in_repertoire_count: 100000 # number of receptors in each repertoire
-          seed: 2 # seed for reproducibility
           signals:
             signal1__signal2: 0.0001 # signal1 and signal2 co-occur in the same receptor at this witness rate
             signal1: 0.0099 # signal1 occurs in isolation in the repertoires at this witness rate
