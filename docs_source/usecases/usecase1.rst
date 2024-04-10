@@ -119,7 +119,7 @@ Before applying Logistic regression we additionally preprocessed the LIgO-simula
 
 - We merged AIRR1, AIRR2, AIRR3, and AIRR4 into one dataset (merged.tsv)
 
-- We added two additional columns -- **individual** and **signal_label**. The **individual** column indicates the corresponding individual for each AIR. The **individual** column contains values 0 and 1, where 1 represents that an AIR contains any of the signal motifs and 0 otherwise.
+- We added two additional columns — **individual** and **signal_label**. The **individual** column indicates the corresponding individual for each AIR. The **individual** column contains values 0 and 1, where 1 represents that an AIR contains any of the signal motifs and 0 otherwise.
 
 Here is an example of a python script which can do the preprocessing described above
 
