@@ -102,3 +102,13 @@ ligo specs.yaml output_folder
 ```
 
 Note that `output_folder` (user-defined name) should not exist before the run.
+
+
+## Citing LIgO
+
+If you are using LIgO in any published work, please cite:
+
+Chernigovskaya, M.; Pavlović, M.; Kanduri, C.; Gielis, S.; Robert, P. A.; Scheffer, L.; Slabodkin, A.; Haff, I. H.; Meysman, P.; Yaari, G.; Sandve, G. K.; Greiff, V
+“Simulation of Adaptive Immune Receptors and Repertoires with Complex Immune Information to Guide the Development and Benchmarking of AIRR Machine Learning” 
+bioRxiv, 2023, 2023.10.20.562936. https://doi.org/10.1101/2023.10.20.562936.
+
