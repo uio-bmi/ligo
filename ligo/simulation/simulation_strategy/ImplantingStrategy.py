@@ -141,10 +141,8 @@ class ImplantingStrategy(SimulationStrategy):
             new_sequence['p_gen'] = -1.
 
         new_sequence[signal.id] = 1
-        new_sequence[f'{signal.id}_positions'] = "m" + "".join("0" for _ in range(implant_position)) + "1" + \
-                                                 "".join("0" for _ in
-                                                         range(len(getattr(sequence_row,
-                                                                           sequence_type.value)) - implant_position))
+        new_sequence[f'{signal.id}_positions'] = ["m"] + ["0" if ind != implant_position else "1" for ind in range(sequence_length)]
+        new_sequence[f'{signal.id}_positions'] = "".join(new_sequence[f'{signal.id}_positions'])
 
         zero_mask = "m" + "".join(["0" for _ in range(len(new_sequence[sequence_type.value]))])
         new_sequence = {**{f"{s.id}_positions": zero_mask for s in all_signals},
