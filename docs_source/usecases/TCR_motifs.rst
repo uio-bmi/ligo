@@ -20,7 +20,7 @@ Table 1 shows the long and short seeds that were selected for the three initial 
 
 
 .. list-table:: Description of the long and short seeds
-   :header-rows: 1
+  :header-rows: 1
 
   * - TCR beta sequence
     - TRBV gene
@@ -171,7 +171,7 @@ Tables 2 and 3 present examples of simulated TCRs for the long and short seed si
 
 
 .. list-table:: Examples of simulated TCRs with long seeds
-   :header-rows: 1
+  :header-rows: 1
 
   * - junction_aa
     - seed_match
@@ -203,7 +203,7 @@ Tables 2 and 3 present examples of simulated TCRs for the long and short seed si
     - SPAGGTYE
 
 .. list-table:: Examples of simulated TCRs with short seeds
-   :header-rows: 1
+  :header-rows: 1
 
   * - junction_aa
     - seed_match
