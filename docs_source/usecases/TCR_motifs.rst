@@ -19,7 +19,7 @@ For demonstration purposes, we define three seeds from three TCR beta sequences 
 Table 1 shows the long and short seeds that were selected for the three initial TCRs. We will use these two seed sets to perform two LIgO simulations, keeping all other simulation parameters identical except for the seeds.
 
 
-.. list-table:: Description of the long and short seeds
+.. list-table:: Table 1: Description of the long and short seeds
   :header-rows: 1
 
   * - TCR beta sequence
@@ -170,7 +170,7 @@ Observation 1: a large allowance for hamming distance may impact the identificat
 Tables 2 and 3 present examples of simulated TCRs for the long and short seed simulations, respectively. As expected, most of the amino acids in the original long seed are retained, with only a few positions changed. The opposite is true for the short seeds. Since we allowed up to two hamming distances for a seed of three amino acids, it is a challenge to identify the original seed within the simulated TCRs.
 
 
-.. list-table:: Examples of simulated TCRs with long seeds
+.. list-table:: Table 2: Examples of simulated TCRs with long seeds
   :header-rows: 1
 
   * - junction_aa
@@ -202,7 +202,7 @@ Tables 2 and 3 present examples of simulated TCRs for the long and short seed si
     - 2
     - SPAGGTYE
 
-.. list-table:: Examples of simulated TCRs with short seeds
+.. list-table:: Table 3: Examples of simulated TCRs with short seeds
   :header-rows: 1
 
   * - junction_aa
@@ -243,7 +243,7 @@ When simulating the TCRs with long seeds, we observe a clear overlap between the
 
 Seed length and allowed hamming distance both have an impact on the final results. Even with long seeds, unwanted results can occur if the hamming distances are set too high. As a general recommendation, we advise clustering the simulated receptors in case the exact presence of motifs is required for your study.
 
-.. list-table:: Motifs of the 10 largest clusters in the simulated TCRs with large seeds
+.. list-table:: Table 4: Motifs of the 10 largest clusters in the simulated TCRs with large seeds
   :header-rows: 1
 
   * - CDR3 Motif
@@ -277,7 +277,7 @@ Seed length and allowed hamming distance both have an impact on the final result
     - SPAGGTYE
     - 4
 
-.. list-table:: Motifs of the 10 largest clusters in the simulated TCRs with short seeds
+.. list-table:: Table 5: Motifs of the 10 largest clusters in the simulated TCRs with short seeds
   :header-rows: 1
 
   * - CDR3 Motif
@@ -315,7 +315,8 @@ Seed length and allowed hamming distance both have an impact on the final result
     - 5
 
 
-
+Observation 3: TCRs simulated with a short seed have shorter CDR3s compared to TCRs simulated with long seeds
+----------------------------------------
 
 
 
