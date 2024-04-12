@@ -1,4 +1,4 @@
-How to construct LIgO motifs inspired by VDJdb
+Constructing LIgO motifs inspired by VDJdb
 ===================================================
 
 LIgO enables the generation of motifs based on either a PSSM or a combination of a short amino acid sequence (i.e., a seed) and a list of hamming distances. When starting from a known sequence motif present in a group of TCRs, a PSSM can be used. However, when the exact distribution of every amino acid is unknown, the simpler method of defining a seed and distances is recommended.
