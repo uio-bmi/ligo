@@ -11,10 +11,11 @@ The LIgO manuscript showcases LIgO on two use cases. The following sections prov
 2. :ref:`Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR`
 
 
-Additional use cases:
+The following group of use cases is inspired by the manucript "Revealing the hidden structure of epitope-specific TCR repertoires and its influence on model performance" (link will be added soon). From these use cases you can learn how to define LIgO motifs inspired by VDJdb database, simulate epitope-specific TCR repertoires based on these motifs, and inspect the simulated repertoires compared to experimental data.
 
-3. :ref:`Simulating epitope-specific TCR repertoires in 5 steps`
-
+1. :ref:`Constructing LIgO motifs inspired by VDJdb`
+2. :ref:`Simulating epitope-specific TCR repertoires in 5 steps`
+3. :ref:`Inspecting the simulated data compared to experimental data`
 
 List of all usecases
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -24,6 +25,7 @@ List of all usecases
 
   usecases/usecase1
   usecases/usecase2
-  usecases/epitope-specific_TCR_AIRRs.rst
   usecases/TCR_motifs.rst
+  usecases/epitope-specific_TCR_AIRRs.rst
+
 
