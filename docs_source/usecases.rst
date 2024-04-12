@@ -25,4 +25,5 @@ List of all usecases
   usecases/usecase1
   usecases/usecase2
   usecases/epitope-specific_TCR_AIRRs.rst
+  usecases/TCR_motifs.rst
 
