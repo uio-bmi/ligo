@@ -164,7 +164,7 @@ Running LIgO for long and short seeds
     format: HTML
 
 
-Observation 1: A large allowance for hamming distance may impact the identification of the seed sequences when simulated with shorter seeds
+Observation 1: a large allowance for hamming distance may impact the identification of the seed sequences when simulated with shorter seeds
 ------------------------------------------
 
 Tables 2 and 3 present examples of simulated TCRs for the long and short seed simulations, respectively. As expected, most of the amino acids in the original long seed are retained, with only a few positions changed. The opposite is true for the short seeds. Since we allowed up to two hamming distances for a seed of three amino acids, it is a challenge to identify the original seed within the simulated TCRs.
@@ -232,7 +232,7 @@ Tables 2 and 3 present examples of simulated TCRs for the long and short seed si
 
 
 
-Observation 2: Inferring motifs in the simulated TCRs using ClustTCR
+Observation 2: hamming distance and seed length may affect the similarity between simulation seeds and simulated TCR cluster concensuses
 ----------------------------------
 
 We used ClustTCR (Valkiers et al., 2021) to investigate the architecture of the simulated TCRs by clustering their CDR3s with up to one allowed amino acid difference. The TCRs simulated with two different sets of seeds were clustered separately, and for each cluster, a motif summarizing the consensus sequence was calculated. The motifs for the 10 largest clusters are provided in tables 4 and 5 for the long and short seed simulation, respectively.
@@ -242,6 +242,88 @@ When simulating the TCRs with long seeds, we observe a clear overlap between the
 .. note::
 
 Seed length and allowed hamming distance both have an impact on the final results. Even with long seeds, unwanted results can occur if the hamming distances are set too high. As a general recommendation, we advise clustering the simulated receptors in case the exact presence of motifs is required for your study.
+
+.. list-table:: Motifs of the 10 largest clusters in the simulated TCRs with large seeds
+  :header-rows: 1
+
+  * - CDR3 Motif
+    - Seed
+    - Cluster size
+  * - CASSp.GGtYEQYF
+    - SPAGGTYE
+    - 59
+  * - CASSLSG.NQPQHF
+    - ELSGINQP
+    - 16
+  * - CASSL.GINQPQHF
+    - ELSGINQP
+    - 9
+  * - CASSAGG.YEQYF
+    - SPAGGTYE
+    - 7
+  * - CASSGG.VRYEQYF
+    - SGGDVREE
+    - 6
+  * - CASP[GP]GG.YEQYF
+    - SPAGGTYE
+    - 6
+  * - CASSE.SGSNQPQHF
+    - ELSGINQP
+    - 5
+  * - CASSPGtGTYEQYF
+    - SPAGGTYE
+    - 4
+  * - CASSvAGGTGELFF
+    - SPAGGTYE
+    - 4
+
+.. list-table:: Motifs of the 10 largest clusters in the simulated TCRs with short seeds
+  :header-rows: 1
+
+  * - CDR3 Motif
+    - Seed
+    - Cluster size
+  * - CA..YEQYF
+    - PAG,DVR,SGI
+    - 15
+  * - CAs.yEQYF
+    - PAG,DVR,SGI
+    - 14
+  * - CA.T[AP]YEQYF
+    - PAG,DVR
+    - 9
+  * - CArDEQYF
+    - DVR
+    - 8
+  * - CAS..ETQYF
+    - SGI
+    - 8
+  * - CAS.tYEQYF
+    - SGI
+    - 6
+  * - C[RT]DYEQYF
+    - DVR
+    - 5
+  * - CA[KT][SR]ETQYF
+    - DVR,SGI
+    - 5
+  * - C[GV]G[QL]YEQYF
+    - SGI
+    - 5
+  * - CAR.TDTQYF
+    - DVR
+    - 5
+
+
+
+
+
+
+
+
+
+
+
 
 
 
