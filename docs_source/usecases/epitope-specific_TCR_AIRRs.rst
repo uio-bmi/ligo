@@ -1,14 +1,13 @@
-Simulating epitope-specific TCR repertoires in 5 steps
+Simulating epitope-specific TCR repertoires and validating their properties 
 ===================
 
   
-During the development of a new epitope-TCR prediction method, it might be useful to simulate training data to test it or study potential biases in model performance. In this tutorial, the simulation of epitope-specific TCR repertoire data will be explained in detail. An epitope-specific TCR repertoire is a collection of TCRs derived from different individuals that are all recognizing the same epitope. Note that all simulated TCR repertoires can only resemble the general structure of epitope-specific TCR repertoires. The actual specificities of these TCRs cannot be simulated, and thus the final simulated repertoires are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore.
+During the development of a new epitope-TCR prediction method, it might be useful to simulate training data to test it or study potential biases in model performance. In this tutorial, the simulation of epitope-specific TCR repertoire data, where an epitope-specific TCR repertoire is a collection of TCRs derived from different individuals that are all recognizing the same epitope. Note that all simulated TCR repertoires can only resemble the general structure of epitope-specific TCR repertoires. The actual specificities of these TCRs cannot be simulated, and thus the final simulated repertoires are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore.
  
-In this tutorial, one epitope-specific TCR beta repertoire is simulated from three user-defined motifs. The number of motifs is arbitrary and can easily be changed. Here, the motifs are considered to describe the subsequences within TCRs that are epitope-specific. Every motif in this tutorial consists of the combination of a LIgO seed, i.e., a small amino acid sequence, and a list of hamming distances. To formulate realistic epitope-specific motifs, all seeds were derived from epitope-specific TCR sequences in the VDJdb (Shugay et al. 2018). All options needed to run one LIgO simulation are defined in this YAML file and explained below.
+In this tutorial, one epitope-specific TCR beta repertoire is simulated from three user-defined motifs, which are considered to describe the subsequences within TCRs that are epitope-specific. Next, we ensure that the simulated data is biologically relevant by comparing the simulated TCR repertoire to the experimental epitope-specific data.  
 
-  
-Step 1: Define the epitope-binding TCR motifs
---------------------------
+Simulating of the epitope-specific TCR repertoire
+-------------------------
 
   
 To ensure that all simulated TCR sequences are biologically relevant, the rejection sampling method is recommended (see Step 3). This method first generates a list of TCR sequences and afterwards removes all TCRs that do not contain a user-defined motif. Two options exist to describe this motif: (1) start from a seed and define all possible deviations that are allowed using gaps and hamming distances or (2) start from a PWM. In the case of generating a hypothetical epitope-specific TCR repertoire, i.e., the exact binding motif is not known, it is recommended to keep the motif as simple as possible, i.e., using only a seed and hamming distances. For simplicity, this seed can be derived from known epitope-specific TCR sequences. 
