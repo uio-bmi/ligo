@@ -318,6 +318,11 @@ Seed length and allowed hamming distance both have an impact on the final result
 Observation 3: TCRs simulated with a short seed have shorter CDR3s compared to TCRs simulated with long seeds
 ----------------------------------------
 
+We also compared the distribution of CDRR3 length (in amino acids) between the TCRs generated with short and long motifs (shown in blue and red, respectively). Our observation indicates that TCRs generated with long motifs tend to be longer than those generated with short motifs.
+
+
+.. image:: ../_static/figures/usecase_VDJdb_motifs_length_diftribution.png
+  :width: 500
 
 
 
