@@ -328,18 +328,16 @@ We also compared the distribution of CDRR3 length (in amino acids) between the T
 General tips for defining a motif
 ---------------------------------------
 
-.. note::
-
 1. Start with the full seed you want to find back in your simulated TCRs, e.g., ELSGINQP
 
-2.  If you want to use rejection sampling, estimate the maximal hamming distance to finish your simulation in a reasonable time. You can start with a very restrictive hamming distance (e.g. max 1) and adjust it as needed. You can use the feasibility report to estimate the effectiveness of the simulation with a given set of parameters - about checking feasibility here ref:`How to check feasibility of the simulation parameters`.   
+2.  If you want to use rejection sampling, estimate the maximal hamming distance to finish your simulation in a reasonable time. You can start with a very restrictive hamming distance (e.g. max 1) and adjust it as needed. You can use the feasibility report to estimate the effectiveness of the simulation with a given set of parameters, see :ref:`How to check feasibility of the simulation parameters`.   
 
-For example, in this tutorial we used the following rule of the thumb:
-- Seed length of 6-8 => maximal hamming distance =2
-- Seed length of 9-10 => maximal hamming distance =3
-- Seed length >10 => test the simulation with a maximal hamming distance of 3. If not enough TCR are simulated, increase the max hamming distance up to 4.
+    For example, in this tutorial we used the following rule of the thumb:
+    - Seed length of 6-8 => maximal hamming distance =2
+    - Seed length of 9-10 => maximal hamming distance =3
+    - Seed length >10 => test the simulation with a maximal hamming distance of 3. If not enough TCR are simulated, increase the max hamming distance up to 4.
 
-If you want to use implanting, you do not need to estimate the feasibility because the simulation will be fast with any hamming distance.
+    If you want to use implanting, you do not need to estimate the feasibility because the simulation will be fast with any hamming distance.
 
 3. Start the simulation with the selected seed and hamming distances. Check for the presence of the predefined motif in the simulated TCRs by clustering or allocating the seed within the TCR sequences.
 
