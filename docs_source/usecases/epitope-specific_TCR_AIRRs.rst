@@ -94,21 +94,10 @@ The yaml file below describes simulation parameters used for LIgO simulation. Yo
     format: HTML
 
 
-Step 4: Setting the instructions
+How to handle the maximum iterations were reached error
 ----------------------
 
-After defining the simulation, you can update the instructions to execute this simulation. Important factors are the number of TCR sequences LIgO has to generate in every iteration (sequence_batch_size) and the maximum number of iterations (max_iterations).
-
-.. code-block:: yaml
-
-  instructions:
-   inst1:
-     export_p_gens: true
-     max_iterations: 2000
-     number_of_processes: 8
-     sequence_batch_size: 10000
-     simulation: sim1
-     type: LigoSim
+LIgO has two parameters, which may impact succuss of the simulation: the number of TCR sequences LIgO has to generate in every iteration (sequence_batch_size) and the maximum number of iterations (max_iterations).
 
 When achieving the number of required TCRs before the maximum number of iterations, the LIgO simulation will stop. However, when the number of required TCRs is not reached after the maximum number of iterations, the following error will be reported:
 
@@ -128,24 +117,16 @@ For this tutorial, the following files should be consulted in case of a LigoSimI
   results/inst1/var2/processed_sequences/signal2.tsv.
   results/inst1/var3/processed_sequences/signal3.tsv.
 
-How to handle the maximum iterations were reached error?
+Tips for handling the maximum iterations were reached error
 
 #. If you only need a few more TCRs, you can increase the sequence_batch_size and the max_iterations and wait a bit longer.  If no additional data is needed, you could already work with the data that has been generated.
 
 #. In case the number of generated TCRs is very low, you must adapt your motifs to allow more variation, i.e. shorten the seed, increase the hamming distance or start with a new seed.
 
-**Tip**: Before initiating a large simulation process, first estimate the success of the simulation by running the simulation feasibility report. For more details see :ref:`How to check feasibility of the simulation parameters`
+.. note::
+
+Before initiating a large simulation process, first estimate the success of the simulation by running the simulation feasibility report. For more details see :ref:`How to check feasibility of the simulation parameters`
 
 
-Step 5: Run your simulation
------------------------------
-
-After setting all options in the YAML file, you can start your simulation by specifying the required YAML file and the name of the results folder that will be created.
-
-.. code-blocks:: yaml
-
-ligo specs.yaml results
-
-
-Additional step: Inspect your simulated repertoire
+Inspecting the simulated TCRs
 ------------------------------
