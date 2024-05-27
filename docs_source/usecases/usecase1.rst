@@ -284,3 +284,39 @@ The L1-regularized logistic regression on k-mer encoded data is trained used Imm
     format: HTML
 
 
+
+Results and ways to increase simulation complexity if required
+-----------------
+
+
+The logistic regressions trained on the random train-test split achieved higher accuracy with a median balanced accuracy of 0.98, and its largest coefficients corresponded to the four signal 4-mers. However, the logistic regression trained on the leave-one individual out train-test split demonstrated lower performance with a median balanced accuracy of 0.67. This shows that while perfect prediction accuracy may be observed with a random split approach, prediction accuracy may appear more limited based on a leave-one-individual-out split strategy.
+
+Since this use case only illustrates the utilization of LIgO for benchmarking and developing AIRR-ML methods, the simulation performed here is very basic. For simplicity, we assumed that each individual contains only one specific 4-mer and any other signal-specific AIRs are removed from the background. To create a more complex simulation, one can utilize the following LIgO options:
+
+- Do not exclude signal-specific receptors from the background. For example, all AIRs containing AAAA, AAGA, AANA, and AACA should be present in the background of 5000 AIRs for each individual with their natural occurrence. To achieve this, set remove_seqs_with_signals to false.
+
+.. code-block:: yaml
+
+  remove_seqs_with_signals: true # keep all signal-specific AIRs in the background receptors
+
+
+- Explicity add AIRs containing other signal-specific 4-mers. For example, if an individual carries the signal AAAA, we can also include AIRs containing AAGA, AANA, and AACA to their repertoire. The yaml below demonstrates how to incorporate 1% of these extra signal-specific AIRs for individual 1. 
+
+.. code-block:: yaml
+
+  airr1: # repertoire for individual 1
+    generative_model:
+      default_model_name: humanIGH
+      model_path: null
+      type: OLGA
+    is_noise: false
+    number_of_examples: 1 # for demonstration purposes we simulate airr1 1 time
+    receptors_in_repertoire_count: 10000 # each AIRR containing 10000 receptors
+    signals:
+      signal1: 0.5 # 50% of receptors (5000) should contain signal1 (AAAA)
+      signal2: 0.01 # 1% of receptors (5000) should contain signal1 (AACA)
+      signal3: 0.01 # 1% of receptors (5000) should contain signal1 (AAGA)
+      signal4: 0.01 # 1% of receptors (5000) should contain signal1 (AANA)
+
+
+
