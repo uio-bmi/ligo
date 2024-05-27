@@ -300,7 +300,7 @@ Since this use case only illustrates the utilization of LIgO for benchmarking an
   remove_seqs_with_signals: true # keep all signal-specific AIRs in the background receptors
 
 
-- Explicity add AIRs containing other signal-specific 4-mers. For example, if an individual carries the signal AAAA, we can also include AIRs containing AAGA, AANA, and AACA to their repertoire. The yaml below demonstrates how to incorporate 1% of these extra signal-specific AIRs for individual 1. 
+- Explicitly add AIRs containing other signal-specific 4-mers. For example, if an individual carries the signal AAAA, we can also include AIRs containing AAGA, AANA, and AACA to their repertoire. The yaml below demonstrates how to incorporate 1% of these extra signal-specific AIRs for individual 1. 
 
 .. code-block:: yaml
 
