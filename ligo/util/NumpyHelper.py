@@ -6,7 +6,7 @@ import numpy as np
 
 class NumpyHelper:
 
-    SIMPLE_TYPES = [str, int, float, bool, np.str_, np.int_, np.float_, np.bool_]
+    SIMPLE_TYPES = [str, int, float, bool, np.int64, np.float64, np.bool, np.str_]
 
     @staticmethod
     def group_structured_array_by(data, field):

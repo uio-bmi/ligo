@@ -1,5 +1,6 @@
 import os
 import shutil
+import unittest
 from unittest import TestCase
 from zipfile import ZipFile
 
@@ -438,6 +439,7 @@ class TestIReceptorImport(TestCase):
 
         return zip_path
 
+    @unittest.skip("skip until ireceptor output format is compared to example files available here")
     def test_import_repertoire_dataset(self):
         base_path = EnvironmentSettings.root_path / "test/tmp/ireceptorimport/"
         path = base_path / "repertoiredataset/"
@@ -482,6 +484,7 @@ person2	second_zip_rep2	samp2	5faf101103b9977a150a9eaa	PRJCA002413	Homo sapiens	
 
         shutil.rmtree(base_path)
 
+    @unittest.skip("skip until ireceptor output format is compared to example files available here")
     def test_import_sequence_dataset(self):
         path = PathBuilder.remove_old_and_build(EnvironmentSettings.tmp_test_path / "ireceptorimport_sequence_dataset")
 

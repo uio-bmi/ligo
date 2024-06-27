@@ -1,9 +1,9 @@
 pandas
-bionumpy==0.2.26
+bionumpy>=0.2.26
 numpy
 olga
 pyyaml
-airr<1.4
+airr
 dill
 plotly
 pystache

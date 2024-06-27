@@ -61,7 +61,7 @@ def get_bnp_data(sequence_path, bnp_data_class):
     if sequence_path.is_file():
         buff_type = delimited_buffers.get_bufferclass_for_datatype(bnp_data_class, delimiter='\t', has_header=True)
 
-        with bnp.open(sequence_path, buffer_type=buff_type) as file:
+        with bnp.open(sequence_path, buffer_type=buff_type, lazy=False) as file:
             data = file.read()
 
         return data
