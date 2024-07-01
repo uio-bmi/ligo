@@ -30,7 +30,7 @@ from ligo.simulation.generative_models.BackgroundSequences import BackgroundSequ
 from ligo.simulation.implants.LigoPWM import LigoPWM
 from ligo.simulation.implants.MotifInstance import MotifInstance, MotifInstanceGroup
 from ligo.simulation.implants.Signal import Signal, SignalPair
-from ligo.simulation.util.bnp_util import merge_dataclass_objects
+from ligo.simulation.util.bnp_util import merge_dataclass_objects, pad_ragged_array
 from ligo.util.PathBuilder import PathBuilder
 from ligo.util.PositionHelper import PositionHelper
 
@@ -163,7 +163,6 @@ def _annotate_with_signal(sequences, sequence_array, is_amino_acid, encoding, si
 
 def _annotate_with_signal_func(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal, signal_index,
                                signal_positions):
-
     signal_matrix[:, signal_index] = [signal.is_present_custom_func(seq.sequence_aa.to_string(),
                                                                     seq.sequence.to_string(),
                                                                     seq.v_call.to_string(),
@@ -173,7 +172,7 @@ def _annotate_with_signal_func(sequences, sequence_array, is_amino_acid, encodin
 
 
 def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encoding, signal_matrix, signal,
-                                 signal_index, signal_positions, sim_item_name = None):
+                                 signal_index, signal_positions, sim_item_name=None):
     signal_pos_col = None
     allowed_positions = get_allowed_positions(signal, sequence_array, get_region_type(sequences))
     matches_gene = match_genes(signal.v_call, sequences.v_call, signal.j_call, sequences.j_call)
@@ -192,9 +191,9 @@ def _annotate_with_signal_motifs(sequences, sequence_array, is_amino_acid, encod
             except TypeError as te:
                 print(f"Matches: {matches}\nMatches shape: {matches.shape}\nPositions: {allowed_positions}\n"
                       f"Positions shape: {allowed_positions.shape}")
-                with (Path.cwd() / f'allowed_positions_{sim_item_name}.csv').open('w') as file:
+                with (Path.cwd() / f'allowed_positions_{sim_item_name}.yaml').open('w') as file:
                     yaml.dump(allowed_positions.tolist(), file, default_flow_style=True)
-                with (Path.cwd() / f'matches_{sim_item_name}.csv').open('w') as file:
+                with (Path.cwd() / f'matches_{sim_item_name}.yaml').open('w') as file:
                     yaml.dump(matches.tolist(), file, default_flow_style=True)
                 write_bnp_data(Path.cwd() / f'sequences_{sim_item_name}.tsv', sequences)
                 print(f"Temporary values that raised the exception are stored in {Path.cwd()}")
@@ -264,6 +263,7 @@ def match_motif(motif: Union[str, LigoPWM], encoding, sequence_array):
         matches = matcher.rolling_window(sequence_array, mode='same')
     else:
         matches = get_motif_scores(sequence_array, motif.pwm_matrix) > motif.threshold
+        matches = pad_ragged_array(matches, sequence_array.shape, False)
     return matches
 
 
@@ -326,7 +326,7 @@ def make_bnp_annotated_sequences(sequences: BackgroundSequences, bnp_data_class,
     kwargs['signals_aggregated'] = [s if s != "" else "no_signal" for s in
                                     ["_".join(
                                         s for index, s in enumerate([sig.id for sig in all_signals]) if el[index] == 1)
-                                     for el in signal_matrix]]
+                                        for el in signal_matrix]]
 
     for field in dc_fields:
         if field.name not in kwargs:
@@ -523,7 +523,6 @@ def get_min_seq_length(sim_item: SimConfigItem, sequence_type: SequenceType, reg
 
 
 def get_max_seq_length(sim_item: SimConfigItem, sequence_type: SequenceType, region_type: RegionType) -> int:
-
     conversion_constant = 1 if sequence_type == SequenceType.AMINO_ACID else 3
 
     if region_type == RegionType.IMGT_JUNCTION:
@@ -538,4 +537,3 @@ def get_max_seq_length(sim_item: SimConfigItem, sequence_type: SequenceType, reg
         return max_allowed
     else:
         return sim_item.sequence_len_limits['max']
-

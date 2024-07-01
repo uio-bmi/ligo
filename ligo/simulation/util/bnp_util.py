@@ -7,7 +7,16 @@ import numpy as np
 from bionumpy import as_encoded_array, EncodedArray
 from bionumpy.bnpdataclass import BNPDataClass, bnpdataclass
 from bionumpy.encodings import Encoding
+from npstructures import RaggedArray
 
+
+def pad_ragged_array(new_array, target_shape, padded_value):
+    """pad ragged array to match sequence lengths"""
+    padded_array = RaggedArray([[padded_value for _ in range(target_shape[1][ind])] for ind in range(target_shape[0])])
+    for row_ind in range(target_shape[0]):
+        np.put(padded_array[row_ind], 0, new_array[row_ind])
+
+    return padded_array
 
 def make_bnp_dataclass_object_from_dicts(dict_objects: List[dict], field_type_map: dict = None, signals: list = None, base_class=None) -> BNPDataClass:
     if not isinstance(dict_objects, list) or len(dict_objects) == 0:
