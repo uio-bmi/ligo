@@ -18,7 +18,9 @@ def pad_ragged_array(new_array, target_shape, padded_value):
 
     return padded_array
 
-def make_bnp_dataclass_object_from_dicts(dict_objects: List[dict], field_type_map: dict = None, signals: list = None, base_class=None) -> BNPDataClass:
+
+def make_bnp_dataclass_object_from_dicts(dict_objects: List[dict], field_type_map: dict = None, signals: list = None,
+                                         base_class=None) -> BNPDataClass:
     if not isinstance(dict_objects, list) or len(dict_objects) == 0:
         raise RuntimeError("Cannot make dataclass, got empty list as input.")
 
@@ -31,10 +33,13 @@ def make_bnp_dataclass_object_from_dicts(dict_objects: List[dict], field_type_ma
         functions = {"get_signal_matrix": lambda self: np.array([getattr(self, name) for name in signal_names]).T,
                      "get_signal_names": lambda self: signal_names}
 
-        new_class = bnpdataclass(dc_make_dataclass("DynamicDC", bases=tuple([base_class]) if base_class is not None else (), namespace=functions,
-                                                   fields=fields_list))
+        new_class = bnpdataclass(
+            dc_make_dataclass("DynamicDC", bases=tuple([base_class]) if base_class is not None else (),
+                              namespace=functions,
+                              fields=fields_list))
     elif base_class:
-        new_class = base_class.extend(fields)
+        base_class_fields = [f.name for f in get_fields(base_class)]
+        new_class = base_class.extend([(field, field_type) for field, field_type in fields_list if field not in base_class_fields])
     else:
         new_class = bnpdataclass(dc_make_dataclass("DynamicDC", fields=fields_list))
 
@@ -54,7 +59,8 @@ def _extract_fields(transformed_objs, field_type_map):
         if field_type_map is not None and field_name in field_type_map:
             field_type = field_type_map[field_name]
             if isinstance(field_type, Encoding):
-                transformed_objs[field_name] = as_encoded_array(transformed_objs[field_name], field_type) if any(transformed_objs[field_name]) else None
+                transformed_objs[field_name] = as_encoded_array(transformed_objs[field_name], field_type) if any(
+                    transformed_objs[field_name]) else None
         elif isinstance(transformed_objs[field_name][0], EncodedArray):
             field_type = transformed_objs[field_name][0].encoding
         elif transformed_objs[field_name] is not None:
@@ -74,7 +80,8 @@ def merge_dataclass_objects(objects: list):  # TODO: replace with equivalent fro
         assert all(hasattr(obj, field) for field in field_names), ([f.name for f in get_fields(obj)], field_names)
 
     cls = type(objects[0])
-    return cls(**{field_name: list(chain.from_iterable([getattr(obj, field_name) for obj in objects])) for field_name in field_names})
+    return cls(**{field_name: list(chain.from_iterable([getattr(obj, field_name) for obj in objects])) for field_name in
+                  field_names})
 
 
 def _make_new_fields(new_fields: dict) -> List[tuple]:
