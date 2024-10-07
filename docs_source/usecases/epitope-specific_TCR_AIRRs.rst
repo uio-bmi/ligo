@@ -93,6 +93,17 @@ The yaml file below describes simulation parameters used for LIgO simulation. Yo
   output:
     format: HTML
 
+How to increase simulation complexity if required
+----------------------
+
+In this tutorial, we demonstrate how to simulate epitope-specific T-cell receptors using seeds obtained from the VDJdb (Shugay et al. 2018). One way to increase simulation complexity is to replace the seed-based motif with a position weight matrix (PWM) motif. To do this, one should:
+
+1. Select a set of TCRs from VDJdb sharing the same epitope specificity. To obtain accurate PWMs, consider epitope sequences containing a sufficient number of epitope-specific TCRs.
+
+2. Cluster the epitope-specific TCRs to obtain epitope-specific PWMs. This step can be performed using a tool like the clustcr tool. For more information on clustcr tool, see `clustcr documentation <https://svalkiers.github.io/clusTCR/>`_.
+
+3. Use the epitope-specific PWMs to simulate epitope-specific TCRs using rejection sampling or signal implanting.
+
 
 How to handle the maximum iterations were reached error
 ----------------------
