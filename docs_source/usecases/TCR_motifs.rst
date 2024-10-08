@@ -1,11 +1,30 @@
-Constructing LIgO motifs inspired by VDJdb
+Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities
 ===================================================
 
-LIgO enables the generation of motifs using either (i) a position weight matrix (PWM) or (ii) a combination of a short amino acid sequence (i.e., a seed) and a list of hamming distances, representing the allowed deviatoins from the seed. When starting from a known motif present in a group of TCRs, a PWM can be used. However, when the exact distribution of every amino acid is unknown, defining a seed and hamming distances offers a simpler approach.
- 
-When using motif seeds for LIgO simulation, it is important to consider the impact of seed length and Hamming distances on the quality of simulated TCR sequences. Ideally, when simulating a TCR repertoire or a set of TCRs, the predefined LIgO seeds should be identifiable within these TCRs.
+LIgO enables the generation of motifs using either (i) a combination of a short amino acid sequence (i.e., a seed) and a list of Hamming distances, representing the allowed deviations from the seed or (ii) a position weight matrix (PWM). In this tutorial, we demonstrate how one can use a database of TCRs with known antigen specificities to construct more biologically-relevant LIgO motifs. These database-inspired motifs can be used to simulate epitope-specific TCR data, i.e., a collection of TCRs derived from different individuals that are all recognizing the same epitope. 
 
-In this tutorial, we demonstrate the impact of the seed length on simulated signal-specific TCRs. 
+.. note::
+
+   LIgO-simulated data can only resemble the general structure of epitope-specific TCRs. The actual specificities of these TCRs cannot be simulated, and thus the final simulated data are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore.
+
+In this tutorial, we will suggest two approaches for constructing database-inspired LIgO motifs:
+
+1. `Basic approach: defining motifs based on the seed and a list of Hamming distances <#constructing-seeds-from-the-VDJdb-receptors>`_
+
+2. Enhanced approach: defining motifs based on PWM 
+
+In both approaches we will use the VDJdb database (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
+
+- `McPAS <https://friedmanlab.weizmann.ac.il/McPAS-TCR/>`_ (Tickotsky et al., 2017) 
+
+- `IEDB <https://www.iedb.org/>`_  (Vita et al., 2019) 
+
+- `ATLAS <https://atlas.wenglab.org/web/>`_  (Borrman et al., 2017) 
+
+- `TCRdb <http://bioinfo.life.hust.edu.cn/TCRdb/#/>`_  (Chen et al., 2021) 
+
+
+
 
 Constructing seeds from the VDJdb receptors
 ---------------------------------------
