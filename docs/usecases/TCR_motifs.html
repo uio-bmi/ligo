@@ -1,0 +1,741 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Simulating epitope-specific TCRs and validating their properties" href="epitope-specific_TCR_AIRRs.html" /><link rel="prev" title="Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR" href="usecase2.html" />
+        <link rel="canonical" href="https://uio-bmi.github.io/ligo/usecases/TCR_motifs.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+        <title>Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities - LIgO 1.0.9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/immuneml.css?v=3985a9e7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">LIgO 1.0.9 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">LIgO 1.0.9 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../quickstart.html">Quickstart</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Quickstart</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/receptor_level_simulation.html">How to use LIgO for receptor-level simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart/repertoire_level_simulation.html">How to use LIgO for repertoire-level simulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../installation.html">Installing LIgO</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Installing LIgO</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_define_immune_signals_and_events.html">How to define immune signals and immune events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_choose_simulation_strategy.html">How to choose between rejection sampling and signal implantation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_check_feasibility_of_sim_params.html">How to check feasibility of the simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/simulation_with_custom_signal_functions.html">Simulation with custom signal functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_simulate_paired_chain_data.html">Paired chain simulations in LIgO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_simulate_co-occuring_signals.html">How to simulate co-occuring immune signals</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../usecases.html">Use case examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Use case examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="usecase1.html">Manuscript use case 1: Out-of-distribution receptor-level simulation using LIgO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usecase2.html">Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epitope-specific_TCR_AIRRs.html">Simulating epitope-specific TCRs and validating their properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../specification.html">YAML specification</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of YAML specification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/usecases/TCR_motifs.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="constructing-ligo-motifs-inspired-by-a-database-of-tcr-sequences-with-known-antigen-specificities">
+<h1>Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities<a class="headerlink" href="#constructing-ligo-motifs-inspired-by-a-database-of-tcr-sequences-with-known-antigen-specificities" title="Link to this heading">¶</a></h1>
+<p>LIgO enables the generation of motifs using either (i) a combination of a short amino acid sequence (i.e., a seed) and a list of Hamming distances, representing the allowed deviations from the seed or (ii) a position weight matrix (PWM). In this tutorial, we demonstrate how one can use a database of TCRs with known antigen specificities to construct more biologically-relevant LIgO motifs. These database-inspired motifs can be used to simulate epitope-specific TCR data, i.e., a collection of TCRs derived from different individuals that are all recognizing the same epitope.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>LIgO-simulated data can only resemble the general structure of epitope-specific TCRs. The actual specificities of these TCRs cannot be simulated, and thus the final simulated data are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore.</p>
+</div>
+<p>In this tutorial, we will suggest two approaches for constructing database-inspired LIgO motifs:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="#constructing-seeds-from-the-VDJdb-receptors">Basic approach: defining motifs based on the seed and a list of Hamming distances</a></p></li>
+<li><p>Enhanced approach: defining motifs based on PWM</p></li>
+</ol>
+<p>In both approaches we will use the VDJdb database (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://friedmanlab.weizmann.ac.il/McPAS-TCR/">McPAS</a> (Tickotsky et al., 2017)</p></li>
+<li><p><a class="reference external" href="https://www.iedb.org/">IEDB</a>  (Vita et al., 2019)</p></li>
+<li><p><a class="reference external" href="https://atlas.wenglab.org/web/">ATLAS</a>  (Borrman et al., 2017)</p></li>
+<li><p><a class="reference external" href="http://bioinfo.life.hust.edu.cn/TCRdb/#/">TCRdb</a>  (Chen et al., 2021)</p></li>
+</ul>
+<section id="constructing-seeds-from-the-vdjdb-receptors">
+<h2>Constructing seeds from the VDJdb receptors<a class="headerlink" href="#constructing-seeds-from-the-vdjdb-receptors" title="Link to this heading">¶</a></h2>
+<p>For demonstration purposes, we define three seeds from three TCR beta sequences in the VDJdb (Shugay et al. 2018), all recognizing the DENV3/4 epitope GTSGSPIINR (Table 1). To transform these TCRs into seeds, they need to be shrinked. Typically, the epitope-binding motif is located in the middle of CDR3 beta sequences, while the beginning and end are responsible for HLA-binding. Therefore, the center of the CDR3 beta sequence can be used as seed. In this tutorial we will consider two ways of constructing seeds: <em>long seeds</em> and <em>short seeds</em>.</p>
+<ul class="simple">
+<li><p>To construct <em>long seeds</em> we removed the first and the last 3 amino acids were removed from the CDR3 sequence;</p></li>
+<li><p>To construct <em>short seeds</em> we randomly selected a consecutive substring of 3 amino acid long out of the long seed sequence in such way, that the resulting seeds are not too similar.</p></li>
+</ul>
+<p>Table 1 shows the long and short seeds that were selected for the three initial TCRs. We will use these two seed sets to perform two LIgO simulations, keeping all other simulation parameters identical except for the seeds.</p>
+<div class="table-wrapper docutils container" id="id1">
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Table 1: Description of the long and short seeds</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>TCR beta sequence</p></th>
+<th class="head"><p>TRBV gene</p></th>
+<th class="head"><p>TRBJ gene</p></th>
+<th class="head"><p>Epitope</p></th>
+<th class="head"><p>Long Seed</p></th>
+<th class="head"><p>Short Seed</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CSVELSGINQPQHF</p></td>
+<td><p>TRBV29-1</p></td>
+<td><p>TRBJ1-5</p></td>
+<td><p>GTSGSPIINR</p></td>
+<td><p>ELSGINQP</p></td>
+<td><p>SGI</p></td>
+</tr>
+<tr class="row-odd"><td><p>CASSPAGGTYEQYF</p></td>
+<td><p>TRBV11-2</p></td>
+<td><p>TRBJ2-7</p></td>
+<td><p>GTSGSPIINR</p></td>
+<td><p>SPAGGTYE</p></td>
+<td><p>PAG</p></td>
+</tr>
+<tr class="row-even"><td><p>CASSGGDVREEQYF</p></td>
+<td><p>TRBV9</p></td>
+<td><p>TRBJ2-7</p></td>
+<td><p>GTSGSPIINR</p></td>
+<td><p>SGGDVREE</p></td>
+<td><p>DVR</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="defining-motifs-based-on-the-seeds">
+<h2>Defining motifs based on the seeds<a class="headerlink" href="#defining-motifs-based-on-the-seeds" title="Link to this heading">¶</a></h2>
+<p>After describing the seeds, it is required to define possible deviations that are allowed from these seeds using hamming distance. To select the maximum hamming distance, consider the length of your seed and the aimed diversity of the final TCR repertoire.</p>
+<p>Shorter seeds require lower hamming distances. However, if one only wishes to simulated TCRs looking very similar to the seed, one can also lower the hamming distance.</p>
+<p>In this tutorial, a maximum hamming distance of two was selected so that the diversity of the simulated epitope-specific TCR receptors does not become too large. Below we show an example of how to define motifs using haming distance and long seeds.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">motifs</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">motif1</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">hamming_distance_probabilities</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w"> </span><span class="c1"># 10% of TCRs will contain ELSGINQP as the exact match</span>
+<span class="w">       </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w"> </span><span class="c1"># 20% of TCRs will contain ELSGINQP with 1 mismatch</span>
+<span class="w">       </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span><span class="w"> </span><span class="c1"># 70% of TCRs will contain ELSGINQP with 2 mismatch</span>
+<span class="w">     </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ELSGINQP</span>
+<span class="w">   </span><span class="nt">motif2</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">hamming_distance_probabilities</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w"> </span><span class="c1"># 10% of TCRs will contain SPAGGTYE as the exact match</span>
+<span class="w">       </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w"> </span><span class="c1"># 20% of TCRs will contain SPAGGTYE with 1 mismatch</span>
+<span class="w">       </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span><span class="w"> </span><span class="c1"># 70% of TCRs will contain SPAGGTYE with 2 mismatch</span>
+<span class="w">     </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPAGGTYE</span>
+<span class="w">   </span><span class="nt">motif3</span><span class="p">:</span>
+<span class="w">     </span><span class="nt">hamming_distance_probabilities</span><span class="p">:</span>
+<span class="w">       </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w"> </span><span class="c1"># 10% of TCRs will contain SGGDVREE as the exact match</span>
+<span class="w">       </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w"> </span><span class="c1"># 20% of TCRs will contain SGGDVREE with 1 mismatch</span>
+<span class="w">       </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span><span class="w"> </span><span class="c1"># 70% of TCRs will contain SGGDVREE with 2 mismatch</span>
+<span class="w">     </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SGGDVREE</span>
+</pre></div>
+</div>
+</section>
+<section id="running-ligo-for-long-and-short-seeds">
+<h2>Running LIgO for long and short seeds<a class="headerlink" href="#running-ligo-for-long-and-short-seeds" title="Link to this heading">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">definitions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">motifs</span><span class="p">:</span><span class="w"> </span><span class="c1"># define motifs based on long seeds</span>
+<span class="w">    </span><span class="nt">motif1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hamming_distance_probabilities</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<span class="w">        </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">      </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ELSGINQP</span><span class="w"> </span><span class="c1"># replace with SGI to simulate signal-specific TCRs with short seeds</span>
+<span class="w">    </span><span class="nt">motif2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hamming_distance_probabilities</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<span class="w">        </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">      </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPAGGTYE</span><span class="w"> </span><span class="c1"># replace with PAG to simulate signal-specific TCRs with short seeds</span>
+<span class="w">    </span><span class="nt">motif3</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hamming_distance_probabilities</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<span class="w">        </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">      </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SGGDVREE</span><span class="w"> </span><span class="c1"># replace with DVR to simulate signal-specific TCRs with short seeds</span>
+<span class="w">  </span><span class="nt">signals</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">signal1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">motifs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motif1</span>
+<span class="w">      </span><span class="nt">sequence_position_weights</span><span class="p">:</span>
+<span class="w">        </span><span class="s">&#39;104&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"> </span><span class="c1"># we did not want to start the motif at the first position, i.e. IMGT position 104</span>
+<span class="w">    </span><span class="nt">signal2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">motifs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motif2</span>
+<span class="w">      </span><span class="nt">sequence_position_weights</span><span class="p">:</span>
+<span class="w">        </span><span class="s">&#39;104&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"> </span><span class="c1"># we did not want to start the motif at the first position, i.e. IMGT position 104</span>
+<span class="w">    </span><span class="nt">signal3</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">motifs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">motif3</span>
+<span class="w">      </span><span class="nt">sequence_position_weights</span><span class="p">:</span>
+<span class="w">        </span><span class="s">&#39;104&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"> </span><span class="c1"># we did not want to start the motif at the first position, i.e. IMGT position 104</span>
+<span class="w">  </span><span class="nt">simulations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">sim1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">is_repertoire</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">paired</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">sequence_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amino_acid</span>
+<span class="w">      </span><span class="nt">simulation_strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RejectionSampling</span>
+<span class="w">      </span><span class="nt">sim_items</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">var1</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">generative_model</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">default_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">humanTRB</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OLGA</span>
+<span class="w">          </span><span class="nt">is_noise</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">          </span><span class="nt">number_of_examples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"> </span><span class="c1"># simulate 300 TCRs</span>
+<span class="w">          </span><span class="nt">signals</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">signal1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># all TCRs having signal1</span>
+<span class="w">        </span><span class="nt">var2</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">generative_model</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">default_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">humanTRB</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OLGA</span>
+<span class="w">          </span><span class="nt">is_noise</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">          </span><span class="nt">number_of_examples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"> </span><span class="c1"># simulate 300 TCRs</span>
+<span class="w">          </span><span class="nt">signals</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">signal2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># all TCRs having signal2</span>
+<span class="w">        </span><span class="nt">var3</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">generative_model</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">default_model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">humanTRB</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OLGA</span>
+<span class="w">          </span><span class="nt">is_noise</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">          </span><span class="nt">number_of_examples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w"> </span><span class="c1"># simulate 300 TCRs</span>
+<span class="w">          </span><span class="nt">signals</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">signal3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># all TCRs having signal3</span>
+<span class="nt">instructions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">inst1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">export_p_gens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">max_iterations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
+<span class="w">    </span><span class="nt">number_of_processes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">    </span><span class="nt">sequence_batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+<span class="w">    </span><span class="nt">simulation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sim1</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LigoSim</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTML</span>
+</pre></div>
+</div>
+</section>
+<section id="observation-1-a-large-allowance-for-hamming-distance-may-impact-the-identification-of-the-seed-sequences-when-simulated-with-shorter-seeds">
+<h2>Observation 1: a large allowance for hamming distance may impact the identification of the seed sequences when simulated with shorter seeds<a class="headerlink" href="#observation-1-a-large-allowance-for-hamming-distance-may-impact-the-identification-of-the-seed-sequences-when-simulated-with-shorter-seeds" title="Link to this heading">¶</a></h2>
+<p>Tables 2 and 3 present examples of simulated TCRs for the long and short seed simulations, respectively. As expected, most of the amino acids in the original long seed are retained, with only a few positions changed. The opposite is true for the short seeds. Since we allowed up to two hamming distances for a seed of three amino acids, it is a challenge to identify the original seed within the simulated TCRs.</p>
+<div class="table-wrapper docutils container" id="id2">
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Table 2: Examples of simulated TCRs with long seeds</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>junction_aa</p></th>
+<th class="head"><p>seed_match</p></th>
+<th class="head"><p>hamming_distance</p></th>
+<th class="head"><p>seed</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CAAGDRSGINQPQHF</p></td>
+<td><p>DRSGINQP</p></td>
+<td><p>2</p></td>
+<td><p>ELSGINQP</p></td>
+</tr>
+<tr class="row-odd"><td><p>CACTELAGGNQPQHF</p></td>
+<td><p>ELAGGNQP</p></td>
+<td><p>2</p></td>
+<td><p>ELSGINQP</p></td>
+</tr>
+<tr class="row-even"><td><p>CAIASGGRVREQFF</p></td>
+<td><p>SGGRVREQ</p></td>
+<td><p>1</p></td>
+<td><p>SGGDVREE</p></td>
+</tr>
+<tr class="row-odd"><td><p>CAIQGTSGGAIREETQYF</p></td>
+<td><p>SGGAIREE</p></td>
+<td><p>2</p></td>
+<td><p>SGGDVREE</p></td>
+</tr>
+<tr class="row-even"><td><p>CAIICPGGGTYEQYF</p></td>
+<td><p>CPGGGTYE</p></td>
+<td><p>2</p></td>
+<td><p>SPAGGTYE</p></td>
+</tr>
+<tr class="row-odd"><td><p>CAIPSPCGGCYEQYF</p></td>
+<td><p>SPCGGCYE</p></td>
+<td><p>2</p></td>
+<td><p>SPAGGTYE</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper docutils container" id="id3">
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Table 3: Examples of simulated TCRs with short seeds</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>junction_aa</p></th>
+<th class="head"><p>seed_match</p></th>
+<th class="head"><p>hamming_distance</p></th>
+<th class="head"><p>seed</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CAAELLEQYF</p></td>
+<td><p>AAE</p></td>
+<td><p>2</p></td>
+<td><p>PAG</p></td>
+</tr>
+<tr class="row-odd"><td><p>CACCNCQPQHF</p></td>
+<td><p>PQH</p></td>
+<td><p>2</p></td>
+<td><p>PAG</p></td>
+</tr>
+<tr class="row-even"><td><p>CACDTLNEQYF</p></td>
+<td><p>DTL</p></td>
+<td><p>2</p></td>
+<td><p>DVR</p></td>
+</tr>
+<tr class="row-odd"><td><p>CACEWRYNEQFF</p></td>
+<td><p>EWR</p></td>
+<td><p>2</p></td>
+<td><p>DVR</p></td>
+</tr>
+<tr class="row-even"><td><p>CACILEKLFF</p></td>
+<td><p>ACI</p></td>
+<td><p>2</p></td>
+<td><p>SGI</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="observation-2-hamming-distance-and-seed-length-may-affect-the-similarity-between-simulation-seeds-and-simulated-tcr-cluster-concensuses">
+<h2>Observation 2: hamming distance and seed length may affect the similarity between simulation seeds and simulated TCR cluster concensuses<a class="headerlink" href="#observation-2-hamming-distance-and-seed-length-may-affect-the-similarity-between-simulation-seeds-and-simulated-tcr-cluster-concensuses" title="Link to this heading">¶</a></h2>
+<p>We used ClustTCR (Valkiers et al., 2021) to investigate the architecture of the simulated TCRs by clustering their CDR3s with up to one allowed amino acid difference. The TCRs simulated with two different sets of seeds were clustered separately, and for each cluster, a motif summarizing the consensus sequence was calculated. The motifs for the 10 largest clusters are provided in tables 4 and 5 for the long and short seed simulation, respectively.</p>
+<p>When simulating the TCRs with long seeds, we observe a clear overlap between the clusTCR motifs and the original seeds. This indicates successful simulation of the original motif within the receptors. However, in the case of simulating epitope-specific TCRs using short seeds, we find that these seeds are not well represented within the clusTCR motifs. The clustering may be influenced by other common similarities outside of the predefined motif, leading to a loss of track of the original motif after simulation.</p>
+<p>Seed length and allowed hamming distance both have an impact on the final results. Even with long seeds, unwanted results can occur if the hamming distances are set too high. As a general recommendation, we advise clustering the simulated receptors in case the exact presence of motifs is required for your study.</p>
+<div class="table-wrapper docutils container" id="id4">
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">Table 4: Motifs of the 10 largest clusters in the simulated TCRs with large seeds</span><a class="headerlink" href="#id4" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>CDR3 Motif</p></th>
+<th class="head"><p>Seed</p></th>
+<th class="head"><p>Cluster size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CASSp.GGtYEQYF</p></td>
+<td><p>SPAGGTYE</p></td>
+<td><p>59</p></td>
+</tr>
+<tr class="row-odd"><td><p>CASSLSG.NQPQHF</p></td>
+<td><p>ELSGINQP</p></td>
+<td><p>16</p></td>
+</tr>
+<tr class="row-even"><td><p>CASSL.GINQPQHF</p></td>
+<td><p>ELSGINQP</p></td>
+<td><p>9</p></td>
+</tr>
+<tr class="row-odd"><td><p>CASSAGG.YEQYF</p></td>
+<td><p>SPAGGTYE</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td><p>CASSGG.VRYEQYF</p></td>
+<td><p>SGGDVREE</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-odd"><td><p>CASP[GP]GG.YEQYF</p></td>
+<td><p>SPAGGTYE</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-even"><td><p>CASSE.SGSNQPQHF</p></td>
+<td><p>ELSGINQP</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>CASSPGtGTYEQYF</p></td>
+<td><p>SPAGGTYE</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>CASSvAGGTGELFF</p></td>
+<td><p>SPAGGTYE</p></td>
+<td><p>4</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper docutils container" id="id5">
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Table 5: Motifs of the 10 largest clusters in the simulated TCRs with short seeds</span><a class="headerlink" href="#id5" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>CDR3 Motif</p></th>
+<th class="head"><p>Seed</p></th>
+<th class="head"><p>Cluster size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CA..YEQYF</p></td>
+<td><p>PAG,DVR,SGI</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-odd"><td><p>CAs.yEQYF</p></td>
+<td><p>PAG,DVR,SGI</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>CA.T[AP]YEQYF</p></td>
+<td><p>PAG,DVR</p></td>
+<td><p>9</p></td>
+</tr>
+<tr class="row-odd"><td><p>CArDEQYF</p></td>
+<td><p>DVR</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-even"><td><p>CAS..ETQYF</p></td>
+<td><p>SGI</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-odd"><td><p>CAS.tYEQYF</p></td>
+<td><p>SGI</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-even"><td><p>C[RT]DYEQYF</p></td>
+<td><p>DVR</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>CA[KT][SR]ETQYF</p></td>
+<td><p>DVR,SGI</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>C[GV]G[QL]YEQYF</p></td>
+<td><p>SGI</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>CAR.TDTQYF</p></td>
+<td><p>DVR</p></td>
+<td><p>5</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="observation-3-tcrs-simulated-with-a-short-seed-have-shorter-cdr3s-compared-to-tcrs-simulated-with-long-seeds">
+<h2>Observation 3: TCRs simulated with a short seed have shorter CDR3s compared to TCRs simulated with long seeds<a class="headerlink" href="#observation-3-tcrs-simulated-with-a-short-seed-have-shorter-cdr3s-compared-to-tcrs-simulated-with-long-seeds" title="Link to this heading">¶</a></h2>
+<p>We also compared the distribution of CDRR3 length (in amino acids) between the TCRs generated with short and long motifs (shown in blue and red, respectively). Our observation indicates that TCRs generated with long motifs tend to be longer than those generated with short motifs.</p>
+<a class="reference internal image-reference" href="../_images/usecase_VDJdb_motifs_length_distribution.png"><img alt="../_images/usecase_VDJdb_motifs_length_distribution.png" src="../_images/usecase_VDJdb_motifs_length_distribution.png" style="width: 500px;" />
+</a>
+</section>
+<section id="general-tips-for-defining-a-motif">
+<h2>General tips for defining a motif<a class="headerlink" href="#general-tips-for-defining-a-motif" title="Link to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Start with the full seed you want to find back in your simulated TCRs, e.g., ELSGINQP</p></li>
+<li><p>If you want to use rejection sampling, estimate the maximal hamming distance to finish your simulation in a reasonable time. You can start with a very restrictive hamming distance (e.g. max 1) and adjust it as needed. You can use the feasibility report to estimate the effectiveness of the simulation with a given set of parameters, see <a class="reference internal" href="../tutorials/how_to_check_feasibility_of_sim_params.html#how-to-check-feasibility-of-the-simulation-parameters"><span class="std std-ref">How to check feasibility of the simulation parameters</span></a>.</p>
+<p>For example, in this tutorial we used the following rule of the thumb:
+- Seed length of 6-8 =&gt; maximal hamming distance =2
+- Seed length of 9-10 =&gt; maximal hamming distance =3
+- Seed length &gt;10 =&gt; test the simulation with a maximal hamming distance of 3. If not enough TCR are simulated, increase the max hamming distance up to 4.</p>
+<p>If you want to use implanting, you do not need to estimate the feasibility because the simulation will be fast with any hamming distance.</p>
+</li>
+<li><p>Start the simulation with the selected seed and hamming distances. Check for the presence of the predefined motif in the simulated TCRs by clustering or allocating the seed within the TCR sequences.</p></li>
+</ol>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="epitope-specific_TCR_AIRRs.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Simulating epitope-specific TCRs and validating their properties</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="usecase2.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities</a><ul>
+<li><a class="reference internal" href="#constructing-seeds-from-the-vdjdb-receptors">Constructing seeds from the VDJdb receptors</a></li>
+<li><a class="reference internal" href="#defining-motifs-based-on-the-seeds">Defining motifs based on the seeds</a></li>
+<li><a class="reference internal" href="#running-ligo-for-long-and-short-seeds">Running LIgO for long and short seeds</a></li>
+<li><a class="reference internal" href="#observation-1-a-large-allowance-for-hamming-distance-may-impact-the-identification-of-the-seed-sequences-when-simulated-with-shorter-seeds">Observation 1: a large allowance for hamming distance may impact the identification of the seed sequences when simulated with shorter seeds</a></li>
+<li><a class="reference internal" href="#observation-2-hamming-distance-and-seed-length-may-affect-the-similarity-between-simulation-seeds-and-simulated-tcr-cluster-concensuses">Observation 2: hamming distance and seed length may affect the similarity between simulation seeds and simulated TCR cluster concensuses</a></li>
+<li><a class="reference internal" href="#observation-3-tcrs-simulated-with-a-short-seed-have-shorter-cdr3s-compared-to-tcrs-simulated-with-long-seeds">Observation 3: TCRs simulated with a short seed have shorter CDR3s compared to TCRs simulated with long seeds</a></li>
+<li><a class="reference internal" href="#general-tips-for-defining-a-motif">General tips for defining a motif</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=0abd802e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>
