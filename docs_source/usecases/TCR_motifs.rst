@@ -311,6 +311,24 @@ After clicking the Export button, you will receive a TSV file containing all the
     f.write(f'>ClusterMembers_H.A.IVTDFSVIK\n')
     f.write(jaspar_motif.format('jaspar'))
 
+Finally, the motif file pwm.jaspar can be used to define LIgO signal. Additional CDR3 length restricrion (15AA) can be added using the sequence_len_limits parameter in the simulation config item
+
+.. code-block:: yaml
+
+ motifs:
+   sars-cov-2_motif:
+     file_path: pwm.jaspar
+        threshold: 2 # the threshold to consider the sequence as containing the motif, can be changed
+ signals:
+    signal1:
+      v_call: TRBV27*01
+      j_call: TRBJ2-1*1
+      motifs: [sars-cov-2_motif]
+
+**Option 2: VDJdb clustering by the user**
+
+Alternatively, one can cluster VDJdb (or any other database) to obtain PWMs for LIgO simulation. In this tutorial we demonstrate how to cluster VDJdb database using clustcr tool. For more information on clustcr tool, see `clustcr documentation <https://svalkiers.github.io/clusTCR/>`_.
+
 
 
 
