@@ -105,38 +105,6 @@ In this tutorial, we demonstrate how to simulate epitope-specific T-cell recepto
 3. Use the epitope-specific PWMs to simulate epitope-specific TCRs using rejection sampling or signal implanting.
 
 
-How to handle the maximum iterations were reached error
-----------------------
-
-LIgO has two parameters, which may impact succuss of the simulation: the number of TCR sequences LIgO has to generate in every iteration (sequence_batch_size) and the maximum number of iterations (max_iterations).
-
-When achieving the number of required TCRs before the maximum number of iterations, the LIgO simulation will stop. However, when the number of required TCRs is not reached after the maximum number of iterations, the following error will be reported:
-
-*LigoSimInstruction: maximum iterations were reached, but the simulation could not finish with parameters:…*
-
-In this situation, you have multiple options to proceed. First of all, take a look at the results and see how many TCRs were generated. In case of an error, the results for every simulation item are stored in
-  
-.. code-block:: yaml
-  
-  results/inst1/simulation_item/processed_sequences/name_of_the_signal.tsv
-
-For this tutorial, the following files should be consulted in case of a LigoSimInstruction error
-
-.. code-block:: yaml
-
-  results/inst1/var1/processed_sequences/signal1.tsv.
-  results/inst1/var2/processed_sequences/signal2.tsv.
-  results/inst1/var3/processed_sequences/signal3.tsv.
-
-Tips for handling the maximum iterations were reached error
-
-#. If you only need a few more TCRs, you can increase the sequence_batch_size and the max_iterations and wait a bit longer.  If no additional data is needed, you could already work with the data that has been generated.
-
-#. In case the number of generated TCRs is very low, you must adapt your motifs to allow more variation, i.e. shorten the seed, increase the hamming distance or start with a new seed.
-
-.. note::
-
-Before initiating a large simulation process, first estimate the success of the simulation by running the simulation feasibility report. For more details see :ref:`How to check feasibility of the simulation parameters`
 
 
 Inspecting the simulated TCRs
