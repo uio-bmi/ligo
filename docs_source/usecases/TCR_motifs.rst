@@ -322,7 +322,7 @@ Finally, the motif file pwm.jaspar can be used to define LIgO signal. Additional
  signals:
     signal1:
       v_call: TRBV27*01
-      j_call: TRBJ2-1*1
+      j_call: TRBJ2-1*01
       motifs: [sars-cov-2_motif]
 
 **Option 2: VDJdb clustering by the user**
