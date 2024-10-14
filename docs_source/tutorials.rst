@@ -36,6 +36,7 @@ List of all tutorials
   tutorials/how_to_define_immune_signals_and_events
   tutorials/how_to_choose_simulation_strategy
   tutorials/how_to_check_feasibility_of_sim_params
+  tutorials/how_to_handle_the_maximum_iterations_were_reached_error
   tutorials/simulation_with_custom_signal_functions
   tutorials/how_to_simulate_paired_chain_data
   tutorials/how_to_simulate_co-occuring_signals
