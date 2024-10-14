@@ -9,9 +9,9 @@ LIgO enables the generation of motifs using either (i) a combination of a short 
 
 In this tutorial, we will suggest two approaches for constructing database-inspired LIgO motifs:
 
-1. `Basic approach: defining motifs based on the seed and a list of Hamming distances <#constructing-seeds-from-the-VDJdb-receptors>`_
+1. `Basic approach: defining motifs based on a seed and a list of Hamming distances <#basic-approach:-defining-motifs-based-on-a-seed-and-a-list-of-Hamming-distances>`_
 
-2. Enhanced approach: defining motifs based on PWM 
+2. `Enhanced approach: defining motifs based on PWM <#enhanced-approach:-defining-motifs-based-on-pwm>`_
 
 In both approaches we will use the VDJdb database (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
 
@@ -24,12 +24,12 @@ In both approaches we will use the VDJdb database (Shugay et al., 2018; Goncharo
 - `TCRdb <http://bioinfo.life.hust.edu.cn/TCRdb/#/>`_  (Chen et al., 2021) 
 
 
-
-
-Constructing seeds from the VDJdb receptors
+Basic approach: defining motifs based on a seed and a list of Hamming distances
 ---------------------------------------
 
-For demonstration purposes, we define three seeds from three TCR beta sequences in the VDJdb (Shugay et al. 2018), all recognizing the DENV3/4 epitope GTSGSPIINR (Table 1). To transform these TCRs into seeds, they need to be shrinked. Typically, the epitope-binding motif is located in the middle of CDR3 beta sequences, while the beginning and end are responsible for HLA-binding. Therefore, the center of the CDR3 beta sequence can be used as seed. In this tutorial we will consider two ways of constructing seeds: *long seeds* and *short seeds*.
+**Step 1: Constructing seeds from the VDJdb receptors**
+
+For demonstration purposes, we define three seeds from three TCR beta sequences in the VDJdb (Shugay et al. 2018), all recognizing the DENV3/4 epitope GTSGSPIINR (Table 1). To transform these TCRs into seeds, they need to be shrinked. Typically, the epitope-binding motif is located in the middle of CDR3 beta sequences, while the beginning and end are responsible for HLA-binding. Therefore, the center of the CDR3 beta sequence can be used as seed. In this tutorial, we will consider two ways of constructing seeds: *long seeds* and *short seeds*.
 
 - To construct *long seeds* we removed the first and the last 3 amino acids were removed from the CDR3 sequence;
 
@@ -38,7 +38,7 @@ For demonstration purposes, we define three seeds from three TCR beta sequences 
 Table 1 shows the long and short seeds that were selected for the three initial TCRs. We will use these two seed sets to perform two LIgO simulations, keeping all other simulation parameters identical except for the seeds.
 
 
-.. list-table:: Table 1: Description of the long and short seeds
+.. list-table:: Table 1: Examples of the long and short seeds
   :header-rows: 1
 
   * - TCR beta sequence
@@ -67,15 +67,14 @@ Table 1 shows the long and short seeds that were selected for the three initial 
     - DVR
 
 
-Defining motifs based on the seeds
-----------------------------------------
+**Step 2: Defining LIgO motifs based on the seeds**
 
 After describing the seeds, it is required to define possible deviations that are allowed from these seeds using hamming distance. To select the maximum hamming distance, consider the length of your seed and the aimed diversity of the final TCR repertoire. 
 
 .. note::
 Shorter seeds require lower hamming distances. However, if one only wishes to simulated TCRs looking very similar to the seed, one can also lower the hamming distance. 
 
-In this tutorial, a maximum hamming distance of two was selected so that the diversity of the simulated epitope-specific TCR receptors does not become too large. Below we show an example of how to define motifs using haming distance and long seeds. 
+In this tutorial, a maximum hamming distance of two was selected so that the diversity of the simulated epitope-specific TCR receptors does not become too large. Below we show an example of how to define motifs using haming distance and long seeds. These signals can be further used for LIgO simulation based on rejection sampling or signal implantation.
 
 .. code-block:: yaml
 
@@ -99,95 +98,30 @@ In this tutorial, a maximum hamming distance of two was selected so that the div
         2: 0.7 # 70% of TCRs will contain SGGDVREE with 2 mismatch
       seed: SGGDVREE
 
-Running LIgO for long and short seeds
-----------------------------------------
+**General tips for defining a motif using a seed and Hamming distance:**
 
-.. code-block:: yaml
+#. Start with the full seed you want to find back in your simulated TCRs, e.g., ELSGINQP
 
-  definitions:
-    motifs: # define motifs based on long seeds
-      motif1:
-        hamming_distance_probabilities:
-          0: 0.1
-          1: 0.2
-          2: 0.7
-        seed: ELSGINQP # replace with SGI to simulate signal-specific TCRs with short seeds
-      motif2:
-        hamming_distance_probabilities:
-          0: 0.1
-          1: 0.2
-          2: 0.7
-        seed: SPAGGTYE # replace with PAG to simulate signal-specific TCRs with short seeds
-      motif3:
-        hamming_distance_probabilities:
-          0: 0.1
-          1: 0.2
-          2: 0.7
-        seed: SGGDVREE # replace with DVR to simulate signal-specific TCRs with short seeds
-    signals:
-      signal1:
-        motifs:
-        - motif1
-        sequence_position_weights:
-          '104': 0 # we did not want to start the motif at the first position, i.e. IMGT position 104
-      signal2:
-        motifs:
-        - motif2
-        sequence_position_weights:
-          '104': 0 # we did not want to start the motif at the first position, i.e. IMGT position 104
-      signal3:
-        motifs:
-        - motif3
-        sequence_position_weights:
-          '104': 0 # we did not want to start the motif at the first position, i.e. IMGT position 104
-    simulations:
-      sim1:
-        is_repertoire: false
-        paired: false
-        sequence_type: amino_acid
-        simulation_strategy: RejectionSampling
-        sim_items:
-          var1:
-            generative_model:
-              default_model_name: humanTRB
-              type: OLGA
-            is_noise: false
-            number_of_examples: 300 # simulate 300 TCRs 
-            signals: 
-              signal1: 1 # all TCRs having signal1
-          var2:
-            generative_model:
-              default_model_name: humanTRB
-              type: OLGA
-            is_noise: false
-            number_of_examples: 300 # simulate 300 TCRs 
-            signals:
-              signal2: 1 # all TCRs having signal2
-          var3:
-            generative_model:
-              default_model_name: humanTRB
-              type: OLGA
-            is_noise: false
-            number_of_examples: 300 # simulate 300 TCRs 
-            signals:
-              signal3: 1 # all TCRs having signal3
-  instructions:
-    inst1:
-      export_p_gens: false
-      max_iterations: 2000
-      number_of_processes: 8
-      sequence_batch_size: 10000
-      simulation: sim1
-      type: LigoSim
-  output:
-    format: HTML
+#.  If you want to use rejection sampling, estimate the maximal hamming distance to finish your simulation in a reasonable time. You can start with a very restrictive hamming distance (e.g. max 1) and adjust it as needed. You can use the feasibility report to estimate the effectiveness of the simulation with a given set of parameters, see :ref:`How to check feasibility of the simulation parameters`.   
+
+    For example, in this tutorial we used the following rule of the thumb:
+
+    - Seed length of 6-8 => max Hamming distance = 2
+
+    - Seed length of 9-10 => max Hamming distance = 3
+
+    - Seed length >10 => test the simulation with a maximal hamming distance of 3. If not enough TCR are simulated, increase the max hamming distance up to 4.
+
+    If you want to use implanting, you do not need to estimate the feasibility because the simulation will be fast with any Hamming distance.
+
+#. Start the simulation with the selected seed and Hamming distances. Check for the presence of the predefined motif in the simulated TCRs by clustering or allocating the seed within the TCR sequences.
 
 
-Observation 1: a large allowance for hamming distance may impact the identification of the seed sequences when simulated with shorter seeds
-------------------------------------------
+**Observations:** 
 
-Tables 2 and 3 present examples of simulated TCRs for the long and short seed simulations, respectively. As expected, most of the amino acids in the original long seed are retained, with only a few positions changed. The opposite is true for the short seeds. Since we allowed up to two hamming distances for a seed of three amino acids, it is a challenge to identify the original seed within the simulated TCRs.
+1. A large allowance for hamming distance may impact the identification of the seed sequences when simulated with shorter seeds
 
+Tables 2 and 3 present examples of simulated TCRs for the long and short seed simulations, respectively. As expected, most of the amino acids in the original long seed are retained, with only a few positions changed. The opposite is true for the short seeds. Since we allowed up to two Hamming distances for a seed of three amino acids, it is a challenge to identify the original seed within the simulated TCRs.
 
 .. list-table:: Table 2: Examples of simulated TCRs with long seeds
   :header-rows: 1
@@ -251,8 +185,7 @@ Tables 2 and 3 present examples of simulated TCRs for the long and short seed si
 
 
 
-Observation 2: hamming distance and seed length may affect the similarity between simulation seeds and simulated TCR cluster concensuses
-----------------------------------
+2. Hamming distance and seed length may affect the similarity between simulation seeds and simulated TCR cluster concensuses
 
 We used ClustTCR (Valkiers et al., 2021) to investigate the architecture of the simulated TCRs by clustering their CDR3s with up to one allowed amino acid difference. The TCRs simulated with two different sets of seeds were clustered separately, and for each cluster, a motif summarizing the consensus sequence was calculated. The motifs for the 10 largest clusters are provided in tables 4 and 5 for the long and short seed simulation, respectively.
 
@@ -333,35 +266,18 @@ Seed length and allowed hamming distance both have an impact on the final result
     - DVR
     - 5
 
-
-Observation 3: TCRs simulated with a short seed have shorter CDR3s compared to TCRs simulated with long seeds
-----------------------------------------
+3. TCRs simulated with a short seed have shorter CDR3s compared to TCRs simulated with long seeds
 
 We also compared the distribution of CDRR3 length (in amino acids) between the TCRs generated with short and long motifs (shown in blue and red, respectively). Our observation indicates that TCRs generated with long motifs tend to be longer than those generated with short motifs.
-
 
 .. image:: ../_static/figures/usecase_VDJdb_motifs_length_distribution.png
   :width: 500
 
 
-General tips for defining a motif
+
+
+Enhanced approach: defining motifs based on PWM 
 ---------------------------------------
-
-1. Start with the full seed you want to find back in your simulated TCRs, e.g., ELSGINQP
-
-2.  If you want to use rejection sampling, estimate the maximal hamming distance to finish your simulation in a reasonable time. You can start with a very restrictive hamming distance (e.g. max 1) and adjust it as needed. You can use the feasibility report to estimate the effectiveness of the simulation with a given set of parameters, see :ref:`How to check feasibility of the simulation parameters`.   
-
-    For example, in this tutorial we used the following rule of the thumb:
-    - Seed length of 6-8 => maximal hamming distance =2
-    - Seed length of 9-10 => maximal hamming distance =3
-    - Seed length >10 => test the simulation with a maximal hamming distance of 3. If not enough TCR are simulated, increase the max hamming distance up to 4.
-
-    If you want to use implanting, you do not need to estimate the feasibility because the simulation will be fast with any hamming distance.
-
-3. Start the simulation with the selected seed and hamming distances. Check for the presence of the predefined motif in the simulated TCRs by clustering or allocating the seed within the TCR sequences.
-
-
-
 
 
 
