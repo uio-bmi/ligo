@@ -1,13 +1,11 @@
 Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities
 ===================================================
 
-LIgO enables the generation of motifs using either (i) a combination of a short amino acid sequence (i.e., a seed) and a list of Hamming distances, representing the allowed deviations from the seed or (ii) a position weight matrix (PWM). In this tutorial, we demonstrate how one can use a database of TCRs with known antigen specificities to construct more biologically-relevant LIgO motifs. These database-inspired motifs can be used to simulate epitope-specific TCR data, i.e., a collection of TCRs derived from different individuals that are all recognizing the same epitope. 
+LIgO enables the generation of motifs using either (i) a combination of a short amino acid sequence (i.e., a seed) and a list of Hamming distances, representing the allowed deviations from the seed or (ii) a position weight matrix (PWM). 
 
-.. note::
+In this tutorial, we demonstrate how one can use a database of TCRs with known antigen specificities to construct more biologically-relevant LIgO motifs. These database-inspired motifs can be used to simulate epitope-specific TCR data, i.e., a collection of TCRs derived from different individuals that are all recognizing the same epitope. 
 
-   LIgO-simulated data can only resemble the general structure of epitope-specific TCRs. The actual specificities of these TCRs cannot be simulated, and thus the final simulated data are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore.
-
-In this tutorial, we will suggest two approaches for constructing database-inspired LIgO motifs:
+We suggest two approaches for constructing database-inspired LIgO motifs:
 
 1. `Basic approach: defining motifs based on a seed and a list of Hamming distances <#basic-approach:-defining-motifs-based-on-a-seed-and-a-list-of-Hamming-distances>`_
 
