@@ -282,8 +282,8 @@ VDJdb provides a database of CDR3 motifs, which you can access at https://vdjdb.
 
 The figure below showcases a SARS-CoV-2-specific motif from VDJdb. This SARS-CoV-2-specific TCRs must have 15 amino acids long CDR3 and use the germline genes TRBV27*01 and TRBJ2-1*1.
 
-.. image:: ../_static/figures/usecase_VDJdb_motifs_length_distribution.png
-  :width: 500
+.. image:: ../_static/figures/VDJdb_CDR3_database.png
+  :width: 1500
 
 After clicking the Export button, you will receive a TSV file containing all the members representing the given motif. To convert the set of CDR3s into a PWM compatible with LIgO, you can use the following code:
 
