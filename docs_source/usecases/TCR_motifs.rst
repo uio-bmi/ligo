@@ -13,7 +13,7 @@ In this tutorial, we will suggest two approaches for constructing database-inspi
 
 2. `Enhanced approach: defining motifs based on PWM <#enhanced-approach:-defining-motifs-based-on-pwm>`_
 
-In both approaches we will use the VDJdb database (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
+In both approaches we will use the  `VDJdb database <https:vdjdb.cdr3.net/>`_  (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
 
 - `McPAS <https://friedmanlab.weizmann.ac.il/McPAS-TCR/>`_ (Tickotsky et al., 2017) 
 
