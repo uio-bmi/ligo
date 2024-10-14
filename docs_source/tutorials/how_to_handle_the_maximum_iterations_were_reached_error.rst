@@ -13,7 +13,7 @@ In this situation, you have multiple options to proceed. First of all, take a lo
   
   results/inst1/simulation_item/processed_sequences/name_of_the_signal.tsv
 
-If you the name of your simulated signal is "signal1" the signal-specific AIRs will be stored in this file:
+For example, if the name of your simulated signal is "signal1" then the signal-specific AIRs will be stored in this file:
 
 .. code-block:: yaml
 
