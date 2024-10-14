@@ -327,7 +327,7 @@ Finally, the motif file pwm.jaspar can be used to define LIgO signal. Additional
 
 **Option 2: VDJdb clustering by the user**
 
-Alternatively, one can cluster VDJdb (or any other database) to obtain PWMs for LIgO simulation. In this tutorial we demonstrate how to cluster VDJdb database using clustcr tool. For more information on clustcr tool, see `clustcr documentation <https://svalkiers.github.io/clusTCR/>`_.
+Alternatively, one can cluster VDJdb (or any other database) to obtain PWMs for LIgO simulation. In this tutorial we demonstrate how to cluster VDJdb database using the clusTCR tool (Valkiers et al., 2021). For more information on clusTCR, see `clusTCR documentation <https://svalkiers.github.io/clusTCR/>`_.
 
 
 
