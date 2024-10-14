@@ -273,9 +273,44 @@ We also compared the distribution of CDRR3 length (in amino acids) between the T
 
 
 
-
 Enhanced approach: defining motifs based on PWM 
 ---------------------------------------
+
+**Option 1: VDJdb CDR3 motif database**
+
+VDJdb provides a database of CDR3 motifs, which you can access at https://vdjdb.cdr3.net/motif to find suitable motifs. You can search for motifs based on an epitope or a CDR3 sequence or subsequence.
+
+The figure below showcases a SARS-CoV-2-specific motif from VDJdb. This SARS-CoV-2-specific TCRs must have 15 amino acids long CDR3 and use the germline genes TRBV27*01 and TRBJ2-1*1.
+
+.. image:: ../_static/figures/usecase_VDJdb_motifs_length_distribution.png
+  :width: 500
+
+After clicking the Export button, you will receive a TSV file containing all the members representing the given motif. To convert the set of CDR3s into a PWM compatible with LIgO, you can use the following code:
+
+.. code-block:: python
+
+  from Bio.Align import MultipleSeqAlignment
+  from Bio.Seq import Seq
+  from Bio import motifs
+  from Bio.motifs.jaspar import Motif
+  import pandas as pd
+
+  # Load the TSV file
+  input_file = 'ClusterMembers_H.A.IVTDFSVIK.tsv' 
+  df = pd.read_csv(input_file, sep='\t')
+
+  # Construct the motif
+  sequences = [Seq(seq) for seq in df['cdr3aa'].tolist()]
+  alignment = MultipleSeqAlignment(sequences)
+  motif = motifs.create(alignment)
+  jaspar_motif = Motif(alphabet=motif.alphabet, counts=motif.counts)
+
+  # Save the PWM in jaspar format
+  jaspar_output = 'pwm.jaspar'
+  with open(jaspar_output, 'w') as f:
+    f.write(f'>ClusterMembers_H.A.IVTDFSVIK\n')
+    f.write(jaspar_motif.format('jaspar'))
+
 
 
 
