@@ -33,7 +33,7 @@ class LigoPWM(Motif):
 
         motifs:
             my_custom_pwm: # this will be the identifier of the motif
-                file_path: my_pwm_1.csv
+                file_path: my_pwm_1.jaspar
                 threshold: 2
 
     """
