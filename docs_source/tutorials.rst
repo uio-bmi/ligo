@@ -15,6 +15,8 @@ When immune events and immune signals are defined, the user should choose betwee
 
 - :ref:`How to check feasibility of the simulation parameters`
 
+- :ref:`How to handle the maximum iterations were reached error`
+
 
 These tutorials cover the more complex usage of LIgO simulations. For basic usage of LIgO simulation see :ref:`Quickstart` tutorials.
 
