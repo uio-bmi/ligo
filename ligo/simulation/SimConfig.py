@@ -23,7 +23,7 @@ class SimConfig:
 
     - simulation_strategy (str): either RejectionSampling or Implanting, see the tutorials for more information on choosing one of these
 
-    - keep_p_gen_dist (bool): if possible, whether to keep the distribution of generation probabilities of the sequences the same as provided by the model without any signals
+    - keep_p_gen_dist (bool): if possible, whether to implement the importance sampling strategy, i.e., keep the distribution of generation probabilities of the sequences the same as provided by the model without any signals
 
     - p_gen_bin_count (int): if keep_p_gen_dist is true, how many bins to use to approximate the generation probability distribution
 
@@ -51,7 +51,6 @@ class SimConfig:
                 model_path: null
                 type: OLGA
               number_of_examples: 100
-              seed: 1002
               signals:
                signal1: 1
 

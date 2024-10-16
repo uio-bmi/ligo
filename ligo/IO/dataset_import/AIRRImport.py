@@ -14,27 +14,14 @@ from scripts.specification_util import update_docs_per_mapping
 
 class AIRRImport(DataImport):
     """
-    Imports data in AIRR format into a Repertoire-, Sequence- or ReceptorDataset.
-    RepertoireDatasets should be used when making predictions per repertoire, such as predicting a disease state.
-    SequenceDatasets or ReceptorDatasets should be used when predicting values for unpaired (single-chain) and paired
-    immune receptors respectively, like antigen specificity.
-
-    The AIRR .tsv format is explained here: https://docs.airr-community.org/en/stable/datarep/format.html
+    Imports data in AIRR format. The AIRR .tsv format is explained here: https://docs.airr-community.org/en/stable/datarep/format.html
     And the AIRR rearrangement schema can be found here: https://docs.airr-community.org/en/stable/datarep/rearrangements.html
-
-    When importing a ReceptorDataset, the AIRR field cell_id is used to determine the chain pairs.
 
     Arguments:
 
-    - path (str): For RepertoireDatasets, this is the path to a directory with AIRR files to import. For Sequence- or ReceptorDatasets this path may either be the path to the file to import, or the path to the folder locating one or multiple files with .tsv, .csv or .txt extensions. By default path is set to the current working directory.
+    - path (str): Either the path to the file to import, or the path to the folder locating one or multiple files with .tsv, .csv or .txt extensions. By default path is set to the current working directory.
 
-    - is_repertoire (bool): If True, this imports a RepertoireDataset. If False, it imports a SequenceDataset or ReceptorDataset. By default, is_repertoire is set to True.
-
-    - metadata_file (str): Required for RepertoireDatasets. This parameter specifies the path to the metadata file. This is a csv file with columns filename, subject_id and arbitrary other columns which can be used as labels in instructions. Only the AIRR files included under the column 'filename' are imported into the RepertoireDataset. For setting SequenceDataset metadata, metadata_file is ignored, see metadata_column_mapping instead.
-
-    - paired (str): Required for Sequence- or ReceptorDatasets. This parameter determines whether to import a SequenceDataset (paired = False) or a ReceptorDataset (paired = True). In a ReceptorDataset, two sequences with chain types specified by receptor_chains are paired together based on the identifier given in the AIRR column named 'cell_id'.
-
-    - receptor_chains (str): Required for ReceptorDatasets. Determines which pair of chains to import for each Receptor. Valid values for receptor_chains are the names of the :py:obj:`~immuneML.data_model.receptor.ChainPair.ChainPair` enum. If receptor_chains is not provided, the chain pair is automatically detected (only one chain pair type allowed per repertoire).
+    - is_repertoire (bool): Should be set to False, as we import a SequenceDataset. 
 
     - import_productive (bool): Whether productive sequences (with value 'T' in column productive) should be included in the imported sequences. By default, import_productive is True.
 
@@ -75,11 +62,7 @@ class AIRRImport(DataImport):
             format: AIRR
             params:
                 path: path/to/files/
-                is_repertoire: True # whether to import a RepertoireDataset
-                metadata_file: path/to/metadata.csv # metadata file for RepertoireDataset
-                metadata_column_mapping: # metadata column mapping AIRR: immuneML for Sequence- or ReceptorDatasetDataset
-                    airr_column_name1: metadata_label1
-                    airr_column_name2: metadata_label2
+                is_repertoire: False
                 import_productive: True # whether to include productive sequences in the dataset
                 import_with_stop_codon: False # whether to include sequences with stop codon in the dataset
                 import_out_of_frame: False # whether to include out of frame sequences in the dataset
