@@ -7,9 +7,9 @@ In this tutorial, we demonstrate how one can use a database of TCRs with known a
 
 We suggest two approaches for constructing database-inspired LIgO motifs:
 
-1. :ref:`Basic approach: defining motifs based on a seed and a list of Hamming distances`
+1. :ref:`Basic approach: defining motif based on a seed and a list of Hamming distances`
 
-2. :ref:`Enhanced approach: defining motifs based on PWM`
+2. :ref:`Enhanced approach: defining motif based on PWM`
 
 In both approaches we will use the  `VDJdb database <https:vdjdb.cdr3.net/>`_  (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
 
@@ -22,10 +22,11 @@ In both approaches we will use the  `VDJdb database <https:vdjdb.cdr3.net/>`_  (
 - `TCRdb <http://bioinfo.life.hust.edu.cn/TCRdb/#/>`_  (Chen et al., 2021) 
 
 
-Basic approach: defining motifs based on a seed and a list of Hamming distances
+Basic approach: defining motif based on a seed and a list of Hamming distances
 ---------------------------------------
 
-**Step 1: Constructing seeds from the VDJdb receptors**
+Step 1: Constructing seeds from the VDJdb receptors
+*************
 
 For demonstration purposes, we define three seeds from three TCR beta sequences in the VDJdb (Shugay et al. 2018), all recognizing the DENV3/4 epitope GTSGSPIINR (Table 1). To transform these TCRs into seeds, they need to be shrinked. Typically, the epitope-binding motif is located in the middle of CDR3 beta sequences, while the beginning and end are responsible for HLA-binding. Therefore, the center of the CDR3 beta sequence can be used as seed. In this tutorial, we will consider two ways of constructing seeds: *long seeds* and *short seeds*.
 
@@ -65,7 +66,8 @@ Table 1 shows the long and short seeds that were selected for the three initial 
     - DVR
 
 
-**Step 2: Defining LIgO motifs based on the seeds**
+Step 2: Defining LIgO motifs based on the seeds
+*************
 
 After describing the seeds, it is required to define possible deviations that are allowed from these seeds using hamming distance. To select the maximum hamming distance, consider the length of your seed and the aimed diversity of the final TCR repertoire. 
 
@@ -115,7 +117,7 @@ In this tutorial, a maximum hamming distance of two was selected so that the div
 #. Start the simulation with the selected seed and Hamming distances. Check for the presence of the predefined motif in the simulated TCRs by clustering or allocating the seed within the TCR sequences.
 
 
-Enhanced approach: defining motifs based on PWM 
+Enhanced approach: defining motif based on PWM 
 ---------------------------------------
 
 **Option 1: VDJdb CDR3 motif database**
@@ -171,7 +173,8 @@ Finally, the motif file pwm.csv can be used to define LIgO signal. Additional CD
       j_call: TRBJ2-1*01
       motifs: [sars-cov-2_motif]
 
-**Option 2: VDJdb clustering by the user**
+Option 2: Database clustering by the user
+*************
 
 Alternatively, one can cluster VDJdb (or any other database) to obtain PWMs for LIgO simulation. In this tutorial we demonstrate how to cluster VDJdb database using the clusTCR tool (Valkiers et al., 2021). For more information on clusTCR, see `clusTCR documentation <https://svalkiers.github.io/clusTCR/>`_.
 
