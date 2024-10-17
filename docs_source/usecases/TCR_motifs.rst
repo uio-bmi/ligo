@@ -7,9 +7,9 @@ In this tutorial, we demonstrate how one can use a database of TCRs with known a
 
 We suggest two approaches for constructing database-inspired LIgO motifs:
 
-1. `Basic approach: defining motifs based on a seed and a list of Hamming distances <#basic-approach:-defining-motifs-based-on-a-seed-and-a-list-of-Hamming-distances>`_
+1. :ref:`Basic approach: defining motifs based on a seed and a list of Hamming distances`
 
-2. `Enhanced approach: defining motifs based on PWM <#enhanced-approach:-defining-motifs-based-on-pwm>`_
+2. :ref:`Enhanced approach: defining motifs based on PWM`
 
 In both approaches we will use the  `VDJdb database <https:vdjdb.cdr3.net/>`_  (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
 
