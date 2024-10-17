@@ -289,35 +289,39 @@ After clicking the Export button, you will receive a TSV file containing all the
 
 .. code-block:: python
 
+  import numpy as np
+  import pandas as pd
   from Bio.Align import MultipleSeqAlignment
   from Bio.Seq import Seq
-  from Bio import motifs
-  from Bio.motifs.jaspar import Motif
-  import pandas as pd
-
-  # Load the TSV file
-  input_file = 'ClusterMembers_H.A.IVTDFSVIK.tsv' 
-  df = pd.read_csv(input_file, sep='\t')
-
-  # Construct the motif
-  sequences = [Seq(seq) for seq in df['cdr3aa'].tolist()]
+  from Bio.SeqRecord import SeqRecord
+  
+  df = pd.read_csv('ClusterMembers_H.A.IVTDFSVIK.tsv', sep='\t')
+  sequences = [SeqRecord(Seq(seq)) for seq in df['cdr3aa'].tolist()]
   alignment = MultipleSeqAlignment(sequences)
-  motif = motifs.create(alignment)
-  jaspar_motif = Motif(alphabet=motif.alphabet, counts=motif.counts)
+  
+  # construct PWM
+  amino_acids = 'ACDEFGHIKLMNPQRSTVWY'
+  aa_to_index = {aa: i for i, aa in enumerate(amino_acids)}
+  
+  alignment_matrix = np.array([[aa_to_index.get(aa, -1) for aa in record.seq] for record in alignment])
+  
+  pwm_matrix = np.array([
+      np.bincount(alignment_matrix[:, pos][alignment_matrix[:, pos] >= 0], minlength=len(amino_acids))
+      for pos in range(alignment.get_alignment_length())
+  ]) / len(sequences)
 
-  # Save the PWM in jaspar format
-  jaspar_output = 'pwm.jaspar'
-  with open(jaspar_output, 'w') as f:
-    f.write(f'>ClusterMembers_H.A.IVTDFSVIK\n')
-    f.write(jaspar_motif.format('jaspar'))
+  # export PWM as csv
+  pwm_df = pd.DataFrame(pwm_matrix, columns=list(amino_acids))
+  pwm_df.to_csv('pwm.csv')
 
-Finally, the motif file pwm.jaspar can be used to define LIgO signal. Additional CDR3 length restricrion (15AA) can be added using the sequence_len_limits parameter in the simulation config item
+
+Finally, the motif file pwm.csv can be used to define LIgO signal. Additional CDR3 length restricrion (15AA) can be added using the sequence_len_limits parameter in the simulation config item
 
 .. code-block:: yaml
 
  motifs:
    sars-cov-2_motif:
-     file_path: pwm.jaspar
+     file_path: pwm.csv
         threshold: 2 # the threshold to consider the sequence as containing the motif, can be changed
  signals:
     signal1:
