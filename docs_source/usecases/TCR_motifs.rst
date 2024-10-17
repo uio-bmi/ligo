@@ -7,9 +7,9 @@ In this tutorial, we demonstrate how one can use a database of TCRs with known a
 
 We suggest two approaches for constructing database-inspired LIgO motifs:
 
-1. :ref:`Basic approach: defining motif based on a seed and a list of Hamming distances`
+#. :ref:`Basic approach: defining motif based on a seed and a list of Hamming distances`
 
-2. :ref:`Enhanced approach: defining motif based on PWM`
+#. :ref:`Enhanced approach: defining motif based on PWM`
 
 In both approaches we will use the  `VDJdb database <https:vdjdb.cdr3.net/>`_  (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
 
@@ -98,7 +98,8 @@ In this tutorial, a maximum hamming distance of two was selected so that the div
         2: 0.7 # 70% of TCRs will contain SGGDVREE with 2 mismatch
       seed: SGGDVREE
 
-**General tips for defining a motif using a seed and Hamming distance:**
+General tips for defining a motif using a seed and Hamming distance
+*************
 
 #. Start with the full seed you want to find back in your simulated TCRs, e.g., ELSGINQP
 
@@ -120,7 +121,8 @@ In this tutorial, a maximum hamming distance of two was selected so that the div
 Enhanced approach: defining motif based on PWM 
 ---------------------------------------
 
-**Option 1: VDJdb CDR3 motif database**
+Option 1: VDJdb CDR3 motif database
+*************
 
 VDJdb provides a database of CDR3 motifs, which you can access at https://vdjdb.cdr3.net/motif to find suitable motifs. You can search for motifs based on an epitope or a CDR3 sequence or subsequence.
 
