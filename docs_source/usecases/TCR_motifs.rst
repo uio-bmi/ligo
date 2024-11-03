@@ -145,20 +145,19 @@ After clicking the Export button, you will receive a TSV file containing all the
   sequences = [SeqRecord(Seq(seq)) for seq in df['cdr3aa'].tolist()]
   alignment = MultipleSeqAlignment(sequences)
   
-  # construct PWM
-  amino_acids = 'ACDEFGHIKLMNPQRSTVWY'
-  aa_to_index = {aa: i for i, aa in enumerate(amino_acids)}
+  def construct_pwm(alignment):
+      amino_acids = 'ACDEFGHIKLMNPQRSTVWY'
+      aa_to_index = {aa: i for i, aa in enumerate(amino_acids)}
+      alignment_matrix = np.array([[aa_to_index.get(aa, -1) for aa in record.seq] for record in alignment])
+      pwm_matrix = np.array([
+          np.bincount(alignment_matrix[:, pos][alignment_matrix[:, pos] >= 0], minlength=len(amino_acids))
+          for pos in range(alignment.get_alignment_length())
+          ]) / len(sequences)
+      pwm_df = pd.DataFrame(pwm, columns=list(amino_acids))
+      return(pwm_df)
   
-  alignment_matrix = np.array([[aa_to_index.get(aa, -1) for aa in record.seq] for record in alignment])
-  
-  pwm_matrix = np.array([
-      np.bincount(alignment_matrix[:, pos][alignment_matrix[:, pos] >= 0], minlength=len(amino_acids))
-      for pos in range(alignment.get_alignment_length())
-  ]) / len(sequences)
-
-  # export PWM as csv
-  pwm_df = pd.DataFrame(pwm_matrix, columns=list(amino_acids))
-  pwm_df.to_csv('pwm.csv')
+  pwm = construct_pwm(alignment)
+  pwm.to_csv('pwm.csv', index=False)
 
 
 Finally, the motif file pwm.csv can be used to define LIgO signal. Additional CDR3 length restricrion (15AA) can be added using the sequence_len_limits parameter in the simulation config item
