@@ -181,7 +181,7 @@ Alternatively, one can cluster VDJdb (or any other database) to obtain PWMs for 
 
 First, one should select a set of TCRs from VDJdb sharing the same epitope specificity (see `vdjdb.cdr3.net/search <https://vdjdb.cdr3.net/search>`_). To obtain accurate PWMs, consider epitope sequences containing a sufficient number of epitope-specific TCRs. For demonstration purposes, we used InfluenzaA epitope GILGFVFTL which is associated with 9490 TCRB receptors, see the figure below.  
 
-.. image:: ../_static/figures/vdjdb_download.png 
+.. image:: ../_static/figures/VDJdb_download.png 
   :width: 1500
 
 Next, run the following script on the downloaded VDJdb data to cluster the TCR receptors and generate corresponding PWMs: 
