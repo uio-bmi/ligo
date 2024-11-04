@@ -184,7 +184,42 @@ First, one should select a set of TCRs from VDJdb sharing the same epitope speci
 .. image:: ../_static/figures/VDJdb_download.png 
   :width: 1500
 
-Next, run the following script on the downloaded VDJdb data to cluster the TCR receptors and generate corresponding PWMs: 
+Next, run the following script on the downloaded VDJdb data to cluster the TCR receptors and generate clusTCR motifs: 
+
+..code-block:: python
+
+  from clustcr import Clustering
+  import pandas as pd
+  
+  # Read downloaded vdjdb data
+  data = pd.read_csv('~/Downloads/vdjdb.tsv', sep='\t')
+  
+  # Remove duplicated CDR3 beta sequences
+  data = data.drop_duplicates(subset='CDR3')
+  
+  # Cluster training data for selected epitope using clusTCR
+  clustering = Clustering(method='MCL')
+  clustered_data = clustering.fit(data['CDR3'])
+  
+  # Save clusTCR motifs sorted by cluster size
+  motifs = clustered_data.summary()
+  motifs = motifs.sort_values(by='size', ascending=False)
+  motifs.to_csv('clustcr_motifs.csv', index=False)
+
+The clustcr_motifs.csv contains motifs saved in clusTCR format, see the example below
+
+.. list-table:: Table 2: ClusTCR motifs of top-3 largest clusters 
+  :header-rows: 1
+
+  * - size
+    - motif
+  * - 361
+    - CASS.Rs..EQyF
+  * - 199
+    - ASS..s.DTQYF
+  * - 124
+    - CASS..SnQPQHF
+
 
 
 
