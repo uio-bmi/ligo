@@ -177,7 +177,14 @@ Finally, the motif file pwm.csv can be used to define LIgO signal. Additional CD
 Option 2: Database clustering by the user
 *************
 
-Alternatively, one can cluster VDJdb (or any other database) to obtain PWMs for LIgO simulation. In this tutorial we demonstrate how to cluster VDJdb database using the clusTCR tool (Valkiers et al., 2021). For more information on clusTCR, see `clusTCR documentation <https://svalkiers.github.io/clusTCR/>`_.
+Alternatively, one can cluster VDJdb (or any other database) to obtain PWMs for LIgO simulation. In this tutorial we demonstrate how to cluster VDJdb database using the clusTCR tool (Valkiers et al., 2021). For more information on clusTCR, see `clusTCR documentation <https://svalkiers.github.io/clusTCR/>`_. 
+
+First, one should select a set of TCRs from VDJdb sharing the same epitope specificity (see `vdjdb.cdr3.net/search <https://vdjdb.cdr3.net/search>`_). To obtain accurate PWMs, consider epitope sequences containing a sufficient number of epitope-specific TCRs. For demonstration purposes, we used InfluenzaA epitope GILGFVFTL which is associated with 9490 TCRB receptors, see the figure below.  
+
+.. image:: ../_static/figures/vdjdb_download.png 
+  :width: 1500
+
+Next, run the following script on the downloaded VDJdb data to cluster the TCR receptors and generate corresponding PWMs: 
 
 
 
