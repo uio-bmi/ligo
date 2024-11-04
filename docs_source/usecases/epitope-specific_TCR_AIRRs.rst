@@ -9,7 +9,7 @@ In this tutorial, epitope-specific TCR beta receptors are simulated from three u
 Simulating of the epitope-specific TCRs
 -------------------------
 
-We defined an epitope-specific motif using the long seeds created in the previous tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`, other details on transforming known epitope-specific TCRs from VDJdb into LIgO motifs can be found in the same tutorial. The rejection sampling method was used to avoid introducing additional artifacts to LIgO-simulated TCRs. 
+We defined an epitope-specific motif using the long seeds created in the previous tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities` (other details on transforming known epitope-specific TCRs from VDJdb into LIgO motifs can be found in the same tutorial). The rejection sampling method was used to avoid introducing additional artifacts to LIgO-simulated TCRs. 
 
 The yaml file below describes simulation parameters used for LIgO simulation. You can find more details on how the parameters for the simulation were chosen in the tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities` and find more information about how to run receptor-level simulation using the quickstart :ref:`How to use LIgO for receptor-level simulation`.
   
