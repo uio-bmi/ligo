@@ -209,7 +209,9 @@ Next, run the following script on the downloaded VDJdb data to cluster the TCR r
 
 The clustcr_motifs.csv file will contain motifs saved in clusTCR format, see the example below. You can read more about clusTCR motif format in the `clusTCR documentation <https://svalkiers.github.io/clusTCR/docs/clustering/how-to-use.html#summary>`_. Briefly, the motif uses upper-case for highly conserved amino acids (frequency > 0.7) and lower-case for moderately conserved ones. If two amino acids are equally frequent, they're in brackets ([ ]), and less significant positions use a dot (.) as a wildcard.
 
-.. list-table:: Table 2: ClusTCR motifs of top-3 largest clusters 
+One can use clusTCR motifs to define LIgO PWM motifs. Alternatively, PWM can be constructed based on the TCRs belonging to the same cluster, using the :code:`construct_pwm` function defined earlier in the tutorial. To obtain the TCRs belonging to each cluster use :code:`clustered_data.clusters_df`.   
+
+.. list-table:: Table 2: ClusTCR motifs of top-3 largest clusters constructed using GILGFVFTL-specific TCRs
   :header-rows: 1
 
   * - size
