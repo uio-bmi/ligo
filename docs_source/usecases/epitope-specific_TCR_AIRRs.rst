@@ -2,21 +2,16 @@ Simulating epitope-specific TCRs and validating their properties
 ===================
 
 During the development of a new epitope-TCR prediction method, it might be useful to simulate training data to test it or study potential biases in model performance. In this tutorial, we simulate epitope-specific TCR data, i.e., a collection of TCRs derived from different individuals that are all recognizing the same epitope. 
-
-.. note::
-
-   LIgO-simulated data can only resemble the general structure of epitope-specific TCRs. The actual specificities of these TCRs cannot be simulated, and thus the final simulated data are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore.
-
  
-In this tutorial, one epitope-specific TCR beta receptors are simulated from three user-defined motifs, which are considered to describe the subsequences within TCRs that are epitope-specific. Next, we ensure that the simulated data is biologically relevant by comparing the simulated TCRs to the experimental epitope-specific data.  
+In this tutorial, one epitope-specific TCR beta receptors are simulated from three user-defined motifs, which are considered to describe the subsequences within TCRs that are epitope-specific. Next, we ensure that the simulated data is biologically relevant by comparing the simulated TCRs to the experimental epitope-specific data. This use case is inspired by the manucript “Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance”, see the manuscript text (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_) for more details. 
 
 
 Simulating of the epitope-specific TCRs
 -------------------------
 
-We defined an epitope-specific motif using the VDJdb dtabase. Further details on transforming known epitope-specific TCRs from VDJdb into LIgO motifs can be found in the tutorial :ref:`Constructing LIgO motifs inspired by VDJdb`. In this simulation, we will utilize long seeds created in the same tutorial :ref:`Constructing LIgO motifs inspired by VDJdb`. The rejection sampling method was used to avoid introducing additional artifacts to LIgO-simulated TCRs. 
+We defined an epitope-specific motif using the VDJdb database. Further details on transforming known epitope-specific TCRs from VDJdb into LIgO motifs can be found in the tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`. In this simulation, we will utilize long seeds created in the same tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`. The rejection sampling method was used to avoid introducing additional artifacts to LIgO-simulated TCRs. 
 
-The yaml file below describes simulation parameters used for LIgO simulation. You can find more details on how the parameters for the simulation were chosen in the tutorial :ref:`Constructing LIgO motifs inspired by VDJdb` and find more information about how to run receptor-level simulation using the quickstart :ref:`How to use LIgO for receptor-level simulation`.
+The yaml file below describes simulation parameters used for LIgO simulation. You can find more details on how the parameters for the simulation were chosen in the tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities` and find more information about how to run receptor-level simulation using the quickstart :ref:`How to use LIgO for receptor-level simulation`.
   
 .. code-block:: yaml
 
@@ -98,19 +93,12 @@ The yaml file below describes simulation parameters used for LIgO simulation. Yo
   output:
     format: HTML
 
-How to increase simulation complexity if required
-----------------------
-
-In this tutorial, we demonstrate how to simulate epitope-specific T-cell receptors using seeds obtained from the VDJdb (Shugay et al. 2018). One way to increase simulation complexity is to replace the seed-based motif with a position weight matrix (PWM) motif. To do this, one should:
-
-1. Select a set of TCRs from VDJdb sharing the same epitope specificity. To obtain accurate PWMs, consider epitope sequences containing a sufficient number of epitope-specific TCRs.
-
-2. Cluster the epitope-specific TCRs to obtain epitope-specific PWMs. This step can be performed using a tool like the clustcr tool. For more information on clustcr tool, see `clustcr documentation <https://svalkiers.github.io/clusTCR/>`_.
-
-3. Use the epitope-specific PWMs to simulate epitope-specific TCRs using rejection sampling or signal implanting.
-
-
-
 
 Inspecting the simulated TCRs
 ------------------------------
+LIgO-simulated data can only resemble the general structure of epitope-specific TCRs. The actual specificities of these TCRs cannot be simulated, and thus the final simulated data are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore. However, to validate LIgO-simulated data and compare it to the experimental data several methods can be considered.
+
+
+
+
+
