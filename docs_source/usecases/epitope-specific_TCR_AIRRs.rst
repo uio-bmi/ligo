@@ -9,7 +9,7 @@ In this tutorial, epitope-specific TCR beta receptors are simulated from three u
 Simulating of the epitope-specific TCRs
 -------------------------
 
-We defined an epitope-specific motif using the VDJdb database. Further details on transforming known epitope-specific TCRs from VDJdb into LIgO motifs can be found in the tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`. In this simulation, we will utilize long seeds created in the same tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`. The rejection sampling method was used to avoid introducing additional artifacts to LIgO-simulated TCRs. 
+For simplicity, we defined an epitope-specific motif using the VDJdb database. Further details on transforming known epitope-specific TCRs from VDJdb into LIgO motifs can be found in the tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`. In this simulation, we will utilize long seeds created in the same tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`. The rejection sampling method was used to avoid introducing additional artifacts to LIgO-simulated TCRs. 
 
 The yaml file below describes simulation parameters used for LIgO simulation. You can find more details on how the parameters for the simulation were chosen in the tutorial :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities` and find more information about how to run receptor-level simulation using the quickstart :ref:`How to use LIgO for receptor-level simulation`.
   
@@ -96,7 +96,10 @@ The yaml file below describes simulation parameters used for LIgO simulation. Yo
 
 Inspecting the simulated TCRs
 ------------------------------
-LIgO-simulated data can only resemble the general structure of epitope-specific TCRs. The actual specificities of these TCRs cannot be simulated, and thus the final simulated data are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore. However, to validate LIgO-simulated data and compare it to the experimental data several methods can be considered.
+LIgO-simulated data can only resemble the general structure of epitope-specific TCRs. The actual specificities of these TCRs cannot be simulated, and thus the final simulated data are not guaranteed to contain only TCRs recognizing the same epitope. Otherwise, the problem of predicting epitope-TCR binding would be solved, and no models should be trained anymore. However, several methods can be used to validate LIgO-simulated data and compare it to the experimental data:
+
+Method 1: validating that LIgO-simulated clusters accurately represent immune signals
+^^^^^^^^^^^^^^^^^^^
 
 
 
