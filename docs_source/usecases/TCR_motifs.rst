@@ -186,7 +186,7 @@ First, one should select a set of TCRs from VDJdb sharing the same epitope speci
 
 Next, run the following script on the downloaded VDJdb data to cluster the TCR receptors and generate clusTCR motifs: 
 
-..code-block:: python
+.. code-block:: python
 
   from clustcr import Clustering
   import pandas as pd
@@ -205,8 +205,9 @@ Next, run the following script on the downloaded VDJdb data to cluster the TCR r
   motifs = clustered_data.summary()
   motifs = motifs.sort_values(by='size', ascending=False)
   motifs.to_csv('clustcr_motifs.csv', index=False)
+  
 
-The clustcr_motifs.csv contains motifs saved in clusTCR format, see the example below
+The clustcr_motifs.csv file will contain motifs saved in clusTCR format, see the example below. You can read more about clusTCR motif format in the `clusTCR documentation <https://svalkiers.github.io/clusTCR/docs/clustering/how-to-use.html#summary>`_. Briefly, the motif uses upper-case for highly conserved amino acids (frequency > 0.7) and lower-case for moderately conserved ones. If two amino acids are equally frequent, they're in brackets ([ ]), and less significant positions use a dot (.) as a wildcard.
 
 .. list-table:: Table 2: ClusTCR motifs of top-3 largest clusters 
   :header-rows: 1
