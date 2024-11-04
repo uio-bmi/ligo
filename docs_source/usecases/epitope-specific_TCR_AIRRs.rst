@@ -3,7 +3,7 @@ Simulating epitope-specific TCRs and validating their properties
 
 During the development of a new epitope-TCR prediction method, it might be useful to simulate training data to test it or study potential biases in model performance. In this tutorial, we simulate epitope-specific TCR data, i.e., a collection of TCRs derived from different individuals that are all recognizing the same epitope. 
  
-In this tutorial, one epitope-specific TCR beta receptors are simulated from three user-defined motifs, which are considered to describe the subsequences within TCRs that are epitope-specific. Next, we ensure that the simulated data is biologically relevant by comparing the simulated TCRs to the experimental epitope-specific data. This use case is inspired by the manucript “Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance”, see the manuscript text (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_) for more details. 
+In this tutorial, epitope-specific TCR beta receptors are simulated from three user-defined motifs, which are considered to describe the subsequences within TCRs that are epitope-specific. Next, we ensure that the simulated data is biologically relevant by comparing the simulated TCRs to the experimental epitope-specific data. This use case is inspired by the manucript “Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance”, see the manuscript text (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_) for more details. 
 
 
 Simulating of the epitope-specific TCRs
