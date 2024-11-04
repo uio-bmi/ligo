@@ -15,7 +15,7 @@ The following group of use cases is inspired by the manucript **"Revealing the h
 
 1. :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`
 
-2. :ref:`Simulating epitope-specific TCRs and validating their properies`
+2. :ref:`Simulating epitope-specific TCRs and validating their properties`
 
 
 List of all usecases
