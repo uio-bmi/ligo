@@ -169,6 +169,44 @@ The motifs for the 10 largest clusters are given in the table 1 below. We can se
     - SPAGGTYE
     - 4
 
+In contrast, if we simulate TCR data using short seeds (see :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities` for long and short seeds defenition), we observe that the seeds are not well represented within the clusTCR motifs (see Table 2 below). Clustering might be a result of other common similarities outside of the predefined motif. We thus lost track of the original motif after simulation.
+
+.. list-table:: Table 1: ClusTCR motifs of top-10 largest clusters when TCR dataset is simulated using long seeds
+  :header-rows: 1
+
+ * - clusTCR motif
+    - LIgO seed
+    - cluster size
+ *  - CA..YEQYF
+    - PAG,DVR,SGI
+    - 15
+ *  - CAs.yEQYF
+    - PAG,DVR,SGI
+    - 14
+ *  - CA.T[AP]YEQYF
+    - PAG,DVR
+    - 9
+ *  - CArDEQYF
+    - DVR
+    - 8
+ *  - CAS..ETQYF
+    - SGI
+    - 8
+ *  - CAS.tYEQYF
+    - SGI
+    - 6
+ *  - C[RT]DYEQYF
+    - DVR
+    - 5
+ *  - CA[KT][SR]ETQYF
+    - DVR,SGI
+    - 5
+ *  - C[GV]G[QL]YEQYF
+    - SGI
+    - 5
+ *  - CAR.TDTQYF
+    - DVR
+    - 5
 
 Method 2: Visual investigation using UMAP
 ^^^^^^^^^^^^^^^^^^^
