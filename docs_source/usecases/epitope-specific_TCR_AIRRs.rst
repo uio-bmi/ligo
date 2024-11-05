@@ -103,7 +103,7 @@ Method 1: Validating that LIgO-simulated clusters accurately represent immune si
 
 While LIgO ensures that each signal-specific receptor includes an immune signal, the distribution of these signals in the final repertoire may occasionally diverge from the initial definition. This can occur under certain conditions, such as:
 
-1. High variation allowed by an immune signal: For example, if an signal k-mer allows for a large Hamming distance, it could introduce high variations in the data and thus the initial k-mer would be lost.
+1. High variation allowed by an immune signal: For example, if a signal k-mer allows for a large Hamming distance, it could introduce high variations in the data and thus the initial k-mer would be lost.
 
 2. Similarity between immune signals: If two immune signals, e.g., PWMs are similar, they may produce similar receptors leading to potential merging of two initial signals in the final data.
 
