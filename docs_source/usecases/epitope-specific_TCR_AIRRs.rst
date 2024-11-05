@@ -111,15 +111,18 @@ To address this, we recommend verifying that the motifs in the final dataset acc
 
 **How to verify motif in LIgO-simulated data:**
 
-1. Cluster the simulated Data. Any clustering method can be utilized, in this tutorial we demonstrate clustering using the clusTCR tool (Valkiers et al., 2021). See the script below for more details
+1. Cluster the simulated data. Any clustering method can be utilized, in this tutorial we demonstrate clustering using the clusTCR tool (Valkiers et al., 2021). See the script below for more details
 
 2. Compare cluster motifs to initial LIgO motifs. This comparison will reveal if the final repertoire accurately captures the initial immune signals.
+
+
 
 
 
 Method 2: Visual investigation using UMAP
 ^^^^^^^^^^^^^^^^^^^
 
+As shown by Gielis et al (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_), epitope-specific TCR clusters are spread out over TCR sequence space (figure 2 of the manuscript "Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance"). 
 
 Method 3: Comparing descriptive statistics with experimental data
 ^^^^^^^^^^^^^^^^^^^
