@@ -128,8 +128,46 @@ To address this, we recommend verifying that the motifs in the final dataset acc
   motifs = motifs.sort_values(by='size', ascending=False)
   motifs.to_csv('clustcr_motifs.csv', index=False)
 
-The clustcr_motifs.csv file will contain motifs saved in clusTCR format, see the example below. You can read more about clusTCR motif format in the `clusTCR documentation <https://svalkiers.github.io/clusTCR/>`_. Briefly, the motif uses upper-case for highly conserved amino acids (frequency > 0.7) and lower-case for moderately conserved ones. If two amino acids are equally frequent, they’re in brackets ([ ]), and less significant positions use a dot (.) as a wildcard.
+The clustcr_motifs.csv file will contain motifs saved in clusTCR format. You can read more about clusTCR motif format in the `clusTCR documentation <https://svalkiers.github.io/clusTCR/>`_. Briefly, the motif uses upper-case for highly conserved amino acids (frequency > 0.7) and lower-case for moderately conserved ones. If two amino acids are equally frequent, they’re in brackets ([ ]), and less significant positions use a dot (.) as a wildcard.
 
+The motifs for the 10 largest clusters are given in the table 1 below. We can see a clear overlap between the clusTCR motifs and the original seeds. Thus, the original motif has been successfully simulated within the entire repertoire using long seeds.
+
+.. list-table:: Table 1: ClusTCR motifs of top-10 largest clusters when TCR dataset is simulated using long seeds
+  :header-rows: 1
+
+  * - clusTCR motif
+    - LIgO seed
+    - cluster size
+  * - CASSp.GGtYEQYF
+    - SPAGGTYE
+    - 59
+  * - CAS[SR].gGTYEQYF
+    - SPAGGTYE
+    - 19
+  * - CASSLSG.NQPQHF
+    - ELSGINQP
+    - 16
+  * - CASSL.GINQPQHF
+    - ELSGINQP
+    - 9
+  * - CASSAGG.YEQYF
+    - SPAGGTYE
+    - 7
+  * - CASSGG.VRYEQYF
+    - SGGDVREE
+    - 6
+  * - CASP[GP]GG.YEQYF
+    - SPAGGTYE
+    - 6
+  * - CASSE.SGSNQPQHF
+    - ELSGINQP
+    - 5
+  * - CASSPGtGTYEQYF
+    - SPAGGTYE
+    - 4
+  * - CASSvAGGTGELFF
+    - SPAGGTYE
+    - 4
 
 
 Method 2: Visual investigation using UMAP
