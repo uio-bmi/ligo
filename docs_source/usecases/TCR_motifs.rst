@@ -192,7 +192,7 @@ Next, run the following script on the downloaded VDJdb data to cluster the TCR r
   import pandas as pd
   
   # Read downloaded vdjdb data
-  data = pd.read_csv('~/Downloads/vdjdb.tsv', sep='\t')
+  data = pd.read_csv('vdjdb.tsv', sep='\t')
   
   # Remove duplicated CDR3 beta sequences
   data = data.drop_duplicates(subset='CDR3')
