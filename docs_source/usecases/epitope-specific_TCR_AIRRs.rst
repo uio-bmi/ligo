@@ -141,7 +141,7 @@ To address this, we recommend verifying that the motifs in the final dataset acc
 Method 2: Visual investigation using UMAP
 ^^^^^^^^^^^^^^^^^^^
 
-As shown by Gielis et al (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_), epitope-specific TCR clusters are spread out over TCR sequence space (figure 2 of the manuscript "Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance"). 
+As shown by Gielis et al (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_), epitope-specific TCRs are spread out over TCR sequence space (figure 2 of the manuscript "Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance").  
 
 Method 3: Comparing descriptive statistics with experimental data
 ^^^^^^^^^^^^^^^^^^^
