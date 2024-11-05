@@ -116,6 +116,25 @@ To address this, we recommend verifying that the motifs in the final dataset acc
 2. Compare cluster motifs to initial LIgO motifs. This comparison will reveal if the final repertoire accurately captures the initial immune signals.
 
 
+.. code-block:: python
+
+  from clustcr import Clustering
+  import pandas as pd
+  
+  # Read downloaded vdjdb data
+  data = pd.read_csv('vdjdb.tsv', sep='\t')
+  
+  # Remove duplicated CDR3 beta sequences
+  data = data.drop_duplicates(subset='CDR3')
+  
+  # Cluster training data for selected epitope using clusTCR
+  clustering = Clustering(method='MCL')
+  clustered_data = clustering.fit(data['CDR3'])
+  
+  # Save clusTCR motifs sorted by cluster size
+  motifs = clustered_data.summary()
+  motifs = motifs.sort_values(by='size', ascending=False)
+  motifs.to_csv('clustcr_motifs.csv', index=False)
 
 
 
