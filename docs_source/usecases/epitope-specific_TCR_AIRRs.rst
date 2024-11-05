@@ -171,7 +171,7 @@ The motifs for the 10 largest clusters are given in the table 1 below. We can se
 
 In contrast, if we simulate TCR data using short seeds (see :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities` for long and short seeds defenition), we observe that the seeds are not well represented within the clusTCR motifs (see Table 2 below). Clustering might be a result of other common similarities outside of the predefined motif. We thus lost track of the original motif after simulation.
 
-.. list-table:: Table 1: ClusTCR motifs of top-10 largest clusters when TCR dataset is simulated using long seeds
+.. list-table:: Table 2: ClusTCR motifs of top-10 largest clusters when TCR dataset is simulated using long seeds
   :header-rows: 1
 
  * - clusTCR motif
