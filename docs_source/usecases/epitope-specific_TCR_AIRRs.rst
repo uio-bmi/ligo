@@ -101,6 +101,20 @@ LIgO-simulated data can only resemble the general structure of epitope-specific 
 Method 1: Validating that LIgO-simulated clusters accurately represent immune signals
 ^^^^^^^^^^^^^^^^^^^
 
+While LIgO ensures that each signal-specific receptor includes an immune signal, the distribution of these signals in the final repertoire may occasionally diverge from the initial definition. This can occur under certain conditions, such as:
+
+1. High variation allowed by an immune signal: For example, if an signal k-mer allows for a large Hamming distance, it could introduce high variations in the data and thus the initial k-mer would be lost.
+
+2. Similarity between immune signals: If two immune signals, e.g., PWMs are similar, they may produce similar receptors leading to potential merging of two initial signals in the final data.
+
+To address this, we recommend verifying that the motifs in the final dataset accurately reflect the initial LIgO motifs.
+
+**How to verify motif representation:**
+
+1. Cluster the simulated Data. Any clustering method can be utilized, in this tutorial we demonstrate clustering using the clusTCR tool (Valkiers et al., 2021). See the script below for more details
+
+2. Compare cluster motifs to initial LIgO motifs. This comparison will reveal if the final repertoire accurately captures the initial immune signals.
+
 
 
 Method 2: Visual investigation using UMAP
