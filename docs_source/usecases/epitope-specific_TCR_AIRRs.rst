@@ -109,7 +109,7 @@ While LIgO ensures that each signal-specific receptor includes an immune signal,
 
 To address this, we recommend verifying that the motifs in the final dataset accurately reflect the initial LIgO motifs.
 
-**How to verify motif representation:**
+**How to verify motif in LIgO-simulated data:**
 
 1. Cluster the simulated Data. Any clustering method can be utilized, in this tutorial we demonstrate clustering using the clusTCR tool (Valkiers et al., 2021). See the script below for more details
 
