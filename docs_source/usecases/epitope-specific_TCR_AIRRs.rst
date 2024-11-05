@@ -175,38 +175,39 @@ In contrast, if we simulate TCR data using short seeds (see :ref:`Constructing L
   :header-rows: 1
 
  * - clusTCR motif
-    - LIgO seed
-    - cluster size
- *  - CA..YEQYF
-    - PAG,DVR,SGI
-    - 15
- *  - CAs.yEQYF
-    - PAG,DVR,SGI
-    - 14
- *  - CA.T[AP]YEQYF
-    - PAG,DVR
-    - 9
- *  - CArDEQYF
-    - DVR
-    - 8
- *  - CAS..ETQYF
-    - SGI
-    - 8
- *  - CAS.tYEQYF
-    - SGI
-    - 6
- *  - C[RT]DYEQYF
-    - DVR
-    - 5
- *  - CA[KT][SR]ETQYF
-    - DVR,SGI
-    - 5
- *  - C[GV]G[QL]YEQYF
-    - SGI
-    - 5
- *  - CAR.TDTQYF
-    - DVR
-    - 5
+   - LIgO seed
+   - cluster size
+ * - CA..YEQYF
+   - PAG,DVR,SGI
+   - 15
+ * - CAs.yEQYF
+   - PAG,DVR,SGI
+   - 14
+ * - CA.T[AP]YEQYF
+   - PAG,DVR
+   - 9
+ * - CArDEQYF
+   - DVR
+   - 8
+ * - CAS..ETQYF
+   - SGI
+   - 8
+ * - CAS.tYEQYF
+   - SGI
+   - 6
+ * - C[RT]DYEQYF
+   - DVR
+   - 5
+ * - CA[KT][SR]ETQYF
+   - DVR,SGI
+   - 5
+ * - C[GV]G[QL]YEQYF
+   - SGI
+   - 5
+ * - CAR.TDTQYF
+   - DVR
+   - 5
+
 
 Method 2: Visual investigation using UMAP
 ^^^^^^^^^^^^^^^^^^^
@@ -215,7 +216,7 @@ As shown by Gielis et al (`biorxiv <https://www.biorxiv.org/content/10.1101/2024
 
 Figure below shows a UMAP plot constructed from a LIgO long-seed data simulation. Notably, the simulated TCRs are primarily clustered by their originating seed, which may not fully align with patterns observed in biological data. By contrast, Figure 4 in the Gielis et al. manuscript illustrates a UMAP plot where TCRs simulated from various seeds are interspersed, more closely resembling the complex distribution seen in real TCR data.
 
-The UMAP was generated using RapTCR (Van Deuren et al., 2023). For more information on UMAP construction, please refer to the `RapTCR documentation <https://vincentvandeuren.github.io/RapTCR_docs/visualizing/UMAP.html>`_ and the Gielis et al. manuscript (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_). 
+The UMAP was generated using RapTCR tool (Van Deuren et al., 2023). For more information on UMAP construction, please refer to the `RapTCR documentation <https://vincentvandeuren.github.io/RapTCR_docs/visualizing/UMAP.html>`_ and the Gielis et al. manuscript (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_). 
 
 
 
