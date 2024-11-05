@@ -101,11 +101,7 @@ LIgO-simulated data can only resemble the general structure of epitope-specific 
 Method 1: Validating that LIgO-simulated clusters accurately represent immune signals
 ^^^^^^^^^^^^^^^^^^^
 
-While LIgO ensures that each signal-specific receptor includes an immune signal, the distribution of these signals in the final repertoire may occasionally diverge from the initial definition. This can occur under certain conditions, such as:
-
-1. High variation allowed by an immune signal: For example, if a signal k-mer allows for a large Hamming distance, it could introduce high variations in the data and thus the initial k-mer would be lost.
-
-2. Similarity between immune signals: If two immune signals, e.g., PWMs are similar, they may produce similar receptors leading to potential merging of two initial signals in the final data.
+While LIgO ensures that each signal-specific receptor includes an immune signal, the distribution of these signals in the final repertoire may occasionally diverge from the initial definition. For example, if a signal k-mer allows for a large Hamming distance, it could introduce high variations in the data and thus the initial k-mer signal would be lost.
 
 To address this, we recommend verifying that the motifs in the final dataset accurately reflect the initial LIgO motifs.
 
@@ -115,26 +111,24 @@ To address this, we recommend verifying that the motifs in the final dataset acc
 
 2. Compare cluster motifs to initial LIgO motifs. This comparison will reveal if the final repertoire accurately captures the initial immune signals.
 
-
 .. code-block:: python
 
   from clustcr import Clustering
   import pandas as pd
   
-  # Read downloaded vdjdb data
-  data = pd.read_csv('vdjdb.tsv', sep='\t')
-  
-  # Remove duplicated CDR3 beta sequences
-  data = data.drop_duplicates(subset='CDR3')
-  
+  # Read LIgO-simulated data
+  data = pd.read_csv('./sim/inst1/exported_dataset/airr/batch1.tsv', sep='\t')
+
   # Cluster training data for selected epitope using clusTCR
   clustering = Clustering(method='MCL')
-  clustered_data = clustering.fit(data['CDR3'])
+  clustered_data = clustering.fit(data['junction_aa'])
   
   # Save clusTCR motifs sorted by cluster size
   motifs = clustered_data.summary()
   motifs = motifs.sort_values(by='size', ascending=False)
   motifs.to_csv('clustcr_motifs.csv', index=False)
+
+The clustcr_motifs.csv file will contain motifs saved in clusTCR format, see the example below. You can read more about clusTCR motif format in the `clusTCR documentation <https://svalkiers.github.io/clusTCR/>`_. Briefly, the motif uses upper-case for highly conserved amino acids (frequency > 0.7) and lower-case for moderately conserved ones. If two amino acids are equally frequent, they’re in brackets ([ ]), and less significant positions use a dot (.) as a wildcard.
 
 
 
