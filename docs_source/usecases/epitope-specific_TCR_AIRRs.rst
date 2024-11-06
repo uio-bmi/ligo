@@ -218,6 +218,7 @@ Figure below shows a UMAP plot constructed from a LIgO long-seed data simulation
 
 The UMAP was generated using RapTCR tool (Van Deuren et al., 2023). For more information on UMAP construction, please refer to the `RapTCR documentation <https://vincentvandeuren.github.io/RapTCR_docs/visualizing/UMAP.html>`_ and the Gielis et al. manuscript (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_). 
 
+Figure 1: UMAP plot of LIgO-simulated data using long seeds. TCRs corresponding to different immune signals are shown in different colors.
 .. image:: ../_static/figures/UMAP.png 
   :width: 1500
 
