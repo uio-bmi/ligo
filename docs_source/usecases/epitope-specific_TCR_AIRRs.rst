@@ -226,8 +226,17 @@ Figure 1: UMAP plot of LIgO-simulated data using long seeds. TCRs corresponding 
 Method 3: Comparing descriptive statistics with experimental data
 ^^^^^^^^^^^^^^^^^^^
 
+Due to the complex, high-dimensional nature of immune repertoires, direct comparisons between simulated and experimental datasets are challenging. However, descriptive statistics provide a practical approach for assessing how closely the simulated data aligns with experimental data. The basic statistics to consider is the is the CDR3 length distribution. As shown on the figure below, the CDR3s simulated with long seeds are more closely match the CDR3 length of experimental TCRs used to construct those seeds (14AA). By contrast, simulations based on shorter seeds produce CDR3s that are shorter than those in the original dataset. Users can further refine CDR3 length distributions using the sequence_len_limits parameter in the simulation configuration.
+
 .. image:: ../_static/figures/length_distr.png 
   :width: 1500
+
+
+When LIgO signals are constructed from a larger initial TCR dataset, as demonstrated in the :ref:`Enhanced approach: defining motif based on PWM` or in the Gielis et al. manuscript, users can incorporate additional descriptive statistics to compare simulated and experimental data, such as:
+
+- Basic repertoire statistics: sequence diversity (e.g., Gini index) and or V/J gene usage
+
+- Clustering-based statistics: distribution of cluster sizes within the repertoire
 
 
 
