@@ -27,6 +27,8 @@ Since similar approach can be applied to the BCR simulation, we also provide BCR
 
 - `PLAbDab <https://opig.stats.ox.ac.uk/webapps/plabdab/>`_ (Abanades et al., 2024)
 
+- `OAS <https://opig.stats.ox.ac.uk/webapps/oas>`_ (Olsen, 2022)
+
 
 Basic approach: defining motif based on a seed and a list of Hamming distances
 ---------------------------------------
