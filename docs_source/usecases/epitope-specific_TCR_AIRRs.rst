@@ -212,18 +212,20 @@ In contrast, if we simulate TCR data using short seeds (see :ref:`Constructing L
 Method 2: Visual investigation using UMAP
 ^^^^^^^^^^^^^^^^^^^
 
-As shown by Gielis et al (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_), epitope-specific TCRs are spread out over TCR sequence space (figure 2 of the manuscript "Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance"). This observation can be useful for visually examining whether LIgO-simulated data shows natural groupings among TCRs derived from distinct LIgO seeds.
+As shown by Gielis et al (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_), epitope-specific TCRs are spread out over TCR sequence space (figure 2 of the manuscript "Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance"). This observation can be useful for visual examination whether LIgO-simulated data shows natural groupings among TCRs derived from distinct LIgO seeds.
 
 Figure below shows a UMAP plot constructed from a LIgO long-seed data simulation. Notably, the simulated TCRs are primarily clustered by their originating seed, which may not fully align with patterns observed in biological data. By contrast, Figure 4 in the Gielis et al. manuscript illustrates a UMAP plot where TCRs simulated from various seeds are interspersed, more closely resembling the complex distribution seen in real TCR data.
 
 The UMAP was generated using RapTCR tool (Van Deuren et al., 2023). For more information on UMAP construction, please refer to the `RapTCR documentation <https://vincentvandeuren.github.io/RapTCR_docs/visualizing/UMAP.html>`_ and the Gielis et al. manuscript (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_). 
 
-
+.. image:: ../_static/figures/UMAP.png 
+  :width: 1500
 
 Method 3: Comparing descriptive statistics with experimental data
 ^^^^^^^^^^^^^^^^^^^
 
-
+.. image:: ../_static/figures/length_distr.png 
+  :width: 1500
 
 
 
