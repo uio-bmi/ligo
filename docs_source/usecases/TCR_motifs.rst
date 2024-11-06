@@ -11,7 +11,7 @@ We suggest two approaches for constructing database-inspired LIgO motifs:
 
 #. :ref:`Enhanced approach: defining motif based on PWM`
 
-In both approaches we will use the  `VDJdb database <https:vdjdb.cdr3.net/>`_  (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
+In both approaches we will use the  `VDJdb database <https://vdjdb.cdr3.net/>`_  (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
 
 - `McPAS <https://friedmanlab.weizmann.ac.il/McPAS-TCR/>`_ (Tickotsky et al., 2017) 
 
