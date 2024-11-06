@@ -9,7 +9,7 @@ We suggest two approaches for constructing database-inspired LIgO motifs:
 
 #. :ref:`Basic approach: defining motif based on a seed and a list of Hamming distances`
 
-#. :ref:`Enhanced approach: defining motif based on PWM`
+#. :ref:`Enhanced approach: defining a motif based on PWM`
 
 In both approaches we will use the  `VDJdb database <https://vdjdb.cdr3.net/>`_  (Shugay et al., 2018; Goncharov et al., 2022) to obtain epitope-specific TCRs. However, there are more databases available, such as 
 
@@ -21,6 +21,12 @@ In both approaches we will use the  `VDJdb database <https://vdjdb.cdr3.net/>`_ 
 
 - `TCRdb <http://bioinfo.life.hust.edu.cn/TCRdb/#/>`_  (Chen et al., 2021) 
 
+Since similar approach can be applied to the BCR simulation, we also provide BCR/antibody databases:
+
+- `CoV-AbDab <https://opig.stats.ox.ac.uk/webapps/covabdab/>`_ (Raybould et al., 2021)
+
+- `PLAbDab <https://opig.stats.ox.ac.uk/webapps/plabdab/>`_ (Abanades et al., 2024)
+
 
 Basic approach: defining motif based on a seed and a list of Hamming distances
 ---------------------------------------
@@ -28,11 +34,11 @@ Basic approach: defining motif based on a seed and a list of Hamming distances
 Step 1: Constructing seeds from the VDJdb receptors
 *************
 
-For demonstration purposes, we define three seeds from three TCR beta sequences in the VDJdb (Shugay et al. 2018), all recognizing the DENV3/4 epitope GTSGSPIINR (Table 1). To transform these TCRs into seeds, they need to be shrinked. Typically, the epitope-binding motif is located in the middle of CDR3 beta sequences, while the beginning and end are responsible for HLA-binding. Therefore, the center of the CDR3 beta sequence can be used as seed. In this tutorial, we will consider two ways of constructing seeds: *long seeds* and *short seeds*.
+For demonstration purposes, we define three seeds from three TCR beta sequences in the VDJdb (Shugay et al. 2018), all recognizing the DENV3/4 epitope GTSGSPIINR (Table 1). These TCRs need to be transformed to become LIgO seeds. Typically, the epitope-binding motif is located in the middle of CDR3 beta sequences, while the beginning and end are responsible for HLA-binding. Therefore, the center of the CDR3 beta sequence can be used as seed. In this tutorial, we will consider two ways of constructing seeds: *long seeds* and *short seeds*.
 
-- To construct *long seeds* we removed the first and the last 3 amino acids were removed from the CDR3 sequence;
+- To construct *long seeds*, we removed the first and the last 3 amino acids from the CDR3 sequence;
 
-- To construct *short seeds* we randomly selected a consecutive substring of 3 amino acid long out of the long seed sequence in such way, that the resulting seeds are not too similar.
+- To construct *short seeds*, we randomly selected a consecutive substring of 3 amino acid long out of the long seed sequence in such way that the resulting seeds are not too similar.
 
 Table 1 shows the long and short seeds that were selected for the three initial TCRs. We will use these two seed sets to perform two LIgO simulations, keeping all other simulation parameters identical except for the seeds.
 
@@ -69,12 +75,12 @@ Table 1 shows the long and short seeds that were selected for the three initial 
 Step 2: Defining LIgO motifs based on the seeds
 *************
 
-After describing the seeds, it is required to define possible deviations that are allowed from these seeds using hamming distance. To select the maximum hamming distance, consider the length of your seed and the aimed diversity of the final TCR repertoire. 
+After describing the seeds, it is required to define possible deviations that are allowed from these seeds using hamming distance. To select the maximum Hamming distance, consider the length of your seed and the aimed diversity of the final TCR repertoire. 
 
 .. note::
-Shorter seeds require lower hamming distances. However, if one only wishes to simulated TCRs looking very similar to the seed, one can also lower the hamming distance. 
+Shorter seeds require lower Hamming distances. However, if the user only wishes to simulated TCRs looking very similar to the seed, the user may also lower the hamming distance. 
 
-In this tutorial, a maximum hamming distance of two was selected so that the diversity of the simulated epitope-specific TCR receptors does not become too large. Below we show an example of how to define motifs using haming distance and long seeds. These signals can be further used for LIgO simulation based on rejection sampling or signal implantation.
+In this tutorial, a maximum Hamming distance of two was selected to restrict the diversity of the simulated epitope-specific TCR receptors. Below we show an example of how to define motifs using Hamming distance and long seeds. These signals can be further used for LIgO simulation based on rejection sampling or signal implantation.
 
 .. code-block:: yaml
 
@@ -105,20 +111,20 @@ General tips for defining a motif using a seed and Hamming distance
 
 #.  If you want to use rejection sampling, estimate the maximal hamming distance to finish your simulation in a reasonable time. You can start with a very restrictive hamming distance (e.g. max 1) and adjust it as needed. You can use the feasibility report to estimate the effectiveness of the simulation with a given set of parameters, see :ref:`How to check feasibility of the simulation parameters`.   
 
-    For example, in this tutorial we used the following rule of the thumb:
+    For example, in this tutorial we used the following rule of thumb:
 
     - Seed length of 6-8 => max Hamming distance = 2
 
     - Seed length of 9-10 => max Hamming distance = 3
 
-    - Seed length >10 => test the simulation with a maximal hamming distance of 3. If not enough TCR are simulated, increase the max hamming distance up to 4.
+    - Seed length >10 => test the simulation with a maximal Hamming distance of 3. If not enough TCR are simulated, increase the max Hamming distance up to 4.
 
     If you want to use implanting, you do not need to estimate the feasibility because the simulation will be fast with any Hamming distance.
 
 #. Start the simulation with the selected seed and Hamming distances. Check for the presence of the predefined motif in the simulated TCRs by clustering or allocating the seed within the TCR sequences.
 
 
-Enhanced approach: defining motif based on PWM 
+Enhanced approach: defining a motif based on PWM 
 ---------------------------------------
 
 Option 1: VDJdb CDR3 motif database
@@ -126,7 +132,7 @@ Option 1: VDJdb CDR3 motif database
 
 VDJdb provides a database of CDR3 motifs, which you can access at https://vdjdb.cdr3.net/motif to find suitable motifs. You can search for motifs based on an epitope or a CDR3 sequence or subsequence.
 
-The figure below showcases a SARS-CoV-2-specific motif from VDJdb. This SARS-CoV-2-specific TCRs must have 15 amino acids long CDR3 and use the germline genes TRBV27*01 and TRBJ2-1*1.
+The screenshot below showcases a SARS-CoV-2-specific motif from VDJdb. These SARS-CoV-2-specific TCRs must have 15 amino acids long CDR3 and use the germline genes TRBV27*01 and TRBJ2-1*1.
 
 .. image:: ../_static/figures/VDJdb_CDR3_database.png
   :width: 1500
@@ -207,7 +213,7 @@ Next, run the following script on the downloaded VDJdb data to cluster the TCR r
   motifs.to_csv('clustcr_motifs.csv', index=False)
   
 
-The clustcr_motifs.csv file will contain motifs saved in clusTCR format, see the example below. You can read more about clusTCR motif format in the `clusTCR documentation <https://svalkiers.github.io/clusTCR/docs/clustering/how-to-use.html#summary>`_. Briefly, the motif uses upper-case for highly conserved amino acids (frequency > 0.7) and lower-case for moderately conserved ones. If two amino acids are equally frequent, they're in brackets ([ ]), and less significant positions use a dot (.) as a wildcard.
+The clustcr_motifs.csv file will contain motifs saved in clusTCR format, see the example below. You can read more about clusTCR motif format in the `clusTCR documentation <https://svalkiers.github.io/clusTCR/docs/clustering/how-to-use.html#summary>`_. Briefly, the motif uses upper-case for highly conserved amino acids (frequency > 0.7) and lower-case for moderately conserved ones. If two amino acids are equally frequent, they are in brackets ([ ]), and less significant positions use a dot (.) as a wildcard.
 
 One can use clusTCR motifs to define LIgO PWM motifs. Alternatively, PWM can be constructed based on the TCRs belonging to the same cluster, using the :code:`construct_pwm` function defined earlier in the tutorial. To obtain the TCRs belonging to each cluster use :code:`clustered_data.clusters_df`.   
 
