@@ -118,6 +118,10 @@ References
 
 - Avnir, Yuval, Corey T. Watson, Jacob Glanville, Eric C. Peterson, Aimee S. Tallarico, Andrew S. Bennett, Kun Qin, et al. 2016. “IGHV1-69 Polymorphism Modulates Anti-Influenza Antibody Repertoires, Correlates with IGHV Utilization Shifts and Varies by Ethnicity.” Scientific Reports 6 (February):20842.
 
+- Chiffelle, Johanna, Raphael Genolet, Marta As Perez, George Coukos, Vincent Zoete, and Alexandre Harari. 2020. “T-Cell Repertoire Analysis and Metrics of Diversity and Clonality.” Current Opinion in Biotechnology 65 (October):284–95.
+
+- Chronister, William D., Austin Crinklaw, Swapnil Mahajan, Randi Vita, Zeynep Koşaloğlu-Yalçın, Zhen Yan, Jason A. Greenbaum, et al. 2021. “TCRMatch: Predicting T-Cell Receptor Specificity Based on Sequence Similarity to Previously Characterized Receptors.” Frontiers in Immunology 12 (March):640725.
+
 - Dash, Pradyot, Andrew J. Fiore-Gartland, Tomer Hertz, George C. Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, et al. 2017. “Quantifiable Predictive Features Define Epitope-Specific T Cell Receptor Repertoires.” Nature 547 (7661): 89–93.
 
 - Fagiani, Francesca, Michele Catanzaro, and Cristina Lanni. 2020. “Molecular Features of IGHV3-53-Encoded Antibodies Elicited by SARS-CoV-2.” Signal Transduction and Targeted Therapy 5 (1): 170.
@@ -126,6 +130,12 @@ References
 
 - Glanville, Jacob, Huang Huang, Allison Nau, Olivia Hatton, Lisa E. Wagar, Florian Rubelt, Xuhuai Ji, et al. 2017. “Identifying Specificity Groups in the T Cell Receptor Repertoire.” Nature 547 (June):94–98.
 
+- Glanville, Jacob, Tracy C. Kuo, H-Christian von Büdingen, Lin Guey, Jan Berka, Purnima D. Sundar, Gabriella Huerta, et al. 2011. “Naive Antibody Gene-Segment Frequencies Are Heritable and Unaltered by Chronic Lymphocyte Ablation.” Proceedings of the National Academy of Sciences of the United States of America 108 (50): 20066–71.
+
+- Goncharov, Mikhail, Dmitry Bagaev, Dmitrii Shcherbinin, Ivan Zvyagin, Dmitry Bolotin, Paul G. Thomas, Anastasia A. Minervina, et al. 2022. “VDJdb in the Pandemic Era: A Compendium of T Cell Receptors Specific for SARS-CoV-2.” Nature Methods 19 (9): 1017–19.
+
+- Greiff, Victor, Pooja Bhat, Skylar C. Cook, Ulrike Menzel, Wenjing Kang, and Sai T. Reddy. 2015. “A Bioinformatic Framework for Immune Repertoire Diversity Profiling Enables Detection of Immunological Status.” Genome Medicine 7 (1): 49.
+
 - Haakenson, Jeremy K., Ruiqi Huang, and Vaughn V. Smider. 2018. “Diversity in the Cow Ultralong CDR H3 Antibody Repertoire.” Frontiers in Immunology 9 (June):1262.
 
 - Imkeller, Katharina, Stephen W. Scally, Alexandre Bosch, Gemma Pidelaserra Martí, Giulia Costa, Gianna Triller, Rajagopal Murugan, et al. 2018. “Antihomotypic Affinity Maturation Improves Human B Cell Responses against a Repetitive Epitope.” Science 360 (6395): 1358–62.
@@ -133,8 +143,6 @@ References
 - Kanduri, Chakravarthi, Lonneke Scheffer, Milena Pavlović, Knut Dagestad Rand, Maria Chernigovskaya, Oz Pirvandy, Gur Yaari, Victor Greiff, and Geir K. Sandve. n.d. “simAIRR: Simulation of Adaptive Immune Repertoires with Realistic Receptor Sequence Sharing for Benchmarking of Immune State Prediction Methods.” GigaScience. https://doi.org/10.1093/gigascience/giad074.
 
 - Liu, Leyu, and Alexander H. Lucas. 2003. “IGH V3-23*01 and Its Allele V3-23*03 Differ in Their Capacity to Form the Canonical Human Antibody Combining Site Specific for the Capsular Polysaccharide of Haemophilus Influenzae Type B.” Immunogenetics 55 (5): 336–38.
-
-- Marcou, Quentin, Thierry Mora, and Aleksandra M. Walczak. 2018. “High-Throughput Immune Repertoire Analysis with IGoR.” Nature Communications 9 (1): 561.
 
 - Ostmeyer, Jared, Scott Christley, Inimary T. Toby, and Lindsay G. Cowell. 2019. “Biophysicochemical Motifs in T-Cell Receptor Sequences Distinguish Repertoires from Tumor-Infiltrating Lymphocyte and Adjacent Healthy Tissue.” Cancer Research 79 (7): 1671–80.
 
@@ -146,7 +154,9 @@ References
 
 - Shrock, Ellen L., Richard T. Timms, Tomasz Kula, Elijah L. Mena, Anthony P. West Jr, Rui Guo, I-Hsiu Lee, et al. 2023. “Germline-Encoded Amino Acid-Binding Motifs Drive Immunodominant Public Antibody Responses.” Science 380 (6640): eadc9498.
 
+- Shugay, Mikhail, Dmitriy V. Bagaev, Ivan V. Zvyagin, Renske M. Vroomans, Jeremy Chase Crawford, Garry Dolton, Ekaterina A. Komech, et al. 2018. “VDJdb: A Curated Database of T-Cell Receptor Sequences with Known Antigen Specificity.” Nucleic Acids Research 46 (D1): D419–27.
 
+- Slabodkin, Andrei, Maria Chernigovskaya, Ivana Mikocziova, Rahmad Akbar, Lonneke Scheffer, Milena Pavlović, Habib Bashour, et al. 2021. “Individualized VDJ Recombination Predisposes the Available Ig Sequence Space.” Genome Research, November. https://doi.org/10.1101/gr.275373.121.
 
 
 
