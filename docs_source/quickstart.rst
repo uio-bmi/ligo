@@ -35,3 +35,4 @@ Quickstart tutorials
 
   quickstart/receptor_level_simulation
   quickstart/repertoire_level_simulation
+  quickstart/overview_of_ligo_parameters
