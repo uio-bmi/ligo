@@ -1,4 +1,4 @@
-Overview of LIgO simulation parameters and their potential biological reflection
+Overview of LIgO simulation parameters 
 =========================================
 
 This table provides an overview of LIgO simulation parameters and their potential biological reflection. Refers to Supplementary Table 2 in the LIgO manuscript.
