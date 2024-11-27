@@ -5,5 +5,5 @@ This table provides an overview of LIgO simulation parameters and their potentia
 
 .. csv-table:: List of LIgO simulation parameters, which can reflect biological properties of simulated AIRR data
    :file: ../_static/figures/ligo_parameters.csv
-   :widths: 20, 30, 30, 20
+   :widths: 20 30 30 20
    :header-rows: 1
