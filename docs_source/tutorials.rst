@@ -26,6 +26,12 @@ These tutorials cover the more complex usage of LIgO simulations. For basic usag
 
 - :ref:`Simulation with custom signal functions`
 
+The following tutorials are inspired by the manucript **"Revealing the hidden sequence distribution of epitope-specific TCR repertoires and its influence on machine learning model performance"** by Gielis et al (`biorxiv <https://www.biorxiv.org/content/10.1101/2024.10.21.619364v1>`_). From these tutorials you can learn how to define LIgO motifs inspired by VDJdb database, simulate epitope-specific TCRs based on these motifs, and inspect the simulated TCRs compared to experimental data.
+
+1. :ref:`Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities`
+
+2. :ref:`Simulating epitope-specific TCRs and validating their properties`
+
 
 List of all tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -40,3 +46,5 @@ List of all tutorials
   tutorials/simulation_with_custom_signal_functions
   tutorials/how_to_simulate_paired_chain_data
   tutorials/how_to_simulate_co-occuring_signals
+  tutorials/TCR_motifs.rst
+  tutorials/epitope-specific_TCR_AIRRs.rst
