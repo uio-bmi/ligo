@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 import shutil
 import zipfile
 from pathlib import Path
@@ -299,7 +300,12 @@ class IReceptorImport(DataImport):
 
     @staticmethod
     def _split_airr_files(airr_file: Path, metadata_df: pd.DataFrame, result_path: Path):
-        airr_df = airr.load_rearrangement(airr_file)
+        try:
+            airr_df = airr.load_rearrangement(airr_file)
+        except Exception as e:
+            logging.warning(f"Failed to load {airr_file} using airr package. Error: {e}. Trying with pandas instead.")
+            airr_df = pd.read_csv(airr_file, sep='\t').dropna(axis=1, how='all')
+
         files_written = []
 
         for filename, repertoire_id, sample_processing_id, data_processing_id in metadata_df[

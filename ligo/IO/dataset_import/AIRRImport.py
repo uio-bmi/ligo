@@ -1,3 +1,5 @@
+import logging
+
 import airr
 import pandas as pd
 
@@ -99,9 +101,9 @@ class AIRRImport(DataImport):
             df["frame_type"] = None
 
         if "vj_in_frame" in df.columns:
-            df.loc[df["vj_in_frame"], "frame_type"] = SequenceFrameType.IN.name
+            df.loc[df["vj_in_frame"] == 'T', "frame_type"] = SequenceFrameType.IN.name
         if "stop_codon" in df.columns:
-            df.loc[df["stop_codon"], "frame_type"] = SequenceFrameType.STOP.name
+            df.loc[df["stop_codon"] == 'T', "frame_type"] = SequenceFrameType.STOP.name
 
         if "productive" in df.columns:
             frame_type_list = ImportHelper.prepare_frame_type_list(params)
@@ -125,8 +127,15 @@ class AIRRImport(DataImport):
         return df
 
     @staticmethod
-    def alternative_load_func(filename, params):
-        df = airr.load_rearrangement(filename)
+    def alternative_load_func(filename, params: DatasetImportParams):
+        try:
+            df = airr.load_rearrangement(filename)
+        except Exception as e:
+            logging.warning(f"Could not load file {filename} with airr.load_rearrangement. Trying to load with pandas.")
+            df = pd.read_csv(filename, sep=params.separator).dropna(axis=1, how='all').dropna(axis=0, how='all')
+            if 'productive' in df.columns:
+                df['productive'] = df['productive'] == 'T'
+
         ImportHelper.standardize_none_values(df)
         df.dropna(axis="columns", how="all", inplace=True)
         return df
