@@ -61,7 +61,10 @@ class ExperimentalImport(GenerativeModel):
 
         PathBuilder.build(tmp_import_path, False)
 
-        dataset = ImportParser.parse_dataset("experimental_dataset", {'format': kwargs['import_format'], 'params': kwargs['import_params']},
+        kwargs['import_params']['is_repertoire'] = False
+
+        dataset = ImportParser.parse_dataset("experimental_dataset", {'format': kwargs['import_format'],
+                                                                      'params': kwargs['import_params']},
                                              tmp_import_path)
         print(f"Imported dataset with {dataset.get_example_count()} sequences.")
         return ExperimentalImport(dataset, kwargs['import_params']['path'])

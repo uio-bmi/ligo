@@ -1,11 +1,11 @@
 import logging
+import math
 from enum import Enum
 from multiprocessing import Pool
 from pathlib import Path
 from typing import List
 
 import airr
-import math
 import pandas as pd
 from olga.utils import nt2aa
 
@@ -205,11 +205,13 @@ class AIRRExporter(DataExporter):
             AIRRExporter._enums_to_strings(df, "frame_type")
 
             df["productive"] = df["frame_type"] == SequenceFrameType.IN.name
+            df['productive'] = df["productive"].astype(str)
             df.loc[df["frame_type"].isnull(), "productive"] = ''
 
             df["vj_in_frame"] = df["productive"]
 
             df["stop_codon"] = df["frame_type"] == SequenceFrameType.STOP.name
+            df['stop_codon'] = df["stop_codon"].astype(str)
             df.loc[df["frame_type"].isnull(), "stop_codon"] = ''
 
             df.drop(columns=["frame_type"], inplace=True)

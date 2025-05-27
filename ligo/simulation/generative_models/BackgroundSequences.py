@@ -37,5 +37,5 @@ class BackgroundSequences:
                                    frame_type=[s.metadata.frame_type.name if s.metadata and s.metadata.frame_type
                                                else '' for s in sequences],
                                    p_gen=[-1. for _ in sequences], from_default_model=[1 for _ in sequences],
-                                   duplicate_count=[s.metadata.duplicate_count for s in sequences],
+                                   duplicate_count=[s.metadata.duplicate_count if s.metadata.duplicate_count is not None else -1 for s in sequences],
                                    chain=[s.metadata.chain.value for s in sequences])

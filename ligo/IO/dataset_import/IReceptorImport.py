@@ -183,8 +183,9 @@ class IReceptorImport(DataImport):
 
 
     @staticmethod
-    def _unzip_files(path: Path, unzipped_path: Path, unzip_metadata=True) -> Dataset:
-        for zip_filename in path.glob("*.zip"):
+    def _unzip_files(path: Path, unzipped_path: Path, unzip_metadata=True):
+        zipped_files = list(path.glob("*.zip")) if path.is_dir() else [path]
+        for zip_filename in zipped_files:
             with zipfile.ZipFile(zip_filename, "r") as zip_object:
                 for file in zip_object.filelist:
                     file.filename = f"{zip_filename.stem}_{file.filename}"
