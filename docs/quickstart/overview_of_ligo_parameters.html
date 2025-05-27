@@ -1,0 +1,540 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Installing LIgO" href="../installation.html" /><link rel="prev" title="How to use LIgO for repertoire-level simulation" href="repertoire_level_simulation.html" />
+        <link rel="canonical" href="https://uio-bmi.github.io/ligo/quickstart/overview_of_ligo_parameters.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>Overview of LIgO simulation parameters - LIgO 1.0.11 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/immuneml.css?v=3985a9e7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">LIgO 1.0.11 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">LIgO 1.0.11 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../quickstart.html">Quickstart</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Quickstart</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="receptor_level_simulation.html">How to use LIgO for receptor-level simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="repertoire_level_simulation.html">How to use LIgO for repertoire-level simulation</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Overview of LIgO simulation parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../installation.html">Installing LIgO</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Installing LIgO</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_define_immune_signals_and_events.html">How to define immune signals and immune events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_choose_simulation_strategy.html">How to choose between rejection sampling and signal implantation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_check_feasibility_of_sim_params.html">How to check feasibility of the simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_handle_the_maximum_iterations_were_reached_error.html">How to handle the maximum iterations were reached error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/simulation_with_custom_signal_functions.html">Simulation with custom signal functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_simulate_paired_chain_data.html">Paired chain simulations in LIgO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/how_to_simulate_co-occuring_signals.html">How to simulate co-occuring immune signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/TCR_motifs.html">Constructing LIgO motifs inspired by a database of TCR sequences with known antigen specificities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/epitope-specific_TCR_AIRRs.html">Simulating epitope-specific TCRs and validating their properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../usecases.html">Use case examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Use case examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usecases/usecase1.html">Manuscript use case 1: Out-of-distribution receptor-level simulation using LIgO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usecases/usecase2.html">Manuscript use case 2: Limitations of conventional encoding schemes for repertoire-level binary classification when immune signals co-occur within the same AIR</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../specification.html">YAML specification</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of YAML specification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/quickstart/overview_of_ligo_parameters.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="overview-of-ligo-simulation-parameters">
+<h1>Overview of LIgO simulation parameters<a class="headerlink" href="#overview-of-ligo-simulation-parameters" title="Link to this heading">¶</a></h1>
+<p>This page provides an overview of LIgO simulation parameters and their potential biological reflection. Refers to Supplementary Table 2 in the LIgO manuscript.</p>
+<section id="generative-models-for-simulation-of-background-airs">
+<h2>Generative models for simulation of background AIRs<a class="headerlink" href="#generative-models-for-simulation-of-background-airs" title="Link to this heading">¶</a></h2>
+<p>Link to documentation:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uio-bmi.github.io/ligo/specification.html#experimentalimport">https://uio-bmi.github.io/ligo/specification.html#experimentalimport</a></p></li>
+</ul>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Simulation parameter(s)</p></th>
+<th class="head"><p>Potential biological reflection</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>ExperimentalImport</strong> provides import of existing experimental data of one of the following data formats: AIRR, Generic, IGoR, IReceptor, ImmuneML, ImmunoSEQRearrangement, ImmunoSEQSample, MiXCR, OLGA, SingleLineReceptor, TenxGenomics, VDJdb</p></td>
+<td><p>These parameters relate biologically to germline gene usage differences across individuals as previously shown by us and others (Glanville et al. 2011; Slabodkin et al. 2021).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>OLGA</strong> provides simulation of synthetic AIRs using a V(D)J recombination model, including a user-defined custom model</p></td>
+<td><p>Same as above</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="motif-definition">
+<h2>Motif definition<a class="headerlink" href="#motif-definition" title="Link to this heading">¶</a></h2>
+<p>Links to documentation:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uio-bmi.github.io/ligo/specification.html#seedmotif">https://uio-bmi.github.io/ligo/specification.html#seedmotif</a></p></li>
+<li><p><a class="reference external" href="https://uio-bmi.github.io/ligo/specification.html#pwm">https://uio-bmi.github.io/ligo/specification.html#pwm</a></p></li>
+</ul>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Simulation parameter(s)</p></th>
+<th class="head"><p>Potential biological reflection</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>SeedMotif</strong> describes a motif using a (i) <strong>seed</strong> (the initial k-mer) and (ii) allowed deviations from the seed. The allowed deviations can be described with allowed gap length (<strong>min_gap</strong>, <strong>max_gap</strong>), distribution of number of allowed mismatches to the seed (<strong>hamming_distance_probabilities</strong>), distribution of mismatches across the seed positions (<strong>position_weights</strong>), and substitution probabilities for nucleotides or amino acid (<strong>alphabet_weights</strong>).</p></td>
+<td><p>Can be used to describe antigen-binding motifs, which are present in signal-specfic AIRs as was previously observed by us and others (Akbar et al. 2021; Shrock et al. 2023; Ostmeyer et al. 2019; Shugay et al. 2018; Goncharov et al. 2022; Chronister et al. 2021)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>PWM</strong> — motif described in a form of a positional weight matrix</p></td>
+<td><p>Same as above</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="signal-definition">
+<h2>Signal definition<a class="headerlink" href="#signal-definition" title="Link to this heading">¶</a></h2>
+<p>Link to documentation:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uio-bmi.github.io/ligo/specification.html#signal">https://uio-bmi.github.io/ligo/specification.html#signal</a></p></li>
+</ul>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Simulation parameter(s)</p></th>
+<th class="head"><p>Potential biological reflection</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Motifs</strong> — several motifs within an immune signal</p></td>
+<td><p>Relates to motifs co-occurrence within the same AIR (2 motifs max), since immune signals may comprise multiple co-occurring motifs within the same AIR (Akbar et al. 2021; Glanville et al. 2017; Dash et al. 2017)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sequence_position_weights</strong> describes signal distribution across CDR3 IMGT positions</p></td>
+<td><p>Helps preserve the conservative start and end of CDR3, and controls a motif predominance in a specific location within CDR3</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>V_call</strong>, <strong>J_call</strong> restrict the V or J gene (allele) in the immune signal</p></td>
+<td><p>Relates to previous observations that some signal-specific AIRs are associated with a specific germline gene alleles (Feeney et al. 1996; Avnir et al. 2016; Liu and Lucas 2003; Imkeller et al. 2018; Fagiani, Catanzaro, and Lanni 2020)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Clonal_frequency</strong> describes clonal frequency distribution, can be defined separately for each group of immune signals</p></td>
+<td><p>Relates to previous observation by us and others that clonal frequency distributions may change across immune statuses (Greiff et al. 2015; Chiffelle et al. 2020).</p></td>
+</tr>
+<tr class="row-even"><td><p>Custom signal function (<strong>source_file</strong>, <strong>is_present_func</strong>) — any user-defined function which takes as arguments motifs, v_call, j_call, and sequence_position_weights</p></td>
+<td><p>Helps to define any custom immune signal</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="parameters-related-to-a-group-of-receptors-or-repertoires">
+<h2>Parameters related to a group of receptors or repertoires<a class="headerlink" href="#parameters-related-to-a-group-of-receptors-or-repertoires" title="Link to this heading">¶</a></h2>
+<p>Link to documentation:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uio-bmi.github.io/ligo/specification.html#simulation-config-item">https://uio-bmi.github.io/ligo/specification.html#simulation-config-item</a></p></li>
+</ul>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Simulation parameter(s)</p></th>
+<th class="head"><p>Potential biological reflection</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Signals</strong> — distribution of signals across the simulated AIRs</p></td>
+<td><p>Helps increase complexity of simulated data</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Is_noise</strong> indicates if a group of signal-specific AIRs should be labeled as not signal-specific</p></td>
+<td><p>Relates to experimental artifacts that may occur under imperfect experimental conditions</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Generative_model</strong> defines V(D)J model for a given set of AIRs</p></td>
+<td><p>Helps increase complexity of simulated data and control gene allele distribution of signal-specific AIRs</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>False_positives_prob_in_receptors</strong>, <strong>false_negative_prob_in_receptors</strong> percentage of false positive or false negative AIRs when performing repertoire-level simulation</p></td>
+<td><p>Relates to experimental artifacts that may occur under imperfect experimental conditions</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Immune_events</strong> — receptor or repertoire-level labels, which can be later used for AIRR-ML</p></td>
+<td><p>Relates to  diseases, vaccinations, allergies, etc,   which elicit immune responses</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Default_clonal_frequency</strong> — clonal frequency distribution for background AIRs</p></td>
+<td><p>Relates to previous observation by us and others that clonal frequency distributions may change across immune statuses (Greiff et al. 2015; Chiffelle et al. 2020).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Sequence_len_limits</strong> restricts minimal and maximal CDR3 lengths to be included in the simulated data</p></td>
+<td><p>Relates to length biases observed in signal-specific AIRs (Haakenson, Huang, and Smider 2018; Roark et al. 2021)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="parameters-of-the-simulation">
+<h2>Parameters of the simulation<a class="headerlink" href="#parameters-of-the-simulation" title="Link to this heading">¶</a></h2>
+<p>Link to documentation:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uio-bmi.github.io/ligo/specification.html#simulation-config">https://uio-bmi.github.io/ligo/specification.html#simulation-config</a></p></li>
+</ul>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Simulation parameter(s)</p></th>
+<th class="head"><p>Potential biological reflection</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Is_repertoire</strong> defines receptor or repertoire level of simulation</p></td>
+<td><p>Relates to different types of available AIRR data</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Paired</strong> defines how to pair the output data</p></td>
+<td><p>Relates to different types of available AIRR data</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Sequence_type</strong> — defines the nucleotide or amino acid type of simulated AIRs</p></td>
+<td><p>Relates to different types of available AIRR data</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Species</strong> — human (default) or mouse</p></td>
+<td><p>Relates to different types of available AIRR data</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Keep_p_gen_dist</strong> implements importance sampling, i.e., subsample signal-specific AIRs with respect to pgen distribution of background AIRs</p></td>
+<td><p>Relates to previous observations by us and other that found marked differences in pgen and clonal frequency which may relate to immune signal (Kanduri et al. 2023; Pogorelyy et al. 2019)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Remove_seqs_with_signals</strong> filters signal-specific AIRs from the background if True</p></td>
+<td><p>Helps to control the exact number of signal-specific receptors within a set of AIRs (if True) or make simulated data more complex (if False)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Akbar, Rahmad, Philippe A. Robert, Milena Pavlović, Jeliazko R. Jeliazkov, Igor Snapkov, Andrei Slabodkin, Cédric R. Weber, et al. 2021. “A Compact Vocabulary of Paratope-Epitope Interactions Enables Predictability of Antibody-Antigen Binding.” Cell Reports 34 (11): 108856.</p></li>
+<li><p>Avnir, Yuval, Corey T. Watson, Jacob Glanville, Eric C. Peterson, Aimee S. Tallarico, Andrew S. Bennett, Kun Qin, et al. 2016. “IGHV1-69 Polymorphism Modulates Anti-Influenza Antibody Repertoires, Correlates with IGHV Utilization Shifts and Varies by Ethnicity.” Scientific Reports 6 (February):20842.</p></li>
+<li><p>Chiffelle, Johanna, Raphael Genolet, Marta As Perez, George Coukos, Vincent Zoete, and Alexandre Harari. 2020. “T-Cell Repertoire Analysis and Metrics of Diversity and Clonality.” Current Opinion in Biotechnology 65 (October):284–95.</p></li>
+<li><p>Chronister, William D., Austin Crinklaw, Swapnil Mahajan, Randi Vita, Zeynep Koşaloğlu-Yalçın, Zhen Yan, Jason A. Greenbaum, et al. 2021. “TCRMatch: Predicting T-Cell Receptor Specificity Based on Sequence Similarity to Previously Characterized Receptors.” Frontiers in Immunology 12 (March):640725.</p></li>
+<li><p>Dash, Pradyot, Andrew J. Fiore-Gartland, Tomer Hertz, George C. Wang, Shalini Sharma, Aisha Souquette, Jeremy Chase Crawford, et al. 2017. “Quantifiable Predictive Features Define Epitope-Specific T Cell Receptor Repertoires.” Nature 547 (7661): 89–93.</p></li>
+<li><p>Fagiani, Francesca, Michele Catanzaro, and Cristina Lanni. 2020. “Molecular Features of IGHV3-53-Encoded Antibodies Elicited by SARS-CoV-2.” Signal Transduction and Targeted Therapy 5 (1): 170.</p></li>
+<li><p>Feeney, A. J., M. J. Atkinson, M. J. Cowan, G. Escuro, and G. Lugo. 1996. “A Defective Vkappa A2 Allele in Navajos Which May Play a Role in Increased Susceptibility to Haemophilus Influenzae Type B Disease.” The Journal of Clinical Investigation 97 (10): 2277–82.</p></li>
+<li><p>Glanville, Jacob, Huang Huang, Allison Nau, Olivia Hatton, Lisa E. Wagar, Florian Rubelt, Xuhuai Ji, et al. 2017. “Identifying Specificity Groups in the T Cell Receptor Repertoire.” Nature 547 (June):94–98.</p></li>
+<li><p>Glanville, Jacob, Tracy C. Kuo, H-Christian von Büdingen, Lin Guey, Jan Berka, Purnima D. Sundar, Gabriella Huerta, et al. 2011. “Naive Antibody Gene-Segment Frequencies Are Heritable and Unaltered by Chronic Lymphocyte Ablation.” Proceedings of the National Academy of Sciences of the United States of America 108 (50): 20066–71.</p></li>
+<li><p>Goncharov, Mikhail, Dmitry Bagaev, Dmitrii Shcherbinin, Ivan Zvyagin, Dmitry Bolotin, Paul G. Thomas, Anastasia A. Minervina, et al. 2022. “VDJdb in the Pandemic Era: A Compendium of T Cell Receptors Specific for SARS-CoV-2.” Nature Methods 19 (9): 1017–19.</p></li>
+<li><p>Greiff, Victor, Pooja Bhat, Skylar C. Cook, Ulrike Menzel, Wenjing Kang, and Sai T. Reddy. 2015. “A Bioinformatic Framework for Immune Repertoire Diversity Profiling Enables Detection of Immunological Status.” Genome Medicine 7 (1): 49.</p></li>
+<li><p>Haakenson, Jeremy K., Ruiqi Huang, and Vaughn V. Smider. 2018. “Diversity in the Cow Ultralong CDR H3 Antibody Repertoire.” Frontiers in Immunology 9 (June):1262.</p></li>
+<li><p>Imkeller, Katharina, Stephen W. Scally, Alexandre Bosch, Gemma Pidelaserra Martí, Giulia Costa, Gianna Triller, Rajagopal Murugan, et al. 2018. “Antihomotypic Affinity Maturation Improves Human B Cell Responses against a Repetitive Epitope.” Science 360 (6395): 1358–62.</p></li>
+<li><p>Kanduri, Chakravarthi, Lonneke Scheffer, Milena Pavlović, Knut Dagestad Rand, Maria Chernigovskaya, Oz Pirvandy, Gur Yaari, Victor Greiff, and Geir K. Sandve. n.d. “simAIRR: Simulation of Adaptive Immune Repertoires with Realistic Receptor Sequence Sharing for Benchmarking of Immune State Prediction Methods.” GigaScience. <a class="reference external" href="https://doi.org/10.1093/gigascience/giad074">https://doi.org/10.1093/gigascience/giad074</a>.</p></li>
+<li><p>Liu, Leyu, and Alexander H. Lucas. 2003. “IGH V3-23*01 and Its Allele V3-23*03 Differ in Their Capacity to Form the Canonical Human Antibody Combining Site Specific for the Capsular Polysaccharide of Haemophilus Influenzae Type B.” Immunogenetics 55 (5): 336–38.</p></li>
+<li><p>Ostmeyer, Jared, Scott Christley, Inimary T. Toby, and Lindsay G. Cowell. 2019. “Biophysicochemical Motifs in T-Cell Receptor Sequences Distinguish Repertoires from Tumor-Infiltrating Lymphocyte and Adjacent Healthy Tissue.” Cancer Research 79 (7): 1671–80.</p></li>
+<li><p>Pogorelyy, Mikhail V., Anastasia A. Minervina, Mikhail Shugay, Dmitriy M. Chudakov, Yuri B. Lebedev, Thierry Mora, and Aleksandra M. Walczak. 2019. “Detecting T Cell Receptors Involved in Immune Responses from Single Repertoire Snapshots.” PLoS Biology 17 (6): e3000314.</p></li>
+<li><p>Roark, Ryan S., Hui Li, Wilton B. Williams, Hema Chug, Rosemarie D. Mason, Jason Gorman, Shuyi Wang, et al. 2021. “Recapitulation of HIV-1 Env-Antibody Coevolution in Macaques Leading to Neutralization Breadth.” Science 371 (6525). <a class="reference external" href="https://doi.org/10.1126/science.abd2638">https://doi.org/10.1126/science.abd2638</a>.</p></li>
+<li><p>Sethna, Zachary, Yuval Elhanati, Curtis G. Callan, Aleksandra M. Walczak, and Thierry Mora. 2019. “OLGA: Fast Computation of Generation Probabilities of B- and T-Cell Receptor Amino Acid Sequences and Motifs.” Bioinformatics. <a class="reference external" href="https://doi.org/10.1093/bioinformatics/btz035">https://doi.org/10.1093/bioinformatics/btz035</a>.</p></li>
+<li><p>Shrock, Ellen L., Richard T. Timms, Tomasz Kula, Elijah L. Mena, Anthony P. West Jr, Rui Guo, I-Hsiu Lee, et al. 2023. “Germline-Encoded Amino Acid-Binding Motifs Drive Immunodominant Public Antibody Responses.” Science 380 (6640): eadc9498.</p></li>
+<li><p>Shugay, Mikhail, Dmitriy V. Bagaev, Ivan V. Zvyagin, Renske M. Vroomans, Jeremy Chase Crawford, Garry Dolton, Ekaterina A. Komech, et al. 2018. “VDJdb: A Curated Database of T-Cell Receptor Sequences with Known Antigen Specificity.” Nucleic Acids Research 46 (D1): D419–27.</p></li>
+<li><p>Slabodkin, Andrei, Maria Chernigovskaya, Ivana Mikocziova, Rahmad Akbar, Lonneke Scheffer, Milena Pavlović, Habib Bashour, et al. 2021. “Individualized VDJ Recombination Predisposes the Available Ig Sequence Space.” Genome Research, November. <a class="reference external" href="https://doi.org/10.1101/gr.275373.121">https://doi.org/10.1101/gr.275373.121</a>.</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../installation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Installing LIgO</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="repertoire_level_simulation.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">How to use LIgO for repertoire-level simulation</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Overview of LIgO simulation parameters</a><ul>
+<li><a class="reference internal" href="#generative-models-for-simulation-of-background-airs">Generative models for simulation of background AIRs</a></li>
+<li><a class="reference internal" href="#motif-definition">Motif definition</a></li>
+<li><a class="reference internal" href="#signal-definition">Signal definition</a></li>
+<li><a class="reference internal" href="#parameters-related-to-a-group-of-receptors-or-repertoires">Parameters related to a group of receptors or repertoires</a></li>
+<li><a class="reference internal" href="#parameters-of-the-simulation">Parameters of the simulation</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=9306f2a9"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>

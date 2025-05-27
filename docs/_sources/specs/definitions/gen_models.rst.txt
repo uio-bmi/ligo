@@ -1,0 +1,67 @@
+
+ExperimentalImport
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Allows to import existing experimental data and perform annotations and simulations on top of them.
+
+Arguments:
+
+- import_format (str): see the list of supported formats under :ref:`Supported dataset formats`
+
+- tmp_import_path (str): where to store the imported files
+
+- import_params (dict): as defined under the import format selected in the first parameter; for details see :ref:`Supported dataset formats`
+
+YAML specification:
+
+.. indent with spaces
+.. code-block:: yaml
+
+    generative_model:
+        import_format: AIRR
+        tmp_import_path: ./tmp/
+        import_params:
+            path: path/to/files/
+            region_type: IMGT_CDR3 # what part of the sequence to import
+            column_mapping: # column mapping AIRR: ligo
+                junction: sequence
+                junction_aa: sequence_aa
+                locus: chain
+        type: ExperimentalImport
+
+
+OLGA
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+This is a wrapper for the OLGA package as described by Sethna et al. 2019 (OLGA package on PyPI or GitHub: https://github.com/statbiophys/OLGA).
+
+Reference:
+
+Zachary Sethna, Yuval Elhanati, Curtis G Callan, Jr, Aleksandra M Walczak, Thierry Mora, OLGA: fast computation of generation probabilities
+of B- and T-cell receptor amino acid sequences and motifs, Bioinformatics, Volume 35, Issue 17, 1 September 2019, Pages 2974–2981,
+https://doi.org/10.1093/bioinformatics/btz035
+
+Note:
+
+- OLGA generates sequences that correspond to IMGT junction and are used for matching as such. See the https://github.com/statbiophys/OLGA for more details.
+
+- Gene names are as provided in OLGA (either in default models or in the user-specified model files). For simulation, one should use gene names in the same format.
+
+Arguments:
+
+- model_path (str): if not default model, this parameter should point to a folder where the four OLGA/IGOR format files are stored (could also be inferred from some experimental data)
+
+- default_model_name (str): if not using custom models, one of the OLGA default models could be specified here; the value should be the same as it would be passed to command line in OLGA: e.g., humanTRB, human IGH
+
+YAML specification:
+
+.. indent with spaces
+.. code-block:: yaml
+
+    generative_model:
+        type: OLGA
+        model_path: None
+        default_model_name: humanTRB
+
