@@ -1,8 +1,9 @@
 # LIgO
 
 
-![Python application](https://github.com/uio-bmi/ligo/workflows/Python%20application/badge.svg?branch=main)
-![Docker](https://github.com/uio-bmi/ligo/workflows/Docker/badge.svg?branch=main)
+![Python application](https://github.com/uio-bmi/ligo/actions/workflows/python-app.yml/badge.svg?branch=main)
+![Docker](https://github.com/uio-bmi/ligo/actions/workflows/docker-publish.yml/badge.svg?branch=main)
+![PyPI](https://github.com/uio-bmi/ligo/actions/workflows/publish-to-pypi.yml/badge.svg?branch=master)
 
 LIgO is a tool for simulation of adaptive immune receptors and repertoires, 
 internally powered by [immuneML](https://immuneml.uio.no/). The README includes quick installation instructions and information on how to run a quickstart. For more detailed documentation, see https://uio-bmi.github.io/ligo/.
